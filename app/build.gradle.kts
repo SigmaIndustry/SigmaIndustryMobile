@@ -68,9 +68,41 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.navigation:navigation-compose:2.7.5")
-
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+    //Splash Api
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+
+
+    //Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //Datastore
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+    //Compose Foundation
+    implementation ("androidx.compose.foundation:foundation:1.4.3")
+
+    //Accompanist
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
+
+    //Paging 3
+    var paging_version = "3.1.1"
+    implementation ("androidx.paging:paging-runtime:$paging_version")
+    implementation ("androidx.paging:paging-compose:3.2.0-rc01")
+
+    //Room
+//    var room_version = "2.5.2"
+//    implementation ("androidx.room:room-runtime:$room_version")
+//    kapt "androidx.room:room-compiler:$room_version"
+//    implementation "androidx.room:room-ktx:2.5.2"
+
+
 }
 kapt {
     correctErrorTypes = true

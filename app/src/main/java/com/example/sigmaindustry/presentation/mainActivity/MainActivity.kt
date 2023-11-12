@@ -1,4 +1,4 @@
-package com.loc.newsapp.presentation.mainActivity
+package com.example.sigmaindustry.presentation.mainActivity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,10 +9,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
+import com.example.sigmaindustry.presentation.mainActivity.MainViewModel
 import com.example.sigmaindustry.ui.theme.SigmaIndustryTheme
 import dagger.hilt.android.AndroidEntryPoint
 

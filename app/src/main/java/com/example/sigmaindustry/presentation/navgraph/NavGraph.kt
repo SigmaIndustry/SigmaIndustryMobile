@@ -6,7 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.example.sigmaindustry.presentation.onboarding.OnBoardingScreen
 import com.example.sigmaindustry.presentation.onboarding.OnBoardingViewModel
+import com.example.sigmaindustry.presentation.news_navigator.NewsNavigator
 
 
 @Composable

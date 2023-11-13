@@ -1,4 +1,4 @@
-package com.loc.newsapp.util
+package com.example.sigmaindustry.util
 
 sealed class DataState<T> {
 

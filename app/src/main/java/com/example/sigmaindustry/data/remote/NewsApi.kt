@@ -1,17 +1,21 @@
 package com.example.sigmaindustry.data.remote
 
 import com.example.sigmaindustry.data.remote.dto.NewsResponse
-import com.loc.newsapp.util.Constants.API_KEY
+
+import com.example.sigmaindustry.util.Constants.API_KEY
 import retrofit2.http.Body
-import retrofit2.http.GET
+
 import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface NewsApi {
 
-    @POST("everything")
-    suspend fun getNews(
-    ): NewsResponse
+
+    @POST("api/service/search")
+    suspend fun getServices(@Body request: ): NewsResponse
+
+
+
 
     @POST("everything")
     suspend fun searchNews(

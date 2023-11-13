@@ -30,7 +30,7 @@ import com.example.sigmaindustry.presentation.Dimens.ArticleImageHeight
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.details.components.DetailsTopBar
 import com.example.sigmaindustry.ui.theme.SigmaIndustryTheme
-import com.loc.newsapp.util.UIComponent
+import com.example.sigmaindustry.util.UIComponent
 
 @Composable
 fun DetailsScreen(

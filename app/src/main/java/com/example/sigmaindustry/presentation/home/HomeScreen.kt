@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import com.example.sigmaindustry.R
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.ArticlesList
@@ -32,17 +33,17 @@ import com.example.sigmaindustry.presentation.common.SearchBar
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    articles: LazyPagingItems<Article>,
+    services: LazyPagingItems<SearchResult>,
     navigateToSearch: () -> Unit,
-    navigateToDetails: (Article) -> Unit
+    navigateToDetails: (SearchResult) -> Unit
 ) {
 
     val titles by remember {
         derivedStateOf {
-            if (articles.itemCount > 10) {
-                articles.itemSnapshotList.items
+            if (services.itemCount > 10) {
+                services.itemSnapshotList.items
                     .slice(IntRange(start = 0, endInclusive = 9))
-                    .joinToString(separator = " \uD83D\uDFE5 ") { it.title }
+                    .joinToString(separator = " \uD83D\uDFE5 ") { it.name }
             } else {
                 ""
             }
@@ -91,7 +92,7 @@ fun HomeScreen(
 
         ArticlesList(
             modifier = Modifier.padding(horizontal = MediumPadding1),
-            articles = articles,
+            articles = services,
             onClick = navigateToDetails
         )
     }

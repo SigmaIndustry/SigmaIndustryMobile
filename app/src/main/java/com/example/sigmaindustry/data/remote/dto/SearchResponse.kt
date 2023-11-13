@@ -1,7 +1,9 @@
 package com.example.sigmaindustry.data.remote.dto
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class SearchResponse (
     @SerializedName("code")
@@ -14,7 +16,7 @@ data class SearchResponse (
     var results: List<SearchResult>
 )
 
-
+@Parcelize
 data class SearchResult(
 
     @SerializedName("id")
@@ -41,4 +43,4 @@ data class SearchResult(
     @SerializedName("provider")
     var provider: Int
 
-)
+): Parcelable

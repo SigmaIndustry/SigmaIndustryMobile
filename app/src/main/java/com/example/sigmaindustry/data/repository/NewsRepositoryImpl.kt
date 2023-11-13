@@ -4,24 +4,25 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.sigmaindustry.data.local.NewsDao
-import com.example.sigmaindustry.data.remote.NewsPagingSource
-import com.example.sigmaindustry.data.remote.NewsApi
 import com.example.sigmaindustry.data.remote.SearchNewsPagingSource
-import com.example.sigmaindustry.domain.repository.NewsRepository
+import com.example.sigmaindustry.data.remote.ServicesApi
+import com.example.sigmaindustry.data.remote.ServicesPagingSource
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.model.Article
+import com.example.sigmaindustry.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
-    private val newsApi: NewsApi,
+    private val newsApi: ServicesApi,
     private val newsDao: NewsDao
 ) : NewsRepository {
 
-    override fun getNews(sources: List<String>): Flow<PagingData<Article>> {
+    override fun getServices(): Flow<PagingData<SearchResult>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {
-                NewsPagingSource(newsApi = newsApi, sources = sources.joinToString(separator = ","))
+                ServicesPagingSource(servicesApi = newsApi)
             }
         ).flow
     }

@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.presentation.bookmark.BookmarkScreen
 import com.example.sigmaindustry.presentation.bookmark.BookmarkViewModel
@@ -101,17 +102,17 @@ fun NewsNavigator() {
                 val viewModel: HomeViewModel = hiltViewModel()
                 val articles = viewModel.news.collectAsLazyPagingItems()
                 HomeScreen(
-                    articles = articles,
+                    services = articles,
                     navigateToSearch = {
                         navigateToTab(
                             navController = navController,
                             route = Route.SearchScreen.route
                         )
                     },
-                    navigateToDetails = { article ->
+                    navigateToDetails = { service ->
                         navigateToDetails(
                             navController = navController,
-                            article = article
+                            service = service
                         )
                     }
                 )
@@ -123,10 +124,10 @@ fun NewsNavigator() {
                 SearchScreen(
                     state = state,
                     event = viewModel::onEvent,
-                    navigateToDetails = { article ->
+                    navigateToDetails = { service ->
                         navigateToDetails(
                             navController = navController,
-                            article = article
+                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
                         )
                     }
                 )
@@ -150,10 +151,10 @@ fun NewsNavigator() {
                 OnBackClickStateSaver(navController = navController)
                 BookmarkScreen(
                     state = state,
-                    navigateToDetails = { article ->
+                    navigateToDetails = { service ->
                         navigateToDetails(
                             navController = navController,
-                            article = article
+                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
                         )
                     }
                 )
@@ -184,8 +185,8 @@ private fun navigateToTab(navController: NavController, route: String) {
     }
 }
 
-private fun navigateToDetails(navController: NavController, article: Article) {
-    navController.currentBackStackEntry?.savedStateHandle?.set("article", article)
+private fun navigateToDetails(navController: NavController, service: SearchResult) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
     navController.navigate(
         route = Route.DetailsScreen.route
     )

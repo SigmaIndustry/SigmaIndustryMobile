@@ -3,10 +3,9 @@ package com.example.sigmaindustry.data.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.sigmaindustry.domain.model.Article
-import java.lang.Exception
 
 class SearchNewsPagingSource(
-    private val api: NewsApi,
+    private val api: ServicesApi,
     private val searchQuery: String,
     private val sources: String
 ) : PagingSource<Int, Article>() {

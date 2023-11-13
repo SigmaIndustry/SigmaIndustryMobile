@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding2
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
@@ -43,7 +44,7 @@ fun ArticlesList(
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
-    articles: LazyPagingItems<Article>,
+    articles: LazyPagingItems<SearchResult>,
     onClick: (Article) -> Unit
 ) {
 

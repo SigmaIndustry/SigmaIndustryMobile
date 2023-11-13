@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.sigmaindustry.data.local.NewsDao
 import com.example.sigmaindustry.data.local.NewsDatabase
 import com.example.sigmaindustry.data.local.NewsTypeConvertor
-import com.example.sigmaindustry.data.remote.NewsApi
+import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -22,13 +22,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiInstance(): NewsApi {
+    fun provideApiInstance(): ServicesApi {
         return Retrofit
             .Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(NewsApi::class.java)
+            .create(ServicesApi::class.java)
     }
 
     @Provides

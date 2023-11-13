@@ -1,12 +1,13 @@
 package com.example.sigmaindustry.domain.repository
 
 import androidx.paging.PagingData
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.model.Article
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
-    fun getNews(sources: List<String>): Flow<PagingData<Article>>
+    fun getServices(): Flow<PagingData<SearchResult>>
 
     fun searchNews(searchQuery: String, sources: List<String>): Flow<PagingData<Article>>
 

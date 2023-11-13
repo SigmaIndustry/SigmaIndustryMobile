@@ -6,7 +6,7 @@ import com.example.sigmaindustry.data.local.NewsDao
 import com.example.sigmaindustry.data.local.NewsDatabase
 import com.example.sigmaindustry.data.local.NewsTypeConvertor
 import com.example.sigmaindustry.data.remote.NewsApi
-import com.loc.newsapp.util.Constants.BASE_URL
+import com.example.sigmaindustry.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

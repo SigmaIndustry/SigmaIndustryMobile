@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.sigmaindustry.domain.manger.LocalUserManger
-import com.loc.newsapp.util.Constants
-import com.loc.newsapp.util.Constants.USER_SETTINGS
+import com.example.sigmaindustry.util.Constants
+import com.example.sigmaindustry.util.Constants.USER_SETTINGS
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -9,8 +9,7 @@ import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.domain.usecases.news.DeleteArticle
 import com.example.sigmaindustry.domain.usecases.news.GetSavedArticle
 import com.example.sigmaindustry.domain.usecases.news.UpsertArticle
-import com.example.sigmaindustry.presentation.details.DetailsEvent
-import com.loc.newsapp.util.UIComponent
+import com.example.sigmaindustry.util.UIComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

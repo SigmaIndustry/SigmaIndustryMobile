@@ -1,23 +1,19 @@
 package com.example.sigmaindustry.presentation.search
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.sigmaindustry.domain.model.Article
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
-import com.example.sigmaindustry.presentation.common.ArticlesList
 import com.example.sigmaindustry.presentation.common.SearchBar
 
 @Composable
 fun SearchScreen(
     state: SearchState,
     event:(SearchEvent) -> Unit,
-    navigateToDetails:(Article) -> Unit
+    navigateToDetails:(SearchResult) -> Unit
 ) {
 
     Column(
@@ -33,13 +29,13 @@ fun SearchScreen(
                 event(SearchEvent.SearchNews)
             }
         )
-        Spacer(modifier = Modifier.height(MediumPadding1))
-        state.articles?.let {
-            val articles = it.collectAsLazyPagingItems()
-            ArticlesList(
-                services = articles,
-                onClick = navigateToDetails
-            )
-        }
+//        Spacer(modifier = Modifier.height(MediumPadding1))
+//        state.articles?.let {
+//            val articles = it.collectAsLazyPagingItems()
+//            ArticlesList(
+//                services = articles,
+//                onClick = navigateToDetails
+//            )
+//        }
     }
 }

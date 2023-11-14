@@ -1,10 +1,5 @@
 package com.example.sigmaindustry.di
 
-import android.app.Application
-import androidx.room.Room
-import com.example.sigmaindustry.data.local.NewsDao
-import com.example.sigmaindustry.data.local.NewsDatabase
-import com.example.sigmaindustry.data.local.NewsTypeConvertor
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.util.Constants.BASE_URL
 import dagger.Module
@@ -31,24 +26,5 @@ object AppModule {
             .create(ServicesApi::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideNewsDatabase(
-        application: Application
-    ): NewsDatabase {
-        return Room.databaseBuilder(
-            context = application,
-            klass = NewsDatabase::class.java,
-            name = "news_db"
-        ).addTypeConverter(NewsTypeConvertor())
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideNewsDao(
-        newsDatabase: NewsDatabase
-    ): NewsDao = newsDatabase.newsDao
 
 }

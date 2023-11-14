@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class SearchResponse (
     @SerializedName("code")
     var statusCode: Int,
@@ -14,7 +15,7 @@ data class SearchResponse (
 
     @SerializedName("results")
     var results: List<SearchResult>
-)
+): Parcelable
 
 @Parcelize
 data class SearchResult(

@@ -2,21 +2,13 @@ package com.example.sigmaindustry.domain.repository
 
 import androidx.paging.PagingData
 import com.example.sigmaindustry.data.remote.dto.SearchResult
-import com.example.sigmaindustry.domain.model.Article
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
     fun getServices(): Flow<PagingData<SearchResult>>
 
-    fun searchNews(searchQuery: String, sources: List<String>): Flow<PagingData<Article>>
+   // fun searchNews(searchQuery: String, sources: List<String>): Flow<PagingData<SearchResult>>
 
-    suspend fun upsertArticle(article: Article)
-
-    suspend fun deleteArticle(article: Article)
-
-    fun getArticles(): Flow<List<Article>>
-
-    suspend fun getArticle(url: String): Article?
 
 }

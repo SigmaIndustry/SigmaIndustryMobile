@@ -3,10 +3,6 @@ package com.example.sigmaindustry.presentation.search
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import com.example.sigmaindustry.presentation.search.SearchEvent
-import com.example.sigmaindustry.presentation.search.SearchState
 import com.example.sigmaindustry.domain.usecases.news.SearchNews
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -27,18 +23,18 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchEvent.SearchNews -> {
-                searchNews()
+//                searchNews()
             }
         }
+
+//    private fun searchNews() {
+//        val articles = searchNewsUseCase(
+//            searchQuery = _state.value.searchQuery,
+//            sources = listOf("bbc-news", "abc-news", "al-jazeera-english")
+//        ).cachedIn(viewModelScope)
+//        _state.value = _state.value.copy(articles = articles)
+//    }
+
+
     }
-
-    private fun searchNews() {
-        val articles = searchNewsUseCase(
-            searchQuery = _state.value.searchQuery,
-            sources = listOf("bbc-news", "abc-news", "al-jazeera-english")
-        ).cachedIn(viewModelScope)
-        _state.value = _state.value.copy(articles = articles)
-    }
-
-
 }

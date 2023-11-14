@@ -21,18 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.SearchResult
-import com.example.sigmaindustry.domain.model.Article
-import com.example.sigmaindustry.presentation.bookmark.BookmarkScreen
-import com.example.sigmaindustry.presentation.bookmark.BookmarkViewModel
-import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
 import com.example.sigmaindustry.presentation.home.HomeViewModel
 import com.example.sigmaindustry.presentation.navgraph.Route
 import com.example.sigmaindustry.presentation.news_navigator.components.BottomNavigationItem
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
-import com.example.sigmaindustry.presentation.search.SearchScreen
-import com.example.sigmaindustry.presentation.search.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,48 +111,35 @@ fun NewsNavigator() {
                     }
                 )
             }
-            composable(route = Route.SearchScreen.route) {
-                val viewModel: SearchViewModel = hiltViewModel()
-                val state = viewModel.state.value
-                OnBackClickStateSaver(navController = navController)
-                SearchScreen(
-                    state = state,
-                    event = viewModel::onEvent,
-                    navigateToDetails = { service ->
-                        navigateToDetails(
-                            navController = navController,
-                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
-                        )
-                    }
-                )
-            }
+//            composable(route = Route.SearchScreen.route) {
+//                val viewModel: SearchViewModel = hiltViewModel()
+//                val state = viewModel.state.value
+//                OnBackClickStateSaver(navController = navController)
+//                SearchScreen(
+//                    state = state,
+//                    event = viewModel::onEvent,
+//                    navigateToDetails = { service ->
+//                        navigateToDetails(
+//                            navController = navController,
+//                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
+//                        )
+//                    }
+//                )
+//            }
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
-                navController.previousBackStackEntry?.savedStateHandle?.get<Article?>("article")
+                navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("article")
                     ?.let { article ->
-                        DetailsScreen(
-                            article = article,
-                            event = viewModel::onEvent,
-                            navigateUp = { navController.navigateUp() },
-                            sideEffect = viewModel.sideEffect
-                        )
+//                        DetailsScreen(
+//                            article = article,
+//                            event = viewModel::onEvent,
+//                            navigateUp = { navController.navigateUp() },
+//                            sideEffect = viewModel.sideEffect
+//                        )
                     }
 
             }
-            composable(route = Route.BookmarkScreen.route) {
-                val viewModel: BookmarkViewModel = hiltViewModel()
-                val state = viewModel.state.value
-                OnBackClickStateSaver(navController = navController)
-                BookmarkScreen(
-                    state = state,
-                    navigateToDetails = { service ->
-                        navigateToDetails(
-                            navController = navController,
-                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
-                        )
-                    }
-                )
-            }
+
         }
     }
 }

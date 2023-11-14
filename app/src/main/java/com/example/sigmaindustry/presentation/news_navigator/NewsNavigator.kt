@@ -27,6 +27,8 @@ import com.example.sigmaindustry.presentation.home.HomeViewModel
 import com.example.sigmaindustry.presentation.navgraph.Route
 import com.example.sigmaindustry.presentation.news_navigator.components.BottomNavigationItem
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
+import com.example.sigmaindustry.presentation.search.SearchScreen
+import com.example.sigmaindustry.presentation.search.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,21 +113,21 @@ fun NewsNavigator() {
                     }
                 )
             }
-//            composable(route = Route.SearchScreen.route) {
-//                val viewModel: SearchViewModel = hiltViewModel()
-//                val state = viewModel.state.value
-//                OnBackClickStateSaver(navController = navController)
-//                SearchScreen(
-//                    state = state,
-//                    event = viewModel::onEvent,
-//                    navigateToDetails = { service ->
-//                        navigateToDetails(
-//                            navController = navController,
-//                            service = SearchResult(1,"d", listOf("d"),"d",1,"d", 1, 1)
-//                        )
-//                    }
-//                )
-//            }
+            composable(route = Route.SearchScreen.route) {
+                val viewModel: SearchViewModel = hiltViewModel()
+                val state = viewModel.state.value
+                OnBackClickStateSaver(navController = navController)
+                SearchScreen(
+                    state = state,
+                    event = viewModel::onEvent,
+                    navigateToDetails = { service ->
+                        navigateToDetails(
+                            navController = navController,
+                            service = service
+                        )
+                    }
+                )
+            }
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
                 navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("article")

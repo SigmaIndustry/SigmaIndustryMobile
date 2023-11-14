@@ -7,12 +7,8 @@ import retrofit2.http.POST
 
 interface ServicesApi {
 
-
     @POST("api/service/search")
     suspend fun getServices(@Body request: SearchRequest): SearchResponse
-
-
-
 
 //    @POST("everything")
 //    suspend fun searchNews(

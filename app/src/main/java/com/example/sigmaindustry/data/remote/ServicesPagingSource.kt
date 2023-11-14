@@ -2,8 +2,8 @@ package com.example.sigmaindustry.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.sigmaindustry.data.remote.dto.SearchRequest
 import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 
 class ServicesPagingSource(
     private val servicesApi: ServicesApi,
@@ -22,7 +22,7 @@ class ServicesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> {
         val page = params.key ?: 1
         return try {
-            val searchResponse = servicesApi.getServices(SearchRequest())
+            val searchResponse = servicesApi.getServices(ServiceRequest())
             totalServicesCount += searchResponse.results.size
             val services = searchResponse.results.distinctBy { it.name } //Remove duplicates
             LoadResult.Page(

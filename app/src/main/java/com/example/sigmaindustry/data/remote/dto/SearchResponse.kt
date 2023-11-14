@@ -33,7 +33,7 @@ data class SearchResult(
     var description: String,
 
     @SerializedName("price")
-    var price: Int,
+    var price: Double,
 
     @SerializedName("category")
     var category: String,

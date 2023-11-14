@@ -47,7 +47,7 @@ fun ServiceCard(
             modifier = Modifier
                 .size(ServiceCardSize)
                 .clip(MaterialTheme.shapes.medium),
-            model = ImageRequest.Builder(context).data(services.pictures[1]).build(),
+            model = ImageRequest.Builder(context).data(services.pictures[0]).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )

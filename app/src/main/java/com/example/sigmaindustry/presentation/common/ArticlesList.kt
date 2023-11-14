@@ -11,18 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.example.sigmaindustry.data.remote.dto.SearchResult
-import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding2
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
-import com.example.sigmaindustry.presentation.home.components.ArticleCard
+import com.example.sigmaindustry.presentation.home.components.ServiceCard
 
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
-    articles: List<Article>,
-    onClick: (Article) -> Unit
+    services: List<SearchResult>,
+    onClick: (SearchResult) -> Unit
 ) {
-    if (articles.isEmpty()){
+    if (services.isEmpty()){
         EmptyScreen()
     }
     LazyColumn(
@@ -31,10 +30,10 @@ fun ArticlesList(
         contentPadding = PaddingValues(all = ExtraSmallPadding2)
     ) {
         items(
-            count = articles.size,
+            count = services.size,
         ) {
-            articles[it]?.let { article ->
-                ArticleCard(article = article, onClick = { onClick(article) })
+            services[it].let { service ->
+                ServiceCard(services = service, onClick = { onClick(service) })
             }
         }
     }
@@ -44,11 +43,11 @@ fun ArticlesList(
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
-    articles: LazyPagingItems<SearchResult>,
-    onClick: (Article) -> Unit
+    services: LazyPagingItems<SearchResult>,
+    onClick: (SearchResult) -> Unit
 ) {
 
-    val handlePagingResult = handlePagingResult(articles)
+    val handlePagingResult = handlePagingResult(services)
 
 
     if (handlePagingResult) {
@@ -58,10 +57,10 @@ fun ArticlesList(
             contentPadding = PaddingValues(all = ExtraSmallPadding2)
         ) {
             items(
-                count = articles.itemCount,
+                count = services.itemCount,
             ) {
-                articles[it]?.let { article ->
-                    ArticleCard(article = article, onClick = { onClick(article) })
+                services[it]?.let { service ->
+                    ServiceCard(services = service, onClick = { onClick(service) })
                 }
             }
         }
@@ -69,8 +68,8 @@ fun ArticlesList(
 }
 
 @Composable
-fun handlePagingResult(articles: LazyPagingItems<Article>): Boolean {
-    val loadState = articles.loadState
+fun handlePagingResult(services: LazyPagingItems<SearchResult>): Boolean {
+    val loadState = services.loadState
     val error = when {
         loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
         loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error

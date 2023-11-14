@@ -26,7 +26,7 @@ import coil.request.ImageRequest
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.domain.model.Source
-import com.example.sigmaindustry.presentation.Dimens.ArticleImageHeight
+import com.example.sigmaindustry.presentation.Dimens.ServiceImageHeight
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.details.components.DetailsTopBar
 import com.example.sigmaindustry.ui.theme.SigmaIndustryTheme
@@ -97,7 +97,7 @@ fun DetailsScreen(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(ArticleImageHeight)
+                        .height(ServiceImageHeight)
                         .clip(MaterialTheme.shapes.medium),
                     contentScale = ContentScale.Crop
                 )

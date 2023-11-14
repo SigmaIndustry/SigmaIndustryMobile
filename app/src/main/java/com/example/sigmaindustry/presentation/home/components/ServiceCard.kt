@@ -1,6 +1,5 @@
 package com.example.sigmaindustry.presentation.home.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,22 +22,19 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.domain.model.Article
-import com.example.sigmaindustry.domain.model.Source
-import com.example.sigmaindustry.presentation.Dimens.ArticleCardSize
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding2
+import com.example.sigmaindustry.presentation.Dimens.ServiceCardSize
 import com.example.sigmaindustry.presentation.Dimens.SmallIconSize
-import com.example.sigmaindustry.ui.theme.SigmaIndustryTheme
 
 @Composable
-fun ArticleCard(
+fun ServiceCard(
     modifier: Modifier = Modifier,
-    article: Article,
+    services: SearchResult,
     onClick: (() -> Unit)? = null
 ) {
 
@@ -49,9 +45,9 @@ fun ArticleCard(
         ) {
         AsyncImage(
             modifier = Modifier
-                .size(ArticleCardSize)
+                .size(ServiceCardSize)
                 .clip(MaterialTheme.shapes.medium),
-            model = ImageRequest.Builder(context).data(article.urlToImage).build(),
+            model = ImageRequest.Builder(context).data(services.pictures[1]).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
@@ -59,10 +55,10 @@ fun ArticleCard(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .padding(horizontal = ExtraSmallPadding)
-                .height(ArticleCardSize)
+                .height(ServiceCardSize)
         ) {
             Text(
-                text = article.title,
+                text = services.name,
                 style = MaterialTheme.typography.bodyMedium.copy(),
                 color = colorResource(id = R.color.black),
                 maxLines = 2,
@@ -72,7 +68,7 @@ fun ArticleCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = article.source.name,
+                    text = services.name,
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.black)
                 )
@@ -85,7 +81,7 @@ fun ArticleCard(
                 )
                 Spacer(modifier = Modifier.width(ExtraSmallPadding))
                 Text(
-                    text = article.publishedAt,
+                    text = services.description,
                     style = MaterialTheme.typography.labelSmall,
                     color = colorResource(id = R.color.black)
                 )
@@ -94,22 +90,3 @@ fun ArticleCard(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun ArticleCardPreview() {
-    SigmaIndustryTheme(dynamicColor = false) {
-        ArticleCard(
-            article = Article(
-                author = "",
-                content = "",
-                description = "",
-                publishedAt = "2 hours",
-                source = Source(id = "", name = "BBC"),
-                title = "Her train broke down. Her phone died. And then she met her Saver in a",
-                url = "",
-                urlToImage = "https://ichef.bbci.co.uk/live-experience/cps/624/cpsprodpb/11787/production/_124395517_bbcbreakingnewsgraphic.jpg"
-            )
-        )
-    }
-}

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.SearchResult
-import com.example.sigmaindustry.domain.model.Article
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.ArticlesList
 import com.example.sigmaindustry.presentation.common.SearchBar
@@ -92,7 +91,7 @@ fun HomeScreen(
 
         ArticlesList(
             modifier = Modifier.padding(horizontal = MediumPadding1),
-            articles = services,
+            services = services,
             onClick = navigateToDetails
         )
     }

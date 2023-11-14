@@ -13,14 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.domain.model.Article
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.ArticlesList
 
 @Composable
 fun BookmarkScreen(
     state: BookmarkState,
-    navigateToDetails: (Article) -> Unit
+    navigateToDetails: (SearchResult) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -40,7 +40,7 @@ fun BookmarkScreen(
         Spacer(modifier = Modifier.height(MediumPadding1))
 
         ArticlesList(
-            articles = state.articles,
+            services = state.articles,
             onClick = navigateToDetails
         )
     }

@@ -1,7 +1,7 @@
 package com.example.sigmaindustry.presentation.bookmark
 
-import com.example.sigmaindustry.domain.model.Article
+import com.example.sigmaindustry.data.remote.dto.SearchResult
 
 data class BookmarkState(
-    val articles: List<Article> = emptyList()
+    val articles: List<SearchResult> = emptyList()
 )

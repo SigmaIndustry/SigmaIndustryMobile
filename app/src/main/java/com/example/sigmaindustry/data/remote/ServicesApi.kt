@@ -9,9 +9,9 @@ import retrofit2.http.POST
 
 interface ServicesApi {
 
-
     @POST("api/service/search")
     suspend fun getServices(@Body request: ServiceRequest): SearchResponse
+
 
 
     @POST("security/login")

@@ -11,7 +11,9 @@ interface NewsRepository {
     fun getServices(): Flow<PagingData<SearchResult>>
 
     fun login(loginRequest: LoginRequest): LoginResponse
-   // fun searchNews(searchQuery: String, sources: List<String>): Flow<PagingData<SearchResult>>
+
+    fun searchNews(searchQuery: String): Flow<PagingData<SearchResult>>
+
 
 
 }

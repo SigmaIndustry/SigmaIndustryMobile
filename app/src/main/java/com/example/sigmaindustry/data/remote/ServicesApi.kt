@@ -1,5 +1,7 @@
 package com.example.sigmaindustry.data.remote
 
+import com.example.sigmaindustry.data.remote.dto.LoginRequest
+import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.SearchResponse
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import retrofit2.http.Body
@@ -9,6 +11,11 @@ interface ServicesApi {
 
     @POST("api/service/search")
     suspend fun getServices(@Body request: ServiceRequest): SearchResponse
+
+
+
+    @POST("security/login")
+    suspend fun login(@Body request: LoginRequest): LoginResponse
 
 //    @POST("everything")
 //    suspend fun searchNews(

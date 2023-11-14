@@ -3,10 +3,13 @@ package com.example.sigmaindustry.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+
 import com.example.sigmaindustry.data.remote.SearchNewsPagingSource
 
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
+import com.example.sigmaindustry.data.remote.dto.LoginRequest
+import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +28,14 @@ class NewsRepositoryImpl @Inject constructor(
         ).flow
     }
 
+
+        override fun login(
+        loginRequest: LoginRequest
+    ): LoginResponse {
+         return login(loginRequest)
+    }
+
+
     override fun searchNews(
         searchQuery: String,
     ): Flow<PagingData<SearchResult>> {
@@ -38,4 +49,5 @@ class NewsRepositoryImpl @Inject constructor(
             }
         ).flow
     }
+
 }

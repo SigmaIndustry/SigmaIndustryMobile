@@ -2,7 +2,6 @@ package com.example.sigmaindustry.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.sigmaindustry.data.remote.dto.SearchRequest
 import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 

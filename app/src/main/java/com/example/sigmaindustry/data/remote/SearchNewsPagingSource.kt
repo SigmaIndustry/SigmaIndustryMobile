@@ -3,8 +3,8 @@ package com.example.sigmaindustry.data.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.sigmaindustry.data.remote.dto.SearchRequest
-import com.example.sigmaindustry.data.remote.dto.SearchResponse
 import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 
 
 class SearchNewsPagingSource(
@@ -24,7 +24,7 @@ class SearchNewsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> {
         val page = params.key ?: 1
         return try {
-            val newsResponse = api.getServices(SearchRequest(searchQuery))
+            val newsResponse = api.getServices(ServiceRequest(searchQuery))
             totalNewsCount += newsResponse.results.size
             val services = newsResponse.results.distinctBy { it.id }
             LoadResult.Page(
@@ -37,6 +37,5 @@ class SearchNewsPagingSource(
             LoadResult.Error(throwable = e)
         }
     }
-
 
 }

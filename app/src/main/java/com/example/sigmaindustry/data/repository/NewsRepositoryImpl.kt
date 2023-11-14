@@ -3,6 +3,7 @@ package com.example.sigmaindustry.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.sigmaindustry.data.remote.SearchNewsPagingSource
 
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
@@ -24,19 +25,17 @@ class NewsRepositoryImpl @Inject constructor(
         ).flow
     }
 
-//    override fun searchNews(
-//        searchQuery: String,
-//        sources: List<String>
-//    ): Flow<PagingData<SearchResult>> {
-//        return Pager(
-//            config = PagingConfig(pageSize = 10),
-//            pagingSourceFactory = {
-//                SearchNewsPagingSource(
-//                    api = servicesApi,
-//                    searchQuery = searchQuery,
-//                    sources = sources.joinToString(separator = ",")
-//                )
-//            }
-//        ).flow
-//    }
+    override fun searchNews(
+        searchQuery: String,
+    ): Flow<PagingData<SearchResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                SearchNewsPagingSource(
+                    api = servicesApi,
+                    searchQuery = searchQuery,
+                )
+            }
+        ).flow
+    }
 }

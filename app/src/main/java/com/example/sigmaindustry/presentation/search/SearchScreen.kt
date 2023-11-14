@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.presentation.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.SearchBar
+import com.example.sigmaindustry.presentation.home.components.ServiceCard
 
 @Composable
 fun SearchScreen(
@@ -58,7 +60,7 @@ fun SearchResultList(
         items(services.itemCount, key = services.itemKey {it.id}) { index ->
             val s = services[index]
             if (s != null) {
-                Text(text = s.name, color = Color.White)
+                ServiceCard(services = s)
             } else {
                 Text(text = "Unknown error", color = Color.White)
             }

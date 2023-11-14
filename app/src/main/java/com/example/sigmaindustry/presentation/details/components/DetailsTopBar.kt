@@ -21,12 +21,8 @@ import com.example.sigmaindustry.ui.theme.SigmaIndustryTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopBar(
-    onBrowsingClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onBookMarkClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
-
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -43,27 +39,6 @@ fun DetailsTopBar(
                 )
             }
         },
-        actions = {
-
-            IconButton(onClick = onBookMarkClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = onShareClick) {
-                Icon(
-                    imageVector = Icons.Default.Share,
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = onBrowsingClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = null
-                )
-            }
-        },
     )
 }
 
@@ -72,10 +47,7 @@ fun DetailsTopBar(
 @Composable
 fun DetailsTopBarPreview() {
     SigmaIndustryTheme(dynamicColor = false) {
-        DetailsTopBar(
-            onShareClick = { /*TODO*/ },
-            onBookMarkClick = { /*TODO*/ },
-            onBrowsingClick = {}) {
+        DetailsTopBar() {
 
         }
     }

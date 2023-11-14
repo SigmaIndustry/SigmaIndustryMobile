@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
 import com.example.sigmaindustry.presentation.home.HomeViewModel
@@ -131,13 +132,13 @@ fun NewsNavigator() {
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
                 navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("article")
-                    ?.let { article ->
-//                        DetailsScreen(
-//                            article = article,
-//                            event = viewModel::onEvent,
-//                            navigateUp = { navController.navigateUp() },
-//                            sideEffect = viewModel.sideEffect
-//                        )
+                    ?.let { service ->
+                        DetailsScreen(
+                            service = service,
+                            event = viewModel::onEvent,
+                            navigateUp = { navController.navigateUp() },
+                            sideEffect = viewModel.sideEffect
+                        )
                     }
 
             }

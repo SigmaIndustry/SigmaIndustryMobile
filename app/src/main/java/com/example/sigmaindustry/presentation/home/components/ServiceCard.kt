@@ -35,12 +35,12 @@ import com.example.sigmaindustry.presentation.Dimens.SmallIconSize
 fun ServiceCard(
     modifier: Modifier = Modifier,
     services: SearchResult,
-    onClick: (() -> Unit)? = null
+    onClick: ((SearchResult) -> Unit)? = null
 ) {
 
     val context = LocalContext.current
     Row(
-        modifier = modifier.clickable { onClick?.invoke() },
+        modifier = modifier.clickable { onClick?.invoke(services) },
 
         ) {
         AsyncImage(
@@ -67,18 +67,18 @@ fun ServiceCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = services.name,
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                    color = colorResource(id = R.color.black)
-                )
-                Spacer(modifier = Modifier.width(ExtraSmallPadding2))
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = null,
-                    modifier = Modifier.size(SmallIconSize),
-                    tint = colorResource(id = R.color.black)
-                )
+                Column {
+                    Text(
+                        text = services.price.toString(),
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = colorResource(id = R.color.black)
+                    )
+                    Text(
+                        text = services.category,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = colorResource(id = R.color.black)
+                    )
+                }
                 Spacer(modifier = Modifier.width(ExtraSmallPadding))
                 Text(
                     text = services.description,

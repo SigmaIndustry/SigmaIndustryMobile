@@ -12,9 +12,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-//    private val getSavedArticleUseCase: GetSavedArticle,
-//    private val deleteArticleUseCase: DeleteArticle,
-//    private val upsertArticleUseCase: UpsertArticle
 ) : ViewModel() {
 
     var sideEffect by mutableStateOf<UIComponent?>(null)
@@ -24,12 +21,12 @@ class DetailsViewModel @Inject constructor(
         when (event) {
             is DetailsEvent.UpsertDeleteArticle -> {
                 viewModelScope.launch {
-//                    val article = getSavedArticleUseCase(url = event.article.url)
-//                    if (article == null){
-//
-//                    }else{
-//
-//                    }
+                    val article = getSavedArticleUseCase(url = event.article.url)
+                    if (article == null){
+
+                    }else{
+
+                    }
                 }
             }
             is DetailsEvent.RemoveSideEffect ->{

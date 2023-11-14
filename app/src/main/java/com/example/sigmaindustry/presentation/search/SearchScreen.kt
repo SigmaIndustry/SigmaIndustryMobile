@@ -60,7 +60,7 @@ fun SearchResultList(
         items(services.itemCount, key = services.itemKey {it.id}) { index ->
             val s = services[index]
             if (s != null) {
-                ServiceCard(services = s)
+                ServiceCard(services = s, onClick = onClick)
             } else {
                 Text(text = "Unknown error", color = Color.White)
             }

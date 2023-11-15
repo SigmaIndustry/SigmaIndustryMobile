@@ -37,19 +37,7 @@ fun DetailsScreen(
     navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-
-    LaunchedEffect(key1 = sideEffect) {
-        sideEffect?.let {
-            when(sideEffect){
-                is UIComponent.Toast ->{
-                    Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
-                    event(DetailsEvent.RemoveSideEffect)
-                }
-                else -> Unit
-            }
-        }
-    }
-
+    println(service.name)
     Column(
         modifier = Modifier
             .fillMaxSize()

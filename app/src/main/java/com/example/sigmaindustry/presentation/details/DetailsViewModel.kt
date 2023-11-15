@@ -19,16 +19,6 @@ class DetailsViewModel @Inject constructor(
 
     fun onEvent(event: DetailsEvent) {
         when (event) {
-            is DetailsEvent.UpsertDeleteArticle -> {
-                viewModelScope.launch {
-                    val article = getSavedArticleUseCase(url = event.article.url)
-                    if (article == null){
-
-                    }else{
-
-                    }
-                }
-            }
             is DetailsEvent.RemoveSideEffect ->{
                 sideEffect = null
             }

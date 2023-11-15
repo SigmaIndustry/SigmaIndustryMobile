@@ -131,7 +131,7 @@ fun NewsNavigator() {
             }
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
-                navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("article")
+                navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("service")
                     ?.let { service ->
                         DetailsScreen(
                             service = service,
@@ -171,6 +171,7 @@ private fun navigateToTab(navController: NavController, route: String) {
 
 private fun navigateToDetails(navController: NavController, service: SearchResult) {
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
+    println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreen.route
     )

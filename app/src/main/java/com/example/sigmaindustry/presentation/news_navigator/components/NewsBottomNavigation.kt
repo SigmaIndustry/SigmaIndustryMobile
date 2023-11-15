@@ -76,7 +76,7 @@ fun NewsBottomNavigationPreview() {
         NewsBottomNavigation(items = listOf(
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Home"),
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Search"),
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Bookmark"),
+            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Auth"),
         ), selectedItem = 0, onItemClick = {})
     }
 }

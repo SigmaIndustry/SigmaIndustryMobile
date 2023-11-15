@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SearchResponse (
+data class ServiceResponse (
     @SerializedName("code")
     var statusCode: Int,
 
@@ -14,11 +14,11 @@ data class SearchResponse (
     var size: Int,
 
     @SerializedName("results")
-    var results: List<SearchResult>
+    var results: List<Service>
 ): Parcelable
 
 @Parcelize
-data class SearchResult(
+data class Service(
 
     @SerializedName("id")
     var id: Int,

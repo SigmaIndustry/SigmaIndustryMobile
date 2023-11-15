@@ -1,8 +1,5 @@
 package com.example.sigmaindustry.presentation.details
 
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -23,7 +19,7 @@ import androidx.compose.ui.res.colorResource
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.Dimens.ServiceImageHeight
 import com.example.sigmaindustry.presentation.details.components.DetailsTopBar
@@ -31,7 +27,7 @@ import com.example.sigmaindustry.util.UIComponent
 
 @Composable
 fun DetailsScreen(
-    service: SearchResult,
+    service: Service,
     event: (DetailsEvent) -> Unit,
     sideEffect: UIComponent?,
     navigateUp: () -> Unit

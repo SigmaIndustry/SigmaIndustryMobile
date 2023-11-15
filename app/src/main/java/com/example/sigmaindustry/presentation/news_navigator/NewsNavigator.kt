@@ -20,7 +20,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.presentation.auth.AuthScreen
+import com.example.sigmaindustry.presentation.auth.AuthViewModel
+
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
@@ -82,7 +85,7 @@ fun NewsNavigator() {
 
                         2 -> navigateToTab(
                             navController = navController,
-                            route = Route.BookmarkScreen.route
+                            route = Route.AuthScreen.route
                         )
                     }
                 }
@@ -129,9 +132,20 @@ fun NewsNavigator() {
                     }
                 )
             }
+
+            composable(route = Route.AuthScreen.route) {
+                val viewModel: AuthViewModel = hiltViewModel()
+                val state = viewModel.state.value
+                OnBackClickStateSaver(navController = navController)
+                AuthScreen(
+                    state = state,
+                    event = viewModel::onEvent
+                )
+            }
+
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
-                navController.previousBackStackEntry?.savedStateHandle?.get<SearchResult?>("service")
+                navController.previousBackStackEntry?.savedStateHandle?.get<Service?>("service")
                     ?.let { service ->
                         DetailsScreen(
                             service = service,
@@ -169,7 +183,7 @@ private fun navigateToTab(navController: NavController, route: String) {
     }
 }
 
-private fun navigateToDetails(navController: NavController, service: SearchResult) {
+private fun navigateToDetails(navController: NavController, service: Service) {
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
     println("Navigate to detail")
     navController.navigate(

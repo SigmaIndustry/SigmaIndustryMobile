@@ -1,6 +1,5 @@
 package com.example.sigmaindustry.presentation.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.SearchBar
@@ -24,7 +23,7 @@ import com.example.sigmaindustry.presentation.home.components.ServiceCard
 fun SearchScreen(
     state: SearchState,
     event:(SearchEvent) -> Unit,
-    navigateToDetails:(SearchResult) -> Unit
+    navigateToDetails:(Service) -> Unit
 ) {
 
     Column(
@@ -53,8 +52,8 @@ fun SearchScreen(
 
 @Composable
 fun SearchResultList(
-    services: LazyPagingItems<SearchResult>,
-    onClick: (SearchResult) -> Unit
+    services: LazyPagingItems<Service>,
+    onClick: (Service) -> Unit
 ) {
     LazyColumn {
         items(services.itemCount, key = services.itemKey {it.id}) { index ->

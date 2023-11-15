@@ -3,23 +3,22 @@ package com.example.sigmaindustry.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-
-import com.example.sigmaindustry.data.remote.SearchNewsPagingSource
-
+import com.example.sigmaindustry.data.remote.LoginSource
+import com.example.sigmaindustry.data.remote.SearchServicesPagingSource
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
-import com.example.sigmaindustry.data.remote.dto.SearchResult
-import com.example.sigmaindustry.domain.repository.NewsRepository
+import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.domain.repository.ServicesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class NewsRepositoryImpl @Inject constructor(
+class ServicesRepositoryImpl @Inject constructor(
     private val servicesApi: ServicesApi,
-) : NewsRepository {
+) : ServicesRepository {
 
-    override fun getServices(): Flow<PagingData<SearchResult>> {
+    override fun getServices(): Flow<PagingData<Service>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {
@@ -28,21 +27,18 @@ class NewsRepositoryImpl @Inject constructor(
         ).flow
     }
 
-
-        override fun login(
-        loginRequest: LoginRequest
-    ): LoginResponse {
-         return login(loginRequest)
+    override suspend fun login(loginRequest: LoginRequest): LoginResponse {
+        return LoginSource(servicesApi).login(loginRequest)
     }
 
 
-    override fun searchNews(
+    override fun searchServices(
         searchQuery: String,
-    ): Flow<PagingData<SearchResult>> {
+    ): Flow<PagingData<Service>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {
-                SearchNewsPagingSource(
+                SearchServicesPagingSource(
                     api = servicesApi,
                     searchQuery = searchQuery,
                 )

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.ArticlesList
 import com.example.sigmaindustry.presentation.common.SearchBar
@@ -32,9 +32,9 @@ import com.example.sigmaindustry.presentation.common.SearchBar
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    services: LazyPagingItems<SearchResult>,
+    services: LazyPagingItems<Service>,
     navigateToSearch: () -> Unit,
-    navigateToDetails: (SearchResult) -> Unit
+    navigateToDetails: (Service) -> Unit
 ) {
 
     val titles by remember {

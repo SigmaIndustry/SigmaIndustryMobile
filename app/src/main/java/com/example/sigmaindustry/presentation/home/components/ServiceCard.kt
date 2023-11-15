@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,23 +18,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.sigmaindustry.R
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding
-import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding2
 import com.example.sigmaindustry.presentation.Dimens.ServiceCardSize
-import com.example.sigmaindustry.presentation.Dimens.SmallIconSize
 
 @Composable
 fun ServiceCard(
     modifier: Modifier = Modifier,
-    services: SearchResult,
-    onClick: ((SearchResult) -> Unit)? = null
+    services: Service,
+    onClick: ((Service) -> Unit)? = null
 ) {
 
     val context = LocalContext.current

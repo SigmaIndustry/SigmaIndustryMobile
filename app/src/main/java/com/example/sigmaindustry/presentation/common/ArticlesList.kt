@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding2
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.home.components.ServiceCard
@@ -18,8 +18,8 @@ import com.example.sigmaindustry.presentation.home.components.ServiceCard
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
-    services: List<SearchResult>,
-    onClick: (SearchResult) -> Unit
+    services: List<Service>,
+    onClick: (Service) -> Unit
 ) {
     if (services.isEmpty()){
         EmptyScreen()
@@ -43,8 +43,8 @@ fun ArticlesList(
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
-    services: LazyPagingItems<SearchResult>,
-    onClick: (SearchResult) -> Unit
+    services: LazyPagingItems<Service>,
+    onClick: (Service) -> Unit
 ) {
 
     val handlePagingResult = handlePagingResult(services)
@@ -68,7 +68,7 @@ fun ArticlesList(
 }
 
 @Composable
-fun handlePagingResult(services: LazyPagingItems<SearchResult>): Boolean {
+fun handlePagingResult(services: LazyPagingItems<Service>): Boolean {
     val loadState = services.loadState
     val error = when {
         loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error

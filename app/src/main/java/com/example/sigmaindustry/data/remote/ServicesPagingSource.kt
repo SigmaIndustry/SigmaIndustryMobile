@@ -2,15 +2,15 @@ package com.example.sigmaindustry.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.sigmaindustry.data.remote.dto.SearchResult
+import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 
 class ServicesPagingSource(
     private val servicesApi: ServicesApi,
-) : PagingSource<Int, SearchResult>() {
+) : PagingSource<Int, Service>() {
 
 
-    override fun getRefreshKey(state: PagingState<Int, SearchResult>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Service>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
@@ -19,7 +19,7 @@ class ServicesPagingSource(
 
     private var totalServicesCount = 0
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Service> {
         val page = params.key ?: 1
         return try {
             val searchResponse = servicesApi.getServices(ServiceRequest())

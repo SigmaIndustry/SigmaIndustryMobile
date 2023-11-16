@@ -21,8 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
-import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
@@ -37,9 +37,6 @@ import com.example.sigmaindustry.presentation.news_navigator.components.BottomNa
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +91,7 @@ fun NewsNavigator(
 
                         2 -> navigateToTab(
                             navController = navController,
-                            Route.SelectAuthScreen.route
+                            Route.ProfileScreen.route
                         )
                     }
                 }
@@ -169,8 +166,14 @@ fun NewsNavigator(
             }
 
             composable(route = Route.ProfileScreen.route) {
+                val viewModel: ProfileScreenViewModel = hiltViewModel()
+                val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
-                ProfileScreen()
+                ProfileScreen(
+                    viewModel = viewModel,
+                    state = state,
+                    navigateToSelectAuth = {navigateToSelectAuth(navController = navController)}
+                )
             }
 
             composable(route = Route.DetailsScreen.route) {
@@ -226,34 +229,11 @@ private fun navigateToLogin(navController: NavController) {
         route = Route.LoginScreen.route
     )
 }
-@OptIn(DelicateCoroutinesApi::class)
-private fun navigateToProfile(navController: NavController, token: ReadToken) {
-    var tokenResult: String? = null
-    GlobalScope.launch {
-        tokenResult = token.invoke()
-    }
-    if (tokenResult!= null) {
-        navController.navigate(Route.ProfileScreen.route) {
-            navController.graph.startDestinationRoute?.let { screen_route ->
-                popUpTo(screen_route) {
-                    saveState = true
-                }
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-    else{
-        navController.navigate(Route.SelectAuthScreen.route) {
-            navController.graph.startDestinationRoute?.let { screen_route ->
-                popUpTo(screen_route) {
-                    saveState = true
-                }
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
+private fun navigateToSelectAuth(navController: NavController) {
+    println("Navigate to selectAuth")
+    navController.navigate(
+        route = Route.SelectAuthScreen.route
+    )
 }
 private fun navigateToSignUp(navController: NavController) {
     println("Navigate to signUp")

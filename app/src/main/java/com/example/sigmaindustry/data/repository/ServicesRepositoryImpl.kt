@@ -7,9 +7,11 @@ import com.example.sigmaindustry.data.remote.LoginSource
 import com.example.sigmaindustry.data.remote.SearchServicesPagingSource
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
+import com.example.sigmaindustry.data.remote.SignUpSource
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.domain.repository.ServicesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,7 +32,9 @@ class ServicesRepositoryImpl @Inject constructor(
     override suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return LoginSource(servicesApi).login(loginRequest)
     }
-
+    override suspend fun signUp(user: User): LoginResponse {
+        return SignUpSource(servicesApi).signUp(user)
+    }
 
     override fun searchServices(
         searchQuery: String,

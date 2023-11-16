@@ -21,10 +21,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.domain.usecases.token.ReadToken
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
-
+import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
+import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
@@ -34,16 +37,20 @@ import com.example.sigmaindustry.presentation.news_navigator.components.BottomNa
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsNavigator() {
+fun NewsNavigator(
+) {
 
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Home"),
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Search"),
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Bookmark"),
+            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Profile"),
         )
     }
 
@@ -55,7 +62,7 @@ fun NewsNavigator() {
     selectedItem = when (backStackState?.destination?.route) {
         Route.HomeScreen.route -> 0
         Route.SearchScreen.route -> 1
-        Route.BookmarkScreen.route -> 2
+        Route.SelectAuthScreen.route -> 2
         else -> 0
     }
 
@@ -63,8 +70,8 @@ fun NewsNavigator() {
     val isBottomBarVisible = remember(key1 = backStackState) {
         backStackState?.destination?.route == Route.HomeScreen.route ||
                 backStackState?.destination?.route == Route.SearchScreen.route ||
-                backStackState?.destination?.route == Route.SelectAuthScreen.route ||
-                backStackState?.destination?.route == Route.BookmarkScreen.route
+                backStackState?.destination?.route == Route.BookmarkScreen.route ||
+                backStackState?.destination?.route == Route.SelectAuthScreen.route
     }
 
 
@@ -87,7 +94,7 @@ fun NewsNavigator() {
 
                         2 -> navigateToTab(
                             navController = navController,
-                            route = Route.SelectAuthScreen.route
+                            Route.SelectAuthScreen.route
                         )
                     }
                 }
@@ -138,16 +145,32 @@ fun NewsNavigator() {
             composable(route = Route.LoginScreen.route) {
                 val viewModel: LoginViewModel = hiltViewModel()
                 val state = viewModel.state.value
+                navController.currentBackStackEntry?.savedStateHandle?.set("token", String())
                 LoginScreen(
                     state = state,
                     event = viewModel::onEvent
                 )
             }
+            composable(route = Route.SignUpScreen.route) {
+                val viewModel: SignUpViewModel = hiltViewModel()
+                val state = viewModel.state.value
+                SignUpScreen(
+                    state = state,
+                    event = viewModel::onEvent
+                )
+            }
+
             composable(route = Route.SelectAuthScreen.route) {
                 OnBackClickStateSaver(navController = navController)
                 SelectAuthScreen(
-                    navigateToLogin = {navigateToLogin(navController = navController)}
+                    navigateToLogin = {navigateToLogin(navController = navController)},
+                    navigateToSignUp = { navigateToSignUp(navController = navController) }
                 )
+            }
+
+            composable(route = Route.ProfileScreen.route) {
+                OnBackClickStateSaver(navController = navController)
+                ProfileScreen()
             }
 
             composable(route = Route.DetailsScreen.route) {
@@ -201,5 +224,40 @@ private fun navigateToLogin(navController: NavController) {
     println("Navigate to login")
     navController.navigate(
         route = Route.LoginScreen.route
+    )
+}
+@OptIn(DelicateCoroutinesApi::class)
+private fun navigateToProfile(navController: NavController, token: ReadToken) {
+    var tokenResult: String? = null
+    GlobalScope.launch {
+        tokenResult = token.invoke()
+    }
+    if (tokenResult!= null) {
+        navController.navigate(Route.ProfileScreen.route) {
+            navController.graph.startDestinationRoute?.let { screen_route ->
+                popUpTo(screen_route) {
+                    saveState = true
+                }
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    else{
+        navController.navigate(Route.SelectAuthScreen.route) {
+            navController.graph.startDestinationRoute?.let { screen_route ->
+                popUpTo(screen_route) {
+                    saveState = true
+                }
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+}
+private fun navigateToSignUp(navController: NavController) {
+    println("Navigate to signUp")
+    navController.navigate(
+        route = Route.SignUpScreen.route
     )
 }

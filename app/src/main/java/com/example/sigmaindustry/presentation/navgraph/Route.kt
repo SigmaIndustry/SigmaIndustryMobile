@@ -14,7 +14,9 @@ sealed class Route(
 
     object BookmarkScreen : Route(route = "bookMarkScreen")
     object LoginScreen : Route(route = "loginScreen")
+    object SignUpScreen : Route(route = "signUpScreen")
     object SelectAuthScreen : Route(route = "selectAuthScreen")
+    object ProfileScreen : Route(route = "profileScreen")
     object DetailsScreen : Route(route = "detailsScreen")
 
 

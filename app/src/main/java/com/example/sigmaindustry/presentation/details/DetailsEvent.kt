@@ -4,4 +4,6 @@ sealed class DetailsEvent {
 
     object RemoveSideEffect : DetailsEvent()
 
+    data class SendRate(val serviceId: Int, val rating: Float, val feedback: String) : DetailsEvent()
+    data class SendOrder(val serviceId: Int, val message: String) : DetailsEvent()
 }

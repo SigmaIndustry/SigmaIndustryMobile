@@ -10,6 +10,8 @@ import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
+import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
+import com.example.sigmaindustry.data.remote.dto.PostRateRequest
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.domain.repository.ServicesRepository
@@ -48,6 +50,15 @@ class ServicesRepositoryImpl @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int {
+        val resp = servicesApi.postRate(PostRateRequest(token, serviceId, rating, feedback))
+        return resp.ratingId
+    }
+
+    override suspend fun sendOrder(token: String, serviceId: Int, message: String) {
+        servicesApi.postOrder(PostOrderRequest(token, serviceId, message = message))
     }
 
 }

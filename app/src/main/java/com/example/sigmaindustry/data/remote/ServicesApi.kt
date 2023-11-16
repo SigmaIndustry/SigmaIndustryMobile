@@ -2,6 +2,9 @@ package com.example.sigmaindustry.data.remote
 
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
+import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
+import com.example.sigmaindustry.data.remote.dto.PostRateRequest
+import com.example.sigmaindustry.data.remote.dto.PostRateResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderRequest
 import com.example.sigmaindustry.data.remote.dto.ProviderResponse
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
@@ -19,6 +22,12 @@ interface ServicesApi {
     suspend fun signUp(@Body request: User): LoginResponse
     @POST
     suspend fun getProvider(@Body request: ProviderRequest): ProviderResponse
+
+    @POST("/api/service/rate")
+    suspend fun postRate(@Body request: PostRateRequest): PostRateResponse
+
+    @POST("/api/service/order")
+    suspend fun postOrder(@Body request: PostOrderRequest)
 
     @POST("security/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse

@@ -8,9 +8,10 @@ import com.example.sigmaindustry.data.remote.dto.User
 import kotlinx.coroutines.flow.Flow
 
 interface ServicesRepository {
-
     fun getServices(): Flow<PagingData<Service>>
     suspend fun login(loginRequest: LoginRequest): LoginResponse
     suspend fun signUp(user: User): LoginResponse
     fun searchServices(searchQuery: String): Flow<PagingData<Service>>
+    suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int
+    suspend fun sendOrder(token: String, serviceId: Int, message: String)
 }

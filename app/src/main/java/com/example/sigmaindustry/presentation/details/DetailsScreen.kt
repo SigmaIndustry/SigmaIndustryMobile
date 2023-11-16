@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.presentation.details
 
+import android.transition.Slide
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,16 +11,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.Navigation
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.sigmaindustry.R
@@ -30,6 +43,7 @@ import com.example.sigmaindustry.presentation.Dimens.ServiceImageHeight
 import com.example.sigmaindustry.presentation.details.components.DetailsTopBar
 import com.example.sigmaindustry.util.UIComponent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     service: Service,
@@ -38,6 +52,15 @@ fun DetailsScreen(
     navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
+    var textField by remember {
+        mutableStateOf("")
+    }
+    var ratingBar by remember {
+        mutableFloatStateOf(2.5f)
+    }
+    var orderField by remember {
+         mutableStateOf("")
+    }
     println(service.name)
     Column(
         modifier = Modifier
@@ -94,14 +117,15 @@ fun DetailsScreen(
                     )
                 }
                 // TODO add navigate to Provider
-                Row (modifier =  Modifier.fillParentMaxWidth().clickable {  },
+                Row (modifier =  Modifier.fillParentMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
                         text = "Provider: ${service.provider}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(
                             id = R.color.black
-                        )
+                        ),
+                        modifier = Modifier.clickable {  }
                     )
                     Text(
                         text = "Work time: ${service.provider}",
@@ -112,6 +136,14 @@ fun DetailsScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(MediumPadding1))
+                Row {
+                    OutlinedTextField(value = orderField , onValueChange = {orderField = it},
+                        modifier = Modifier.width(250.dp))
+                    Button(onClick = { event(DetailsEvent.SendOrder(serviceId = service.id,
+                        message = orderField))}) {
+                        Text("Order")
+                    }
+                }
                 Text(
                     text = service.description,
                     style = MaterialTheme.typography.bodyMedium,
@@ -120,14 +152,22 @@ fun DetailsScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(MediumPadding1))
-                Row(modifier = Modifier.fillParentMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween) {
-                    Button(onClick = {}) {
-                        Text("Order")
-                    }
-                    Button(onClick = {}) {
+                Row {
+                    OutlinedTextField(value = textField,
+                        modifier = Modifier.width(250.dp), onValueChange =  { textField = it })
+                    Button(onClick = { event(DetailsEvent.SendRate(
+                        serviceId = service.id,
+                        feedback = textField,
+                        rating = ratingBar
+                    )) }) {
                         Text("Rate")
                     }
+                }
+                Row {
+                    Slider(value = ratingBar , onValueChange = {ratingBar = it},
+                        valueRange = 0f..5f, steps = 8)
+                    // TODO unvisible
+                    Text(text = ratingBar.toString())
                 }
             }
         }

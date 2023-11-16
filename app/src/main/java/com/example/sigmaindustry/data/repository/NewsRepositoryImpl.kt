@@ -15,7 +15,6 @@ import com.example.sigmaindustry.data.remote.dto.ProviderResponse
 import com.example.sigmaindustry.data.remote.dto.SearchResult
 import com.example.sigmaindustry.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
@@ -54,7 +53,7 @@ class NewsRepositoryImpl @Inject constructor(
     }
 
     override fun getProvider(providerId: Int): ProviderResponse {
-        // TODO fix them
+        val result = servicesApi.getProvider(ProviderRequest(providerId))
         return ProviderResponse()
     }
 }

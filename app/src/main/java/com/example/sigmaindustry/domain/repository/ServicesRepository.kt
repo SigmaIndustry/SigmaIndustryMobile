@@ -13,7 +13,4 @@ interface ServicesRepository {
     suspend fun login(loginRequest: LoginRequest): LoginResponse
     suspend fun signUp(user: User): LoginResponse
     fun searchServices(searchQuery: String): Flow<PagingData<Service>>
-
-
-
 }

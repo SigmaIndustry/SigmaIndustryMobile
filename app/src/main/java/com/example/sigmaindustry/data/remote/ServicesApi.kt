@@ -2,6 +2,8 @@ package com.example.sigmaindustry.data.remote
 
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
+import com.example.sigmaindustry.data.remote.dto.ProviderRequest
+import com.example.sigmaindustry.data.remote.dto.ProviderResponse
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 import com.example.sigmaindustry.data.remote.dto.User
@@ -15,6 +17,8 @@ interface ServicesApi {
 
     @POST("security/register")
     suspend fun signUp(@Body request: User): LoginResponse
+    @POST
+    suspend fun getProvider(@Body request: ProviderRequest): ProviderResponse
 
     @POST("security/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse

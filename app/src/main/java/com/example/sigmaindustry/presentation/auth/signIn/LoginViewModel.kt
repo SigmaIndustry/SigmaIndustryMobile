@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.domain.usecases.login.Login
+import com.example.sigmaindustry.domain.usecases.token.ReadToken
+import com.example.sigmaindustry.domain.usecases.token.SaveToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -12,7 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val login: Login
+    private val login: Login,
+    private val saveToken: SaveToken,
+    private val readToken: ReadToken
 ) : ViewModel() {
 
     private var _state = mutableStateOf(LoginState())
@@ -35,10 +39,11 @@ class LoginViewModel @Inject constructor(
     private fun login() {
 
         GlobalScope.launch {
-             var loginResult = login(
+             val loginResult = login(
                 loginRequest = _state.value.loginRequest,
             )
-            _state.value = _state.value.copy(loginResponse = loginResult)
+            saveToken.invoke(loginResult.token)
+            _state.value = _state.value.copy(token = readToken.invoke() ?: "datastore is empty")
         }
     }
 

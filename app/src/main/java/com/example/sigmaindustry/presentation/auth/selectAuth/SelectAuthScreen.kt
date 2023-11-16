@@ -15,11 +15,11 @@ import com.example.sigmaindustry.presentation.Dimens
 
 @Composable
 fun SelectAuthScreen(
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToSignUp: () -> Unit
 ) {
 
     Column(
-
         modifier = Modifier
             .padding(top = Dimens.MediumPadding1, start = Dimens.MediumPadding1, end = Dimens.MediumPadding1)
             .statusBarsPadding()
@@ -36,7 +36,7 @@ fun SelectAuthScreen(
         }
         Button(
             onClick = {
-
+                navigateToSignUp.invoke()
             },
             modifier = Modifier
                 .fillMaxWidth()

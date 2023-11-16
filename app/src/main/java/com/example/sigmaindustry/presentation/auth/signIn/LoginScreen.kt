@@ -60,9 +60,7 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
-        state.loginResponse.let {
-            Text(text = it.token )
-        }
+        Text(text = state.token)
     }
 }
 

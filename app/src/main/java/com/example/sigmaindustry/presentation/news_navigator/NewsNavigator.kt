@@ -21,8 +21,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
-import com.example.sigmaindustry.presentation.auth.AuthScreen
-import com.example.sigmaindustry.presentation.auth.AuthViewModel
+import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
+import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
+import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
 
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
@@ -85,7 +86,7 @@ fun NewsNavigator() {
 
                         2 -> navigateToTab(
                             navController = navController,
-                            route = Route.AuthScreen.route
+                            route = Route.SelectAuthScreen.route
                         )
                     }
                 }
@@ -133,13 +134,18 @@ fun NewsNavigator() {
                 )
             }
 
-            composable(route = Route.AuthScreen.route) {
-                val viewModel: AuthViewModel = hiltViewModel()
+            composable(route = Route.LoginScreen.route) {
+                val viewModel: LoginViewModel = hiltViewModel()
                 val state = viewModel.state.value
-                OnBackClickStateSaver(navController = navController)
-                AuthScreen(
+                LoginScreen(
                     state = state,
                     event = viewModel::onEvent
+                )
+            }
+            composable(route = Route.SelectAuthScreen.route) {
+                OnBackClickStateSaver(navController = navController)
+                SelectAuthScreen(
+                    navigateToLogin = {navigateToLogin(navController = navController)}
                 )
             }
 
@@ -188,5 +194,11 @@ private fun navigateToDetails(navController: NavController, service: Service) {
     println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreen.route
+    )
+}
+private fun navigateToLogin(navController: NavController) {
+    println("Navigate to login")
+    navController.navigate(
+        route = Route.LoginScreen.route
     )
 }

@@ -1,4 +1,4 @@
-package com.example.sigmaindustry.presentation.auth
+package com.example.sigmaindustry.presentation.auth.signIn
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     private val login: Login
 ) : ViewModel() {
 

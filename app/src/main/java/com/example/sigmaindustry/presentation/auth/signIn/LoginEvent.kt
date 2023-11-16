@@ -1,4 +1,4 @@
-package com.example.sigmaindustry.presentation.auth
+package com.example.sigmaindustry.presentation.auth.signIn
 
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 

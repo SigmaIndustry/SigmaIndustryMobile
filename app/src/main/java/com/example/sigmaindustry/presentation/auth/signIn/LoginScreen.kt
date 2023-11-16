@@ -1,4 +1,4 @@
-package com.example.sigmaindustry.presentation.auth
+package com.example.sigmaindustry.presentation.auth.signIn
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +21,7 @@ import com.example.sigmaindustry.presentation.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthScreen(
+fun LoginScreen(
     state: LoginState,
     event: (LoginEvent) -> Unit,
 ) {
@@ -53,7 +53,7 @@ fun AuthScreen(
             label = { Text("Password") },
         )
         Button(onClick = {
-            event(LoginEvent.UpdateLoginRequest(LoginRequest(email,password)))
+            event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
             event(LoginEvent.Login)
         }) {
             Text(text = "Log in", fontSize = 20.sp)

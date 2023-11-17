@@ -16,7 +16,8 @@ import com.example.sigmaindustry.presentation.Dimens
 @Composable
 fun SelectAuthScreen(
     navigateToLogin: () -> Unit,
-    navigateToSignUp: () -> Unit
+    navigateToSignUp: () -> Unit,
+    navigateToProfile: () -> Unit
 ) {
 
     Column(
@@ -26,7 +27,7 @@ fun SelectAuthScreen(
     ) {
         Button(
             onClick = {
-                navigateToLogin.invoke()
+                navigateToLogin()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -36,7 +37,7 @@ fun SelectAuthScreen(
         }
         Button(
             onClick = {
-                navigateToSignUp.invoke()
+                navigateToSignUp()
             },
             modifier = Modifier
                 .fillMaxWidth()

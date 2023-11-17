@@ -18,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.presentation.navgraph.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     state: LoginState,
     event: (LoginEvent) -> Unit,
+    navigateToProfile: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }

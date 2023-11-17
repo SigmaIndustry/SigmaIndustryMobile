@@ -145,7 +145,8 @@ fun NewsNavigator(
                 navController.currentBackStackEntry?.savedStateHandle?.set("token", String())
                 LoginScreen(
                     state = state,
-                    event = viewModel::onEvent
+                    event = viewModel::onEvent,
+                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
                 )
             }
             composable(route = Route.SignUpScreen.route) {
@@ -161,7 +162,8 @@ fun NewsNavigator(
                 OnBackClickStateSaver(navController = navController)
                 SelectAuthScreen(
                     navigateToLogin = {navigateToLogin(navController = navController)},
-                    navigateToSignUp = { navigateToSignUp(navController = navController) }
+                    navigateToSignUp = { navigateToSignUp(navController = navController) },
+                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
                 )
             }
 
@@ -172,7 +174,8 @@ fun NewsNavigator(
                 ProfileScreen(
                     viewModel = viewModel,
                     state = state,
-                    navigateToSelectAuth = {navigateToSelectAuth(navController = navController)}
+                    navigateToSelectAuth = {navigateToSelectAuth(navController = navController)},
+                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
                 )
             }
 

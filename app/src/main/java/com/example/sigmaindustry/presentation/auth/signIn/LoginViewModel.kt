@@ -9,6 +9,7 @@ import com.example.sigmaindustry.domain.usecases.token.SaveToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,13 +38,15 @@ class LoginViewModel @Inject constructor(
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun login() {
-
         GlobalScope.launch {
              val loginResult = login(
                 loginRequest = _state.value.loginRequest,
             )
-            saveToken.invoke(loginResult.token)
-            _state.value = _state.value.copy(token = readToken.invoke() ?: "datastore is empty")
+            saveToken(loginResult.token)
+            println("Token is: ${loginResult.token}")
+            readToken()?.let{
+                 _state.value = _state.value.copy(token = it)
+            }
         }
     }
 

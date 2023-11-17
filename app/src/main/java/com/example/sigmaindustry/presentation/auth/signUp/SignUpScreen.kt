@@ -34,6 +34,7 @@ import java.util.Date
 fun SignUpScreen(
     state: SignUpState,
     event: (SignUpEvent) -> Unit,
+    toProfile: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }

@@ -25,6 +25,7 @@ import com.example.sigmaindustry.presentation.navgraph.Route
 fun LoginScreen(
     state: LoginState,
     event: (LoginEvent) -> Unit,
+    toProfile: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -56,6 +57,7 @@ fun LoginScreen(
         Button(onClick = {
             event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
             event(LoginEvent.Login)
+            toProfile()
         }) {
             Text(text = "Log in", fontSize = 20.sp)
         }

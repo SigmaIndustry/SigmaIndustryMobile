@@ -20,7 +20,7 @@ interface ServicesApi {
 
     @POST("security/register")
     suspend fun signUp(@Body request: User): LoginResponse
-    @POST
+    @POST("")
     suspend fun getProvider(@Body request: ProviderRequest): ProviderResponse
 
     @POST("/api/service/rate")

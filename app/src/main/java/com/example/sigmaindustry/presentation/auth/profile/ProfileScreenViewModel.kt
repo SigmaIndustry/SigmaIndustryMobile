@@ -1,24 +1,22 @@
 package com.example.sigmaindustry.presentation.auth.profile
 
-import android.provider.Settings.Global
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import com.example.sigmaindustry.data.remote.dto.Token
+import com.example.sigmaindustry.domain.usecases.authenticate.Authenticate
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val readTokenUseCase: ReadToken
+    private val readTokenUseCase: ReadToken,
+    private val authenticateUseCase: Authenticate
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private var _state = mutableStateOf(ProfileScreenState())
@@ -34,6 +32,9 @@ class ProfileScreenViewModel @Inject constructor(
             is ProfileScreenEvent.ProfileScreen -> {
                 readToken()
             }
+            is ProfileScreenEvent.Authenticate -> {
+                authenticate(token = Token(state.value.token ?: ""))
+            }
         }
     }
 
@@ -42,6 +43,15 @@ class ProfileScreenViewModel @Inject constructor(
         GlobalScope.launch {
             // TODO fix later illegal access to _state
             readTokenUseCase()?.let {_state.value = _state.value.copy(token = it)}
+        }
+    }
+    @OptIn(DelicateCoroutinesApi::class)
+    fun authenticate(token: Token){
+        GlobalScope.launch {
+        val user = authenticateUseCase(
+            token = token
+        )
+           _state.value = _state.value.copy(authenticateResponse = user)
         }
     }
 }

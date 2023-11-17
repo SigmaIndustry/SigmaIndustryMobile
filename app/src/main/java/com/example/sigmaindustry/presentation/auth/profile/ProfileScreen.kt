@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileScreenViewModel,
     state: ProfileScreenState,
     event: (ProfileScreenEvent) -> Unit,
     logOut: () -> Unit
@@ -26,13 +27,20 @@ fun ProfileScreen(
                 if (state.token == "") {
                     logOut()
                 }
-                Text("Token is ${state.token}")
-                Row {
-                    Button(onClick = {event(ProfileScreenEvent.ProfileScreen)}) {
-                        Text("Update")
-                    }
-                    Button(onClick = {logOut()}) {
-                        Text("LogOut")
+                event(ProfileScreenEvent.Authenticate)
+                Column {
+                    AsyncImage(model = state.authenticateResponse?.user?.photoUrl,  contentDescription = null,
+                        contentScale = ContentScale.Crop)
+                    Text("Hello ${state.authenticateResponse?.user?.firstName ?: "null"} ${state.authenticateResponse?.user?.lastName ?: "null"}")
+
+                    Text("Token is ${state.token}")
+                    Row {
+                        Button(onClick = { event(ProfileScreenEvent.ProfileScreen) }) {
+                            Text("Update")
+                        }
+                        Button(onClick = { logOut() }) {
+                            Text("LogOut")
+                        }
                     }
                 }
             }

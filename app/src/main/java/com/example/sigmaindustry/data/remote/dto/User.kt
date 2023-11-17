@@ -25,7 +25,10 @@ data class User(
     var photoUrl: String,
 
     @SerializedName("role")
-    var role: String
+    var role: String,
+
+    @SerializedName("created_at")
+    val createdAt: String = ""
 )
 
 enum class Sex {

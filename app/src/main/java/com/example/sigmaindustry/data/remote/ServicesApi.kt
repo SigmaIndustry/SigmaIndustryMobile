@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.data.remote
 
+import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
@@ -9,6 +10,7 @@ import com.example.sigmaindustry.data.remote.dto.ProviderRequest
 import com.example.sigmaindustry.data.remote.dto.ProviderResponse
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import com.example.sigmaindustry.data.remote.dto.ServiceResponse
+import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -22,6 +24,9 @@ interface ServicesApi {
     suspend fun signUp(@Body request: User): LoginResponse
     @POST("")
     suspend fun getProvider(@Body request: ProviderRequest): ProviderResponse
+
+    @POST("security/authenticate")
+    suspend fun authenticate(@Body request: Token): AuthenticateResponse
 
     @POST("/api/service/rate")
     suspend fun postRate(@Body request: PostRateRequest): PostRateResponse

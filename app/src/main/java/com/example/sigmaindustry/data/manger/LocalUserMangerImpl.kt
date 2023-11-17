@@ -40,7 +40,7 @@ class LocalUserMangerImpl @Inject constructor(
 
     override suspend fun readToken(): String? {
 
-         return application.dataStore.data.map { preferences ->
+        return application.dataStore.data.map { preferences ->
         preferences[PreferenceKeys.TOKEN] ?: null
         }.first()
 

@@ -93,7 +93,7 @@ fun NewsNavigator(
 
                         2 -> navigateToTab(
                             navController = navController,
-                            Route.ProfileScreen.route
+                            Route.SelectAuthScreen.route
                         )
                     }
                 }
@@ -144,44 +144,10 @@ fun NewsNavigator(
                 )
             }
 
-            composable(route = Route.LoginScreen.route) {
-                val viewModel: LoginViewModel = hiltViewModel()
-                val state = viewModel.state.value
-                OnBackClickStateSaver(navController = navController,
-                    route = Route.SelectAuthScreen.route)
-                navController.currentBackStackEntry?.savedStateHandle?.set("token", "")
-                LoginScreen(
-                    state = state,
-                    event = viewModel::onEvent,
-                )
-            }
-
-            composable(route = Route.SignUpScreen.route) {
-                val viewModel: SignUpViewModel = hiltViewModel()
-                val state = viewModel.state.value
-                OnBackClickStateSaver(navController = navController,
-                    route = Route.SelectAuthScreen.route)
-                SignUpScreen(
-                    state = state,
-                    event = viewModel::onEvent
-                )
-            }
-
             composable(route = Route.SelectAuthScreen.route) {
-                OnBackClickStateSaver(navController = navController)
                 val viewModel: SelectAuthViewModel = hiltViewModel()
-                SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent, navController = navController)
-            }
-
-            composable(route = Route.ProfileScreen.route) {
-                val viewModel: ProfileScreenViewModel = hiltViewModel()
-                val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
-                ProfileScreen(
-                    viewModel = viewModel,
-                    state = state,
-                    navigateToSelectAuth = {navigateToSelectAuth(navController = navController)},
-                )
+                SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent)
             }
 
             composable(route = Route.DetailsScreen.route) {
@@ -230,19 +196,5 @@ private fun navigateToDetails(navController: NavController, service: Service) {
     println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreen.route
-    )
-}
-private fun navigateToLogin(navController: NavController) {
-}
-private fun navigateToSelectAuth(navController: NavController) {
-    println("Navigate to selectAuth")
-    navController.navigate(
-        route = Route.SelectAuthScreen.route
-    )
-}
-private fun navigateToSignUp(navController: NavController) {
-    println("Navigate to signUp")
-    navController.navigate(
-        route = Route.SignUpScreen.route
     )
 }

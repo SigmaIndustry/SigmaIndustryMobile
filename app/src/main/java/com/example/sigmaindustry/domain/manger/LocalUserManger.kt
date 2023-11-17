@@ -8,5 +8,4 @@ interface LocalUserManger {
     suspend fun saveToken(token: String)
     suspend fun readToken(): String?
     fun readAppEntry(): Flow<Boolean>
-
 }

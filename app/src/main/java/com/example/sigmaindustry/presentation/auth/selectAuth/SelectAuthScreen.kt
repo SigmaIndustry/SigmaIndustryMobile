@@ -1,6 +1,5 @@
 package com.example.sigmaindustry.presentation.auth.selectAuth
 
-import android.transition.ChangeBounds
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,21 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
 import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
 import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
-import com.example.sigmaindustry.presentation.navgraph.Route
-import com.example.sigmaindustry.presentation.news_navigator.OnBackClickStateSaver
-
 
 @Composable
 fun SelectAuthScreen(
     viewModel: SelectAuthViewModel,
     event: (SelectAuthEvent) -> Unit,
-    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -55,7 +51,8 @@ fun SelectAuthScreen(
                 }
                 SignUpScreen(
                     state = state,
-                    event = logUpViewModel::onEvent
+                    event = logUpViewModel::onEvent,
+                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))}
                 )
             }
 
@@ -67,10 +64,20 @@ fun SelectAuthScreen(
                 }
                 LoginScreen(
                     state = state,
-                    event = logInViewModel::onEvent
+                    event = logInViewModel::onEvent,
+                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))}
                 )
             }
-            AuthType.Loggined -> Text(text = "Hello world 3")
+            AuthType.Loggined -> {
+                val logginedViewModel: ProfileScreenViewModel = hiltViewModel()
+                val state = logginedViewModel.state.value
+                ProfileScreen(
+                    viewModel = logginedViewModel,
+                    state = state,
+                    event = logginedViewModel::onEvent,
+                    logOut = {event(SelectAuthEvent.ChangeAuthType(AuthType.None))}
+                )
+            }
         }
     }
 }

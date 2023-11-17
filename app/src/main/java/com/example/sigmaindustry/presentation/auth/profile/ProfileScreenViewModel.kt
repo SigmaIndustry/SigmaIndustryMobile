@@ -1,6 +1,8 @@
 package com.example.sigmaindustry.presentation.auth.profile
 
+import android.provider.Settings.Global
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -9,19 +11,15 @@ import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val readToken: ReadToken
+    private val readTokenUseCase: ReadToken
 ) : ViewModel(), DefaultLifecycleObserver {
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun onResume(owner: LifecycleOwner) {
-        GlobalScope.launch {
-            _state.value = _state.value.copy(token = readToken.invoke())
-        }
-    }
 
     private var _state = mutableStateOf(ProfileScreenState())
     val state: State<ProfileScreenState> = _state
@@ -40,13 +38,10 @@ class ProfileScreenViewModel @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-     fun readToken() : String?{
-
+     fun readToken(){
         GlobalScope.launch {
-            _state.value = _state.value.copy(token = readToken.invoke())
+            // TODO fix later illegal access to _state
+            readTokenUseCase()?.let {_state.value = _state.value.copy(token = it)}
         }
-        return  _state.value.token
     }
-
-
 }

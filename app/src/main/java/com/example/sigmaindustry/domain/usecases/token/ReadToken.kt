@@ -1,6 +1,8 @@
 package com.example.sigmaindustry.domain.usecases.token
 
 import com.example.sigmaindustry.domain.manger.LocalUserManger
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ReadToken @Inject constructor(
@@ -8,7 +10,7 @@ class ReadToken @Inject constructor(
 ) {
 
     suspend operator fun invoke(): String? {
-        return localUserManger.readToken()
+       return  localUserManger.readToken()
     }
 
 }

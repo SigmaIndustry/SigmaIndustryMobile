@@ -47,7 +47,7 @@ fun DetailsTopBar(
 @Composable
 fun DetailsTopBarPreview() {
     SigmaIndustryTheme(dynamicColor = false) {
-        DetailsTopBar() {
+        DetailsTopBar {
 
         }
     }

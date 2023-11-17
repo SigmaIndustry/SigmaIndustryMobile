@@ -25,7 +25,6 @@ import com.example.sigmaindustry.presentation.navgraph.Route
 fun LoginScreen(
     state: LoginState,
     event: (LoginEvent) -> Unit,
-    navigateToProfile: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }

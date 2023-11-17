@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,6 +25,7 @@ import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
+import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthViewModel
 import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
 import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
 import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
@@ -42,7 +44,6 @@ import com.example.sigmaindustry.presentation.search.SearchViewModel
 @Composable
 fun NewsNavigator(
 ) {
-
     val bottomNavigationItems = remember {
         listOf(
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Home"),
@@ -54,21 +55,22 @@ fun NewsNavigator(
     val navController = rememberNavController()
     val backStackState = navController.currentBackStackEntryAsState().value
     var selectedItem by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     selectedItem = when (backStackState?.destination?.route) {
         Route.HomeScreen.route -> 0
         Route.SearchScreen.route -> 1
         Route.SelectAuthScreen.route -> 2
-        else -> 0
+        else -> selectedItem
     }
 
-    //Hide the bottom navigation when the user is in the details screen
+
     val isBottomBarVisible = remember(key1 = backStackState) {
-        backStackState?.destination?.route == Route.HomeScreen.route ||
-                backStackState?.destination?.route == Route.SearchScreen.route ||
-                backStackState?.destination?.route == Route.BookmarkScreen.route ||
-                backStackState?.destination?.route == Route.SelectAuthScreen.route
+        val route = backStackState?.destination?.route
+         route == Route.HomeScreen.route ||
+                route == Route.SearchScreen.route ||
+                route == Route.BookmarkScreen.route ||
+                route == Route.SelectAuthScreen.route
     }
 
 
@@ -106,9 +108,9 @@ fun NewsNavigator(
         ) {
             composable(route = Route.HomeScreen.route) { backStackEntry ->
                 val viewModel: HomeViewModel = hiltViewModel()
-                val articles = viewModel.news.collectAsLazyPagingItems()
+                val services = viewModel.services.collectAsLazyPagingItems()
                 HomeScreen(
-                    services = articles,
+                    services = services,
                     navigateToSearch = {
                         navigateToTab(
                             navController = navController,
@@ -123,6 +125,9 @@ fun NewsNavigator(
                     }
                 )
             }
+
+
+
             composable(route = Route.SearchScreen.route) {
                 val viewModel: SearchViewModel = hiltViewModel()
                 val state = viewModel.state.value
@@ -142,16 +147,20 @@ fun NewsNavigator(
             composable(route = Route.LoginScreen.route) {
                 val viewModel: LoginViewModel = hiltViewModel()
                 val state = viewModel.state.value
-                navController.currentBackStackEntry?.savedStateHandle?.set("token", String())
+                OnBackClickStateSaver(navController = navController,
+                    route = Route.SelectAuthScreen.route)
+                navController.currentBackStackEntry?.savedStateHandle?.set("token", "")
                 LoginScreen(
                     state = state,
                     event = viewModel::onEvent,
-                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
                 )
             }
+
             composable(route = Route.SignUpScreen.route) {
                 val viewModel: SignUpViewModel = hiltViewModel()
                 val state = viewModel.state.value
+                OnBackClickStateSaver(navController = navController,
+                    route = Route.SelectAuthScreen.route)
                 SignUpScreen(
                     state = state,
                     event = viewModel::onEvent
@@ -160,11 +169,8 @@ fun NewsNavigator(
 
             composable(route = Route.SelectAuthScreen.route) {
                 OnBackClickStateSaver(navController = navController)
-                SelectAuthScreen(
-                    navigateToLogin = {navigateToLogin(navController = navController)},
-                    navigateToSignUp = { navigateToSignUp(navController = navController) },
-                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
-                )
+                val viewModel: SelectAuthViewModel = hiltViewModel()
+                SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent, navController = navController)
             }
 
             composable(route = Route.ProfileScreen.route) {
@@ -175,7 +181,6 @@ fun NewsNavigator(
                     viewModel = viewModel,
                     state = state,
                     navigateToSelectAuth = {navigateToSelectAuth(navController = navController)},
-                    navigateToProfile = { navController.navigate(Route.ProfileScreen.route)}
                 )
             }
 
@@ -198,11 +203,11 @@ fun NewsNavigator(
 }
 
 @Composable
-fun OnBackClickStateSaver(navController: NavController) {
+fun OnBackClickStateSaver(navController: NavController, route: String = Route.HomeScreen.route) {
     BackHandler(true) {
         navigateToTab(
             navController = navController,
-            route = Route.HomeScreen.route
+            route = route
         )
     }
 }
@@ -219,6 +224,7 @@ private fun navigateToTab(navController: NavController, route: String) {
     }
 }
 
+
 private fun navigateToDetails(navController: NavController, service: Service) {
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
     println("Navigate to detail")
@@ -227,10 +233,6 @@ private fun navigateToDetails(navController: NavController, service: Service) {
     )
 }
 private fun navigateToLogin(navController: NavController) {
-    println("Navigate to login")
-    navController.navigate(
-        route = Route.LoginScreen.route
-    )
 }
 private fun navigateToSelectAuth(navController: NavController) {
     println("Navigate to selectAuth")

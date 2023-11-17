@@ -10,12 +10,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getServices: GetServices
+    getServices: GetServices
 ): ViewModel() {
 
     var state = mutableStateOf(HomeState())
         private set
 
-    val news = getServices().cachedIn(viewModelScope)
+    val services = getServices().cachedIn(viewModelScope)
 
 }

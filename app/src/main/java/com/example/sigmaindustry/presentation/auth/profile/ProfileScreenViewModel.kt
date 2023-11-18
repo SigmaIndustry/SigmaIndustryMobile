@@ -10,6 +10,7 @@ import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,17 +24,17 @@ class ProfileScreenViewModel @Inject constructor(
     val state: State<ProfileScreenState> = _state
 
 
-    fun onEvent(event: ProfileScreenEvent) {
+     suspend fun onEvent(event: ProfileScreenEvent) {
         when (event) {
             is ProfileScreenEvent.UpdateToken -> {
                 _state.value = _state.value.copy(token = event.token)
             }
 
             is ProfileScreenEvent.ProfileScreen -> {
-                readToken()
+                authenticate()
             }
             is ProfileScreenEvent.Authenticate -> {
-                authenticate(token = Token(state.value.token ?: ""))
+                 authenticate()
             }
         }
     }
@@ -41,17 +42,28 @@ class ProfileScreenViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
      fun readToken(){
         GlobalScope.launch {
-            // TODO fix later illegal access to _state
-            readTokenUseCase()?.let {_state.value = _state.value.copy(token = it)}
+          val token =  async{ readTokenUseCase()}
+              _state.value = _state.value.copy(token = token.await())
         }
     }
     @OptIn(DelicateCoroutinesApi::class)
-    fun authenticate(token: Token){
+     suspend fun authenticate(){
         GlobalScope.launch {
-        val user = authenticateUseCase(
-            token = token
-        )
-           _state.value = _state.value.copy(authenticateResponse = user)
+            val token =  async{ readTokenUseCase()}
+            _state.value = _state.value.copy(token = token.await())
+            val tokenFetched = token.await()
+            if( tokenFetched  !=null) {
+                val user =
+                    async {
+                        authenticateUseCase(
+                            token = Token(tokenFetched)
+                        )
+                    }
+                _state.value = _state.value.copy(authenticateResponse = user.await())
+            }
+
+
+
         }
     }
 }

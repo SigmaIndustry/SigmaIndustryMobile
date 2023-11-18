@@ -73,9 +73,8 @@ fun SelectAuthScreen(
                 val state = logginedViewModel.state.value
                 ProfileScreen(
                     state = state,
-                    event = logginedViewModel::onEvent,
-                    logOut = {event(SelectAuthEvent.ChangeAuthType(AuthType.None))}
-                )
+                    event = logginedViewModel::onEvent
+                ) { event(SelectAuthEvent.ChangeAuthType(AuthType.None)) }
             }
         }
     }

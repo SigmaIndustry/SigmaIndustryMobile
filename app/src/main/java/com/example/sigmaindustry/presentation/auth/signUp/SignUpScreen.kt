@@ -181,8 +181,9 @@ fun SignUpScreen(
                         && Validator.validatePassword(state.user.password)
                         && state.user.firstName.isNotEmpty()
                         && state.user.lastName.isNotEmpty()
-                        && state.user.birthDate.isNotEmpty()
+                        && birthDate.isNotEmpty()
                 if (!valid) {
+                    println("Invalid")
                     return@Button
                 }
                 val validProvider = state.provider.businessName.isNotEmpty()
@@ -198,6 +199,7 @@ fun SignUpScreen(
 
                     delay(2000)
 
+                    println("Valid")
                     if (validProvider) {
                         viewModel.updateProvider(state.provider.copy(email = state.user.email))
                         event(SignUpEvent.RegisterProvider)

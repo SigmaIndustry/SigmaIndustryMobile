@@ -102,6 +102,6 @@ fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 32.dp)
     ) {
-        Text(text = "Log up", fontSize = 40.sp)
+        Text(text = "Sign up", fontSize = 40.sp)
     }
 }

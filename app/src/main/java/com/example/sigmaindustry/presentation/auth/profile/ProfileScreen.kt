@@ -36,6 +36,7 @@ import coil.compose.AsyncImage
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
 import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.util.Validator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -253,6 +254,10 @@ fun EditProfileView(
     logOut: () -> Unit
 ){
 
+    var error by remember {
+        mutableStateOf("")
+    }
+
     var email by remember { mutableStateOf(user.email) }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf(user.firstName) }
@@ -324,9 +329,35 @@ fun EditProfileView(
             },
             label = { Text("Password") },
         )
+        Text(error)
         Row() {
             Button(
                 onClick = {
+                    val isValid = listOf(
+                        Validator.validateMail(email),
+                        Validator.validatePassword(password),
+                        firstName.isNotEmpty(),
+                        lastName.isNotEmpty(),
+                        birthDate.isNotEmpty())
+                    if (isValid.contains(false)) {
+                        error = "Error from: "
+                        if (!isValid[0]) {
+                            error += "email, "
+                        }
+                        if (!isValid[1]) {
+                            error += "password, "
+                        }
+                        if (!isValid[2]) {
+                            error += "first name, "
+                        }
+                        if (!isValid[3]) {
+                            error += "last name, "
+                        }
+                        if (!isValid[4]) {
+                            error += "birth day."
+                        }
+                        return@Button
+                    }
 
                     GlobalScope.launch {
                         event(

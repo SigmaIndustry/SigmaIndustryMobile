@@ -30,20 +30,20 @@ import com.example.sigmaindustry.presentation.Dimens.ServiceCardSize
 @Composable
 fun ServiceCard(
     modifier: Modifier = Modifier,
-    services: Service,
+    s: Service,
     onClick: ((Service) -> Unit)? = null
 ) {
 
     val context = LocalContext.current
     Row(
-        modifier = modifier.clickable { onClick?.invoke(services) },
+        modifier = modifier.clickable { onClick?.invoke(s) },
 
         ) {
         AsyncImage(
             modifier = Modifier
                 .size(ServiceCardSize)
                 .clip(MaterialTheme.shapes.medium),
-            model = ImageRequest.Builder(context).data(services.pictures[0]).build(),
+            model = ImageRequest.Builder(context).data(s.pictures[0]).build(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
@@ -54,8 +54,8 @@ fun ServiceCard(
                 .height(ServiceCardSize)
         ) {
             Text(
-                text = services.name,
-                style = MaterialTheme.typography.bodyMedium.copy(),
+                text = s.name,
+                style = MaterialTheme.typography.titleMedium,
                 color = colorResource(id = R.color.black),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -65,22 +65,16 @@ fun ServiceCard(
             ) {
                 Column {
                     Text(
-                        text = services.price.toString(),
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        text = "Price: ${if (s.price == 0.0) "Free" else s.price.toString() + " uah"}",
+                        style = MaterialTheme.typography.bodySmall,
                         color = colorResource(id = R.color.black)
                     )
                     Text(
-                        text = services.category,
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        text = "Category: ${s.category}",
+                        style = MaterialTheme.typography.bodySmall,
                         color = colorResource(id = R.color.black)
                     )
                 }
-                Spacer(modifier = Modifier.width(ExtraSmallPadding))
-                Text(
-                    text = services.description,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = colorResource(id = R.color.black)
-                )
             }
         }
     }

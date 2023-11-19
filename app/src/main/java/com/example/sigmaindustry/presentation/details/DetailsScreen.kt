@@ -61,7 +61,6 @@ fun DetailsScreen(
     var orderField by remember {
          mutableStateOf("")
     }
-    println(service.name)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -101,7 +100,7 @@ fun DetailsScreen(
                 Row (modifier =  Modifier.fillParentMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
-                        text = "Price: ${service.price}",
+                        text = "Price: ${if (service.price == 0.0) "Free" else service.price.toString() + " uah"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(
                             id = R.color.black
@@ -121,7 +120,7 @@ fun DetailsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
                         text = "Provider: ${service.provider}",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = colorResource(
                             id = R.color.black
                         ),

@@ -33,7 +33,7 @@ fun ArticlesList(
             count = services.size,
         ) {
             services[it].let { service ->
-                ServiceCard(services = service, onClick = { onClick(service) })
+                ServiceCard(s = service, onClick = { onClick(service) })
             }
         }
     }
@@ -60,7 +60,7 @@ fun ArticlesList(
                 count = services.itemCount,
             ) {
                 services[it]?.let { service ->
-                    ServiceCard(services = service, onClick = { onClick(service) })
+                    ServiceCard(s = service, onClick = { onClick(service) })
                 }
             }
         }

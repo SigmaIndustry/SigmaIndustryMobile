@@ -26,9 +26,6 @@ data class User(
 
     @SerializedName("role")
     var role: String,
-
-    @SerializedName("created_at")
-    val createdAt: String = ""
 )
 
 enum class Sex {

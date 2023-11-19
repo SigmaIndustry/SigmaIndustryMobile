@@ -3,6 +3,7 @@ package com.example.sigmaindustry.presentation.auth.signUp
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.sigmaindustry.domain.usecases.RegisterProvider
 import com.example.sigmaindustry.domain.usecases.signUp.SignUp
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import com.example.sigmaindustry.domain.usecases.token.SaveToken
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUp: SignUp,
+    private val registerProvider: RegisterProvider,
     private val saveToken: SaveToken,
     private val readToken: ReadToken
 ) : ViewModel() {
@@ -28,9 +30,14 @@ class SignUpViewModel @Inject constructor(
             is SignUpEvent.UpdateSignUpRequest -> {
                 _state.value = _state.value.copy(user = event.user)
             }
-
+            is SignUpEvent.UpdateProvider -> {
+                _state.value = _state.value.copy(provider = event.provider)
+            }
             is SignUpEvent.SignUp -> {
                 signUp()
+            }
+            is SignUpEvent.RegisterProvider -> {
+                registerProvider()
             }
         }
     }
@@ -47,6 +54,16 @@ class SignUpViewModel @Inject constructor(
             readToken()?.let{
                 _state.value = _state.value.copy(token = it)
             }
+
+        }
+    }
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun registerProvider() {
+
+        GlobalScope.launch {
+             registerProvider(
+                provider = _state.value.provider,
+            )
 
         }
     }

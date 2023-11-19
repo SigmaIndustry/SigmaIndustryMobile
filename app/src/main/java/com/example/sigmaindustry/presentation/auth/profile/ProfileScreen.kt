@@ -75,7 +75,18 @@ fun ProfileScreen(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-
+if(state.authenticateResponse?.provider != null){
+    Text(
+        text = state.authenticateResponse.provider.businessName,
+        style = TextStyle(
+            fontSize = 14.sp,
+            color = Color.Gray,
+            letterSpacing = (0.8).sp
+        ),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
                     Text("Token is ${state.token}")
                     Row {
 //                        Button(onClick = { event(ProfileScreenEvent.ProfileScreen) }) {

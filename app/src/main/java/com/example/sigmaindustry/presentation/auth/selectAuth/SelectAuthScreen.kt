@@ -64,7 +64,6 @@ fun SelectAuthScreen(
                     event(SelectAuthEvent.ChangeAuthType(AuthType.None))
                 }
                 LoginScreen(
-                    state = state,
                     event = logInViewModel::onEvent,
                     toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))}
                 )

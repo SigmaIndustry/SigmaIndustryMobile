@@ -10,6 +10,7 @@ import com.example.sigmaindustry.data.remote.SearchServicesPagingSource
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
+import com.example.sigmaindustry.data.remote.UserUpdateSource
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
@@ -19,6 +20,7 @@ import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
+import com.example.sigmaindustry.data.remote.dto.UserUpdate
 import com.example.sigmaindustry.domain.repository.ServicesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -51,6 +53,9 @@ class ServicesRepositoryImpl @Inject constructor(
         return AuthenticateSource(servicesApi).authenticate(token)
     }
 
+    override suspend fun updateUser(userUpdate: UserUpdate) {
+        UserUpdateSource(servicesApi).updateUser(userUpdate)
+    }
     override suspend fun registerProvider(provider: RegisterProvider) {
         RegisterProviderSource(servicesApi).registerProvider(provider)
     }

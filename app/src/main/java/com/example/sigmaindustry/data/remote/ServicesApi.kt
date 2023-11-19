@@ -13,6 +13,7 @@ import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
+import com.example.sigmaindustry.data.remote.dto.UserUpdate
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -27,6 +28,8 @@ interface ServicesApi {
     suspend fun getProvider(@Body request: ProviderRequest): ProviderResponse
     @POST("security/register_provider")
     suspend fun registerProvider(@Body request: RegisterProvider)
+    @POST("security/update")
+    suspend fun updateUser(@Body request: UserUpdate)
     @POST("security/authenticate")
     suspend fun authenticate(@Body request: Token): AuthenticateResponse
 

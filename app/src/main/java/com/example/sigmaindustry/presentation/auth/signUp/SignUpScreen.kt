@@ -46,6 +46,9 @@ fun SignUpScreen(
 ) {
 
     var birthDate by remember { mutableStateOf("") }
+    var error by remember {
+        mutableStateOf("")
+    }
 
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
@@ -174,24 +177,40 @@ fun SignUpScreen(
                 label = { Text("Work time") },
             )
         }
-
+        Text(text = error)
         Button(
             onClick = {
-                val valid = Validator.validateMail(state.user.email)
-                        && Validator.validatePassword(state.user.password)
-                        && state.user.firstName.isNotEmpty()
-                        && state.user.lastName.isNotEmpty()
-                        && birthDate.isNotEmpty()
-                if (!valid) {
-                    println("Invalid")
+                val isValid = listOf(Validator.validateMail(state.user.email),
+                        Validator.validatePassword(state.user.password),
+                        state.user.firstName.isNotEmpty(),
+                        state.user.lastName.isNotEmpty(),
+                        birthDate.isNotEmpty())
+                if (isValid.contains(false)) {
+                    error = "Error from: "
+                    if (!isValid[0]) {
+                        error += "email, "
+                    }
+                    if (!isValid[1]) {
+                        error += "password, "
+                    }
+                    if (!isValid[2]) {
+                        error += "first name, "
+                    }
+                    if (!isValid[3]) {
+                        error += "last name, "
+                    }
+                    if (!isValid[4]) {
+                        error += "birth day."
+                    }
                     return@Button
                 }
-                val validProvider = state.provider.businessName.isNotEmpty()
-                        && state.provider.city.isNotEmpty()
-                        && state.provider.description.isNotEmpty()
-                        && state.provider.phoneNumber.isNotEmpty()
-                        && state.provider.workTime.isNotEmpty()
-                        && state.user.role == Role.ServiceProvider.toString
+                error = ""
+                val validProvider = listOf(state.user.role == Role.ServiceProvider.toString,
+                        state.provider.city.isNotEmpty(),
+                        state.provider.description.isNotEmpty(),
+                        state.provider.phoneNumber.isNotEmpty(),
+                        state.provider.workTime.isNotEmpty(),
+                        state.provider.businessName.isNotEmpty())
                 GlobalScope.launch {
                     viewModel.updateUser(state.user.copy(birthDate = birthDate,
                         photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
@@ -199,10 +218,26 @@ fun SignUpScreen(
 
                     delay(2000)
 
-                    println("Valid")
-                    if (validProvider) {
+                    if (validProvider.contains(false)) {
                         viewModel.updateProvider(state.provider.copy(email = state.user.email))
                         event(SignUpEvent.RegisterProvider)
+                    } else {
+                        error = "Error from: "
+                        if (!validProvider[1]) {
+                            error += "city, "
+                        }
+                        if (!validProvider[2]) {
+                            error += "description, "
+                        }
+                        if (!validProvider[3]) {
+                            error += "phone number, "
+                        }
+                        if (!validProvider[4]) {
+                            error += "worktime, "
+                        }
+                        if (!validProvider[5]) {
+                            error += "business name."
+                        }
                     }
                     toProfile()
                 }

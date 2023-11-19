@@ -39,7 +39,7 @@ data class Service(
     var category: String,
 
     @SerializedName("rating")
-    var rating: Int,
+    var rating: Double,
 
     @SerializedName("provider")
     var provider: Int

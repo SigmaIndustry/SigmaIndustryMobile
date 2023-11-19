@@ -160,9 +160,7 @@ fun NewsNavigator(
                             sideEffect = viewModel.sideEffect
                         )
                     }
-
             }
-
         }
     }
 }

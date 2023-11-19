@@ -1,7 +1,5 @@
 package com.example.sigmaindustry.presentation.details
 
-import android.transition.Slide
-import android.widget.Space
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -35,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.Navigation
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.sigmaindustry.R
@@ -164,6 +160,7 @@ fun DetailsScreen(
                         Text("Rate")
                     }
                 }
+                Text("1 to 5")
                 Row {
                     Slider(value = ratingBar , onValueChange = {ratingBar = it},
                         valueRange = 0f..5f, steps = 8)

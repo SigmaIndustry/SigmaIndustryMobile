@@ -24,13 +24,14 @@ import com.example.sigmaindustry.util.Validator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    state: LoginState,
     event: (LoginEvent) -> Unit,
     toProfile: () -> Unit
 ) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    var error by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -43,32 +44,34 @@ fun LoginScreen(
     ) {
         OutlinedTextField(
             value = email,
-            onValueChange = { input ->
-                email = input
-            },
+            onValueChange = { email = it },
             label = { Text("Email") },
         )
         OutlinedTextField(
             value = password,
-            onValueChange = { input ->
-                password = input
-            },
+            onValueChange = {password = it },
             label = { Text("Password") },
         )
+        Text(error)
         Button(onClick = {
-            var valid = Validator.validateMail(email) &&
-                    Validator.validatePassword(password)
-            if (valid) {
-                event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
-                event(LoginEvent.Login)
-                toProfile()
+            val valid = listOf(Validator.validateMail(email),
+                    Validator.validatePassword(password))
+            if (valid.contains(false)) {
+                error = "Error "
+                if (!valid[0]) {
+                    error += "email, "
+                }
+                if (!valid[1]) {
+                    error += "password, "
+                }
+                return@Button
             }
+            event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
+            event(LoginEvent.Login)
+            toProfile()
         }) {
             Text(text = "Log in", fontSize = 20.sp)
         }
-
-        Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
-        Text(text = state.token)
     }
 }
 

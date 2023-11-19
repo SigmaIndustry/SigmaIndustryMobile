@@ -27,41 +27,23 @@ import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Role
 import com.example.sigmaindustry.data.remote.dto.Sex
-import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.util.Validator
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun SignUpScreen(
     state: SignUpState,
     event: (SignUpEvent) -> Unit,
+    viewModel: SignUpViewModel,
     toProfile: () -> Unit
 ) {
-
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var isValidEmail by remember { mutableStateOf(false) }
-    var isValidPassword by remember { mutableStateOf(false) }
-    var isValidFirstName by remember { mutableStateOf(false) }
-    var isValidLastName by remember { mutableStateOf(false) }
-    val emailRequiredChars = setOf('@', '.')
-
-    var bussinessName by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    var city by remember { mutableStateOf("") }
-    var workTime by remember { mutableStateOf("") }
-
-    var sex by remember { mutableStateOf(Sex.Male) }
-
-    var role by remember { mutableStateOf(Role.User) }
 
     var birthDate by remember { mutableStateOf("") }
 
@@ -71,7 +53,6 @@ fun SignUpScreen(
     val mMonth = mCalendar.get(Calendar.MONTH)
     val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
     mCalendar.time = Date()
-
 
     val mDatePickerDialog = DatePickerDialog(
         mContext,
@@ -92,36 +73,24 @@ fun SignUpScreen(
             .verticalScroll(rememberScrollState())
     ) {
         OutlinedTextField(
-            value = email,
-            onValueChange = { input ->
-                email = input
-                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
-            },
+            value = state.user.email,
+            onValueChange = { viewModel.updateUser(state.user.copy(email = it)) },
             label = { Text("Email") },
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { input ->
-                password = input
-                isValidPassword = input.length >= 6
-            },
+            value = state.user.password,
+            onValueChange = { viewModel.updateUser(state.user.copy(password = it)) },
             label = { Text("Password") },
         )
         OutlinedTextField(
-            value = firstName,
-            onValueChange = { input ->
-                firstName = input
-                isValidFirstName = input.isNotEmpty()
-            },
+            value = state.user.firstName,
+            onValueChange = { viewModel.updateUser(state.user.copy(firstName = it)) },
             label = { Text("First Name") },
         )
 
         OutlinedTextField(
-            value = lastName,
-            onValueChange = { input ->
-                lastName = input
-                isValidLastName = input.isNotEmpty()
-            },
+            value = state.user.lastName,
+            onValueChange = { viewModel.updateUser(state.user.copy(lastName = it)) },
             label = { Text("Last Name") },
         )
 
@@ -131,13 +100,10 @@ fun SignUpScreen(
         Text("Choose your sex")
         Row()
         {
-
             Button(
-                onClick = {
-                    sex = Sex.Male
-                },
+                onClick = { viewModel.updateUser(state.user.copy(sex = Sex.Male.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (sex == Sex.Male) Color(
+                    containerColor = if (state.user.sex == Sex.Male.toString) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -145,9 +111,9 @@ fun SignUpScreen(
                 Text("Male")
             }
             Button(
-                onClick = { sex = Sex.Female },
+                onClick = { viewModel.updateUser(state.user.copy(sex = Sex.Female.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (sex == Sex.Female) Color(
+                    containerColor = if (state.user.sex == Sex.Female.toString) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -159,9 +125,9 @@ fun SignUpScreen(
         Row()
         {
             Button(
-                onClick = { role = Role.User },
+                onClick = { viewModel.updateUser(state.user.copy(role = Role.User.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (role == Role.User) Color(
+                    containerColor = if (state.user.role == Role.User.toString) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -170,9 +136,9 @@ fun SignUpScreen(
                 Text("User")
             }
             Button(
-                onClick = { role = Role.ServiceProvider },
+                onClick = { viewModel.updateUser(state.user.copy(role = Role.ServiceProvider.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (role == Role.ServiceProvider) Color(
+                    containerColor = if (state.user.role == Role.ServiceProvider.toString) Color(
                         0xFF6650a4
                     ) else Color.Gray
                 )
@@ -181,85 +147,59 @@ fun SignUpScreen(
                 Text("Service provider")
             }
         }
-        if (role == Role.ServiceProvider) {
+        if (state.user.role == Role.ServiceProvider.toString) {
             OutlinedTextField(
-                value = bussinessName,
-                onValueChange = { input ->
-                    bussinessName = input
-                },
+                value = state.provider.businessName ,
+                onValueChange = { viewModel.updateProvider(state.provider.copy(businessName = it)) },
                 label = { Text("Business name") },
             )
             OutlinedTextField(
-                value = description,
-                onValueChange = { input ->
-                    description = input
-                },
+                value = state.provider.description,
+                onValueChange = { viewModel.updateProvider(state.provider.copy(description = it)) },
                 label = { Text("Description") },
             )
             OutlinedTextField(
-                value = phoneNumber,
-                onValueChange = { input ->
-                    phoneNumber = input
-                },
+                value = state.provider.phoneNumber,
+                onValueChange = { viewModel.updateProvider(state.provider.copy(phoneNumber = it)) },
                 label = { Text("Phone number") },
             )
             OutlinedTextField(
-                value = city,
-                onValueChange = { input ->
-                    city = input
-                },
+                value = state.provider.city,
+                onValueChange = { viewModel.updateProvider(state.provider.copy(city = it)) },
                 label = { Text("City") },
             )
             OutlinedTextField(
-                value = workTime,
-                onValueChange = { input ->
-                    workTime = input
-                },
+                value = state.provider.workTime,
+                onValueChange = { viewModel.updateProvider(state.provider.copy(workTime = it)) },
                 label = { Text("Work time") },
             )
         }
 
         Button(
             onClick = {
-
+                val valid = Validator.validateMail(state.user.email)
+                        && Validator.validatePassword(state.user.password)
+                        && state.user.firstName.isNotEmpty()
+                        && state.user.lastName.isNotEmpty()
+                        && state.user.birthDate.isNotEmpty()
+                if (!valid) {
+                    return@Button
+                }
+                val validProvider = state.provider.businessName.isNotEmpty()
+                        && state.provider.city.isNotEmpty()
+                        && state.provider.description.isNotEmpty()
+                        && state.provider.phoneNumber.isNotEmpty()
+                        && state.provider.workTime.isNotEmpty()
+                        && state.user.role == Role.ServiceProvider.toString
                 GlobalScope.launch {
-                    event(
-                        SignUpEvent.UpdateSignUpRequest(
-                            User(
-                                email,
-                                password,
-                                firstName,
-                                lastName,
-                                birthDate,
-                                if (sex == Sex.Male) {
-                                    "M"
-                                } else {
-                                    "F"
-                                },
-                                "https://i.ibb.co/jwKccRz/profile-Picture.jpg",
-                                if (role == Role.User) {
-                                    "G"
-                                } else {
-                                    "P"
-                                }
-                            )
-                        )
-                    )
+                    viewModel.updateUser(state.user.copy(birthDate = birthDate,
+                        photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
                     event(SignUpEvent.SignUp)
+
                     delay(2000)
-                    if (role == Role.ServiceProvider) {
-                        event(
-                            SignUpEvent.UpdateProvider(
-                                RegisterProvider(
-                                    email,
-                                    bussinessName,
-                                    description,
-                                    phoneNumber,
-                                    city,
-                                    workTime
-                                )
-                            )
-                        )
+
+                    if (validProvider) {
+                        viewModel.updateProvider(state.provider.copy(email = state.user.email))
                         event(SignUpEvent.RegisterProvider)
                     }
                     toProfile()
@@ -270,10 +210,7 @@ fun SignUpScreen(
             Text(text = "Sign up", fontSize = 20.sp)
         }
 
-
         Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
-        state.loginResponse.let {
-            Text(text = it.token)
-        }
+        Text(text = state.loginResponse.token)
     }
 }

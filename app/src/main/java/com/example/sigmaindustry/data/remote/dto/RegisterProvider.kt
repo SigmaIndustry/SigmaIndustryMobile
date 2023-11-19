@@ -4,21 +4,21 @@ import com.google.gson.annotations.SerializedName
 
 data class RegisterProvider(
     @SerializedName("email")
-    val email: String = "",
+    var email: String = "",
 
     @SerializedName("business_name")
-    val businessName: String = "",
+    var businessName: String = "",
 
     @SerializedName("description")
-    val description: String = "",
+    var description: String = "",
 
     @SerializedName("phone_number")
-    val phoneNumber: String = "",
+    var phoneNumber: String = "",
 
     @SerializedName("city")
-    val city: String = "",
+    var city: String = "",
 
     @SerializedName("work_time")
-    val workTime: String = "",
+    var workTime: String = "",
 
-)
+    )

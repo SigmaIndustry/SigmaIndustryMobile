@@ -5,5 +5,6 @@ import com.example.sigmaindustry.data.remote.dto.User
 
 data class SignUpState (
     val user: User = User("", "","","","","","",""),
-    val loginResponse: LoginResponse = LoginResponse(400,"")
+    val loginResponse: LoginResponse = LoginResponse(400,""),
+    val token: String = ""
 )

@@ -191,7 +191,11 @@ fun SignUpScreen(
                     }
                 )))
                 event(SignUpEvent.SignUp)
+                if(role == Role.ServiceProvider){
 
+                }else{
+                    toProfile
+                }
             },
         ) {
             Text(text = "Sign up", fontSize = 20.sp)

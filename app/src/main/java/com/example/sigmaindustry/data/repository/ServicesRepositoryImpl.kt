@@ -3,16 +3,19 @@ package com.example.sigmaindustry.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.sigmaindustry.data.remote.AuthenticateSource
 import com.example.sigmaindustry.data.remote.LoginSource
 import com.example.sigmaindustry.data.remote.SearchServicesPagingSource
 import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
+import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
 import com.example.sigmaindustry.data.remote.dto.PostRateRequest
 import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.domain.repository.ServicesRepository
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +41,9 @@ class ServicesRepositoryImpl @Inject constructor(
         return SignUpSource(servicesApi).signUp(user)
     }
 
+    override suspend fun authenticate(token: Token): AuthenticateResponse {
+        return AuthenticateSource(servicesApi).authenticate(token)
+    }
     override fun searchServices(
         searchQuery: String,
     ): Flow<PagingData<Service>> {

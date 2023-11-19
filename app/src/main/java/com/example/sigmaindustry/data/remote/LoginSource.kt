@@ -2,7 +2,6 @@ package com.example.sigmaindustry.data.remote
 
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
-import kotlin.math.log
 
 class LoginSource(
     private val servicesApi: ServicesApi,
@@ -10,8 +9,8 @@ class LoginSource(
 
     suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return try {
-            loginRequest.email = "sigma@nure.ua"
-            loginRequest.password = "hello.world_123"
+            //loginRequest.email = "sigma@nure.ua"
+            //loginRequest.password = "hello.world_123"
             println(loginRequest)
             servicesApi.login(loginRequest)
         } catch (e: Exception) {

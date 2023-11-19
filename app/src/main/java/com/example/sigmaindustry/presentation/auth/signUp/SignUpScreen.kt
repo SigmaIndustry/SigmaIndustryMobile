@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,10 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Role
 import com.example.sigmaindustry.data.remote.dto.Sex
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.presentation.Dimens
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
@@ -47,6 +53,11 @@ fun SignUpScreen(
     var isValidLastName by remember { mutableStateOf(false) }
     val emailRequiredChars = setOf('@', '.')
 
+    var bussinessName by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var workTime by remember { mutableStateOf("") }
 
     var sex by remember { mutableStateOf(Sex.Male) }
 
@@ -78,6 +89,7 @@ fun SignUpScreen(
                 end = Dimens.MediumPadding1
             )
             .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
     ) {
         OutlinedTextField(
             value = email,
@@ -116,9 +128,10 @@ fun SignUpScreen(
         Button(onClick = { mDatePickerDialog.show() }) {
             Text(text = "Pick birth date: $birthDate", color = Color.White)
         }
+        Text("Choose your sex")
         Row()
         {
-            Text("Choose your sex")
+
             Button(
                 onClick = {
                     sex = Sex.Male
@@ -142,10 +155,9 @@ fun SignUpScreen(
                 Text("Female")
             }
         }
-
+        Text("Choose your role")
         Row()
         {
-            Text("Choose your role")
             Button(
                 onClick = { role = Role.User },
                 colors = ButtonDefaults.buttonColors(
@@ -169,41 +181,99 @@ fun SignUpScreen(
                 Text("Service provider")
             }
         }
+        if (role == Role.ServiceProvider) {
+            OutlinedTextField(
+                value = bussinessName,
+                onValueChange = { input ->
+                    bussinessName = input
+                },
+                label = { Text("Business name") },
+            )
+            OutlinedTextField(
+                value = description,
+                onValueChange = { input ->
+                    description = input
+                },
+                label = { Text("Description") },
+            )
+            OutlinedTextField(
+                value = phoneNumber,
+                onValueChange = { input ->
+                    phoneNumber = input
+                },
+                label = { Text("Phone number") },
+            )
+            OutlinedTextField(
+                value = city,
+                onValueChange = { input ->
+                    city = input
+                },
+                label = { Text("City") },
+            )
+            OutlinedTextField(
+                value = workTime,
+                onValueChange = { input ->
+                    workTime = input
+                },
+                label = { Text("Work time") },
+            )
+        }
 
         Button(
             onClick = {
-                event(SignUpEvent.UpdateSignUpRequest(User(
-                    email,
-                    password,
-                    firstName,
-                    lastName,
-                    birthDate,
-                    if (sex == Sex.Male) {
-                        "M"
-                    } else {
-                        "F"
-                    },
-                    "",
-                    if (role == Role.User) {
-                        "G"
-                    } else {
-                        "P"
-                    }
-                )))
-                event(SignUpEvent.SignUp)
-                if(role == Role.ServiceProvider){
 
-                }else{
-                    toProfile
+                GlobalScope.launch {
+                    event(
+                        SignUpEvent.UpdateSignUpRequest(
+                            User(
+                                email,
+                                password,
+                                firstName,
+                                lastName,
+                                birthDate,
+                                if (sex == Sex.Male) {
+                                    "M"
+                                } else {
+                                    "F"
+                                },
+                                "https://i.ibb.co/jwKccRz/profile-Picture.jpg",
+                                if (role == Role.User) {
+                                    "G"
+                                } else {
+                                    "P"
+                                }
+                            )
+                        )
+                    )
+                    event(SignUpEvent.SignUp)
+                    delay(2000)
+                    if (role == Role.ServiceProvider) {
+                        event(
+                            SignUpEvent.UpdateProvider(
+                                RegisterProvider(
+                                    email,
+                                    bussinessName,
+                                    description,
+                                    phoneNumber,
+                                    city,
+                                    workTime
+                                )
+                            )
+                        )
+                        event(SignUpEvent.RegisterProvider)
+                    }
+                    toProfile()
                 }
+
             },
         ) {
             Text(text = "Sign up", fontSize = 20.sp)
         }
 
+
         Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
         state.loginResponse.let {
-            Text(text = it.token )
+            Text(text = it.token)
         }
     }
 }

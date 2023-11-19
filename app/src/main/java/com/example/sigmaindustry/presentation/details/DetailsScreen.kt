@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -160,12 +161,12 @@ fun DetailsScreen(
                         Text("Rate")
                     }
                 }
-                Text("1 to 5")
+                Text("1 to 5", Modifier.align(CenterHorizontally) )
                 Row {
                     Slider(value = ratingBar , onValueChange = {ratingBar = it},
                         valueRange = 0f..5f, steps = 8)
                     // TODO unvisible
-                    Text(text = "$ratingBar")
+
                 }
                 Button(onClick = { event(DetailsEvent.ShowDialog) }) {
                     Text("Order")

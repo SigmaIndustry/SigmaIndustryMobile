@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ServicesRepository {
     fun getServices(): Flow<PagingData<Service>>
+    fun getCategories(): Map<String, String>
     suspend fun login(loginRequest: LoginRequest): LoginResponse
     suspend fun signUp(user: User): LoginResponse
     suspend fun authenticate(token: Token): AuthenticateResponse

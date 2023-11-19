@@ -17,11 +17,13 @@ import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.ExtraSmallPadding
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.SearchBar
+import com.example.sigmaindustry.presentation.common.SearchResultList
 import com.example.sigmaindustry.presentation.home.components.ServiceCard
 
 @Composable
 fun SearchScreen(
     state: SearchState,
+    viewModel: SearchViewModel,
     event:(SearchEvent) -> Unit,
     navigateToDetails:(Service) -> Unit
 ) {
@@ -44,26 +46,9 @@ fun SearchScreen(
             var services = it.collectAsLazyPagingItems()
             SearchResultList(
                 services = services,
+                serviceUpdater = {s -> viewModel.changeServiceCategory(s)},
                 onClick = navigateToDetails
             )
-        }
-    }
-}
-
-@Composable
-fun SearchResultList(
-    services: LazyPagingItems<Service>,
-    onClick: (Service) -> Unit
-) {
-    LazyColumn {
-        items(services.itemCount, key = services.itemKey {it.id}) { index ->
-            val s = services[index]
-            if (s != null) {
-                ServiceCard(s = s, onClick = onClick)
-            } else {
-                Text(text = "Unknown error", color = Color.White)
-            }
-            Spacer(modifier = Modifier.height(ExtraSmallPadding))
         }
     }
 }

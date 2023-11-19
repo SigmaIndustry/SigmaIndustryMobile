@@ -27,6 +27,7 @@ import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.common.ArticlesList
 import com.example.sigmaindustry.presentation.common.SearchBar
+import com.example.sigmaindustry.presentation.common.SearchResultList
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,6 +35,7 @@ import com.example.sigmaindustry.presentation.common.SearchBar
 fun HomeScreen(
     services: LazyPagingItems<Service>,
     navigateToSearch: () -> Unit,
+    viewModel: HomeViewModel,
     navigateToDetails: (Service) -> Unit
 ) {
 
@@ -89,9 +91,9 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(MediumPadding1))
 
-        ArticlesList(
-            modifier = Modifier.padding(horizontal = MediumPadding1),
+        SearchResultList(
             services = services,
+            serviceUpdater = {s -> viewModel.changeServiceCategory(s)},
             onClick = navigateToDetails
         )
     }

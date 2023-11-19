@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sigmaindustry.data.remote.ServicesApi
+import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.domain.repository.ServicesRepository
 import com.example.sigmaindustry.domain.usecases.news.RateSenderService
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import com.example.sigmaindustry.util.UIComponent
@@ -19,11 +21,15 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val tokenReader: ReadToken,
-    private val rateSenderUseCase: RateSenderService
-
+    private val rateSenderUseCase: RateSenderService,
+    private val servicesRepository: ServicesRepository
 ) : ViewModel() {
     var sideEffect by mutableStateOf<UIComponent?>(null)
         private set
+
+    fun changeServiceCategory(s: Service): Service {
+        return s.copy(category = servicesRepository.getCategories()[s.category] ?: "Unknown")
+    }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun onEvent(event: DetailsEvent) {

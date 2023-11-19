@@ -116,6 +116,7 @@ fun NewsNavigator(
                             route = Route.SearchScreen.route
                         )
                     },
+                    viewModel = viewModel,
                     navigateToDetails = { service ->
                         navigateToDetails(
                             navController = navController,
@@ -134,6 +135,7 @@ fun NewsNavigator(
                 SearchScreen(
                     state = state,
                     event = viewModel::onEvent,
+                    viewModel = viewModel,
                     navigateToDetails = { service ->
                         navigateToDetails(
                             navController = navController,
@@ -157,7 +159,8 @@ fun NewsNavigator(
                             service = service,
                             event = viewModel::onEvent,
                             navigateUp = { navController.navigateUp() },
-                            sideEffect = viewModel.sideEffect
+                            sideEffect = viewModel.sideEffect,
+                            viewModel = viewModel
                         )
                     }
             }

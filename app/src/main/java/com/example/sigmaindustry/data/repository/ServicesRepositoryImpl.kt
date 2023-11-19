@@ -34,6 +34,10 @@ class ServicesRepositoryImpl @Inject constructor(
         ).flow
     }
 
+    override fun getCategories(): Map<String, String> {
+        return mapOf("00" to "Food & Drinks", "01" to "Car service")
+    }
+
     override suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return LoginSource(servicesApi).login(loginRequest)
     }

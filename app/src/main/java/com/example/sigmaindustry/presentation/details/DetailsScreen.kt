@@ -48,6 +48,7 @@ import com.example.sigmaindustry.util.UIComponent
 fun DetailsScreen(
     service: Service,
     event: (DetailsEvent) -> Unit,
+    viewModel: DetailsViewModel,
     sideEffect: UIComponent?,
     navigateUp: () -> Unit
 ) {
@@ -61,6 +62,7 @@ fun DetailsScreen(
     var orderField by remember {
          mutableStateOf("")
     }
+    val s = viewModel.changeServiceCategory(service)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,7 +110,7 @@ fun DetailsScreen(
                     )
                     // TODO correct category
                     Text(
-                        text = "Category: ${service.category}",
+                        text = "Category: ${s.category}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(
                             id = R.color.black

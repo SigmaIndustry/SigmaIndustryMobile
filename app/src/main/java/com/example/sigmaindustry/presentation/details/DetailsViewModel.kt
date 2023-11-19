@@ -27,6 +27,8 @@ class DetailsViewModel @Inject constructor(
     var sideEffect by mutableStateOf<UIComponent?>(null)
         private set
 
+    var showDialog by mutableStateOf(false)
+
     fun changeServiceCategory(s: Service): Service {
         return s.copy(category = servicesRepository.getCategories()[s.category] ?: "Unknown")
     }
@@ -34,6 +36,12 @@ class DetailsViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     fun onEvent(event: DetailsEvent) {
         when (event) {
+            is DetailsEvent.ShowDialog -> {
+                showDialog = true
+            }
+            is DetailsEvent.HideDialog -> {
+                showDialog = false
+            }
             is DetailsEvent.RemoveSideEffect -> {
                 sideEffect = null
             }

@@ -19,7 +19,7 @@ data class User(
     var birthDate: String,
 
     @SerializedName("sex")
-    val sex: String,
+    var sex: String,
 
     @SerializedName("profile_picture")
     var photoUrl: String,
@@ -28,10 +28,12 @@ data class User(
     var role: String,
 )
 
-enum class Sex {
-    Male, Female
+enum class Sex(val toString: String) {
+    Male("M"),
+    Female("F")
 }
 
-enum class Role{
-    User,ServiceProvider
+enum class Role(val toString: String) {
+    User("G"),
+    ServiceProvider("P")
 }

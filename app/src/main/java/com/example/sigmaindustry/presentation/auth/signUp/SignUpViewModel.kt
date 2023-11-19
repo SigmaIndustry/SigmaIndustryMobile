@@ -3,7 +3,9 @@ package com.example.sigmaindustry.presentation.auth.signUp
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.sigmaindustry.domain.usecases.RegisterProvider
+import com.example.sigmaindustry.data.remote.dto.RegisterProvider
+import com.example.sigmaindustry.data.remote.dto.User
+import com.example.sigmaindustry.domain.usecases.RegisterProvider as RegisterProviderUS
 import com.example.sigmaindustry.domain.usecases.signUp.SignUp
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import com.example.sigmaindustry.domain.usecases.token.SaveToken
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUp: SignUp,
-    private val registerProvider: RegisterProvider,
+    private val registerProvider: RegisterProviderUS,
     private val saveToken: SaveToken,
     private val readToken: ReadToken
 ) : ViewModel() {
@@ -24,6 +26,13 @@ class SignUpViewModel @Inject constructor(
     private var _state = mutableStateOf(SignUpState())
     val state: State<SignUpState> = _state
 
+    fun updateUser(newUser: User) {
+        _state.value = _state.value.copy(user = newUser)
+    }
+
+    fun updateProvider(newProvider: RegisterProvider) {
+        _state.value = _state.value.copy(provider = newProvider)
+    }
 
     fun onEvent(event: SignUpEvent) {
         when (event) {

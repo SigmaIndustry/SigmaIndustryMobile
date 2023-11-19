@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.presentation.Dimens
 import com.example.sigmaindustry.presentation.navgraph.Route
+import com.example.sigmaindustry.util.Validator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,9 +56,13 @@ fun LoginScreen(
             label = { Text("Password") },
         )
         Button(onClick = {
-            event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
-            event(LoginEvent.Login)
-            toProfile()
+            var valid = Validator.validateMail(email) &&
+                    Validator.validatePassword(password)
+            if (valid) {
+                event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
+                event(LoginEvent.Login)
+                toProfile()
+            }
         }) {
             Text(text = "Log in", fontSize = 20.sp)
         }

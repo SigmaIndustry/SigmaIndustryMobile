@@ -44,15 +44,16 @@ fun SelectAuthScreen(
             })
 
             AuthType.LogUp -> {
-                val logUpViewModel: SignUpViewModel = hiltViewModel()
-                val state = logUpViewModel.state.value
+                val viewModel: SignUpViewModel = hiltViewModel()
+                val state = viewModel.state.value
                 BackHandler(true) {
                     event(SelectAuthEvent.ChangeAuthType(AuthType.None))
                 }
                 SignUpScreen(
                     state = state,
-                    event = logUpViewModel::onEvent,
-                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))}
+                    event = viewModel::onEvent,
+                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))},
+                    viewModel = viewModel
                 )
             }
 
@@ -101,6 +102,6 @@ fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 32.dp)
     ) {
-        Text(text = "Log up", fontSize = 40.sp)
+        Text(text = "Sign up", fontSize = 40.sp)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sigmaindustry.presentation.details
 
 import android.transition.Slide
+import android.widget.Space
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -62,6 +65,11 @@ fun DetailsScreen(
     var orderField by remember {
          mutableStateOf("")
     }
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
     val s = viewModel.changeServiceCategory(service)
     Column(
         modifier = Modifier
@@ -137,14 +145,6 @@ fun DetailsScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(MediumPadding1))
-                Row {
-                    OutlinedTextField(value = orderField , onValueChange = {orderField = it},
-                        modifier = Modifier.width(250.dp))
-                    Button(onClick = { event(DetailsEvent.SendOrder(serviceId = service.id,
-                        message = orderField))}) {
-                        Text("Order")
-                    }
-                }
                 Text(
                     text = service.description,
                     style = MaterialTheme.typography.bodyMedium,
@@ -168,7 +168,37 @@ fun DetailsScreen(
                     Slider(value = ratingBar , onValueChange = {ratingBar = it},
                         valueRange = 0f..5f, steps = 8)
                     // TODO unvisible
-                    Text(text = ratingBar.toString())
+                    Text(text = "$ratingBar")
+                }
+                Button(onClick = { event(DetailsEvent.ShowDialog) }) {
+                    Text("Order")
+                }
+
+                var phoneNumber by remember {
+                    mutableStateOf("")
+                }
+
+                when (viewModel.showDialog) {
+                    true -> AlertDialog(
+                        onDismissRequest = { event(DetailsEvent.HideDialog) },
+
+                        confirmButton = { TextButton(onClick = {
+                            event(DetailsEvent.SendOrder(service.id, "$orderField | My phone number is: $phoneNumber"))
+                            event(DetailsEvent.HideDialog)
+                        }) {
+                            Text("Send")
+                        } },
+                        text = {
+                            Column {
+                                OutlinedTextField(value = phoneNumber, onValueChange = {phoneNumber = it},
+                                    label = {Text("Phone")})
+                                Spacer(modifier = Modifier.height(10.dp))
+                                OutlinedTextField(value = orderField, onValueChange = {orderField = it},
+                                    label = {Text("Order")})
+                            }
+                        }
+                    )
+                    else -> null
                 }
             }
         }

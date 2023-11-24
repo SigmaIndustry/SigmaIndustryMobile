@@ -28,6 +28,8 @@ class DetailsViewModel @Inject constructor(
         private set
 
     var showDialog by mutableStateOf(false)
+    var isTokenPresent by mutableStateOf(false)
+
 
     fun changeServiceCategory(s: Service): Service {
         return s.copy(category = servicesRepository.getCategories()[s.category] ?: "Unknown")
@@ -35,7 +37,9 @@ class DetailsViewModel @Inject constructor(
 
     @OptIn(DelicateCoroutinesApi::class)
     fun onEvent(event: DetailsEvent) {
+        isTokenPresent = tokenReader.getTokenPresent()
         when (event) {
+            is DetailsEvent.Load -> {}
             is DetailsEvent.ShowDialog -> {
                 showDialog = true
             }
@@ -45,7 +49,6 @@ class DetailsViewModel @Inject constructor(
             is DetailsEvent.RemoveSideEffect -> {
                 sideEffect = null
             }
-
             is DetailsEvent.SendOrder -> {
                 GlobalScope.launch {
                     tokenReader()?.let {
@@ -53,7 +56,6 @@ class DetailsViewModel @Inject constructor(
                     }
                 }
             }
-
             is DetailsEvent.SendRate -> {
                 GlobalScope.launch {
                     tokenReader()?.let {

@@ -49,12 +49,13 @@ class ProfileScreenViewModel @Inject constructor(
                 authenticate()
             }
 
-            is ProfileScreenEvent.Update -> {
-                updateUser()
-            }
+            
             is ProfileScreenEvent.UpdateProviderEvent -> {
                 updateProvider()
             }
+
+            is ProfileScreenEvent.Update -> updateUser()
+
         }
     }
 
@@ -74,8 +75,6 @@ class ProfileScreenViewModel @Inject constructor(
                     }
                 _state.value = _state.value.copy(authenticateResponse = user.await())
             }
-
-
         }
     }
 

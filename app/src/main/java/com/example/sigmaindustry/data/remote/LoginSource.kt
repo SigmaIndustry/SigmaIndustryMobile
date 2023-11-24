@@ -9,9 +9,6 @@ class LoginSource(
 
     suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return try {
-            //loginRequest.email = "sigma@nure.ua"
-            //loginRequest.password = "hello.world_123"
-            println(loginRequest)
             servicesApi.login(loginRequest)
         } catch (e: Exception) {
             e.printStackTrace()

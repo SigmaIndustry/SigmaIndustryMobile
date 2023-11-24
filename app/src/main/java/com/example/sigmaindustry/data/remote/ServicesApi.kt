@@ -1,6 +1,7 @@
 package com.example.sigmaindustry.data.remote
 
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
+import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
@@ -15,7 +16,9 @@ import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ServicesApi {
 
@@ -41,6 +44,9 @@ interface ServicesApi {
 
     @POST("security/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    @GET("api/get_history/{email}")
+    suspend fun getHistory(@Path("email") email: String): HistoryResponse
 
 //    @POST("everything")
 //    suspend fun searchNews(

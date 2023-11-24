@@ -21,14 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
-import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
-import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthViewModel
-import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
-import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
-import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
-import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
+import com.example.sigmaindustry.presentation.cart.CartState
+import com.example.sigmaindustry.presentation.cart.CartView
+import com.example.sigmaindustry.presentation.cart.CartViewEvent
+import com.example.sigmaindustry.presentation.cart.CartViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
@@ -48,6 +46,7 @@ fun NewsNavigator(
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Home"),
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Search"),
             BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Profile"),
+            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Cart"),
         )
     }
 
@@ -69,7 +68,8 @@ fun NewsNavigator(
          route == Route.HomeScreen.route ||
                 route == Route.SearchScreen.route ||
                 route == Route.BookmarkScreen.route ||
-                route == Route.SelectAuthScreen.route
+                route == Route.SelectAuthScreen.route ||
+                route == Route.CardScreen.route
     }
 
 
@@ -93,6 +93,10 @@ fun NewsNavigator(
                         2 -> navigateToTab(
                             navController = navController,
                             Route.SelectAuthScreen.route
+                        )
+                        3 -> navigateToTab(
+                            navController = navController,
+                            Route.CardScreen.route
                         )
                     }
                 }
@@ -163,6 +167,12 @@ fun NewsNavigator(
                             viewModel = viewModel
                         )
                     }
+            }
+
+            composable(route = Route.CardScreen.route) {
+                val viewModel: CartViewModel = hiltViewModel()
+                val state = viewModel.state
+                CartView(event = viewModel::onEvent, viewModel = viewModel,  state = state)
             }
         }
     }

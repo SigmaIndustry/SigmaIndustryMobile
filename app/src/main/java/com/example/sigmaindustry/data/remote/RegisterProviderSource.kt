@@ -6,8 +6,6 @@ class RegisterProviderSource(
     private val servicesApi: ServicesApi,
 )  {
 
-
-
     suspend fun registerProvider(provider: RegisterProvider) {
         try {
             servicesApi.registerProvider(provider)

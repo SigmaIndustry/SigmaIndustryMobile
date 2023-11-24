@@ -8,6 +8,7 @@ import com.example.sigmaindustry.data.remote.dto.PostRateRequest
 import com.example.sigmaindustry.data.remote.dto.PostRateResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderRequest
 import com.example.sigmaindustry.data.remote.dto.ProviderResponse
+import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import com.example.sigmaindustry.data.remote.dto.ServiceResponse
@@ -30,6 +31,9 @@ interface ServicesApi {
     suspend fun registerProvider(@Body request: RegisterProvider)
     @POST("security/update")
     suspend fun updateUser(@Body request: UserUpdate)
+
+    @POST("security/update")
+    suspend fun updateProvider(@Body request: ProviderUpdate)
     @POST("security/authenticate")
     suspend fun authenticate(@Body request: Token): AuthenticateResponse
 

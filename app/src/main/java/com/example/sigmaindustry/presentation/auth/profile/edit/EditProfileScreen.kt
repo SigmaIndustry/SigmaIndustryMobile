@@ -1,10 +1,14 @@
-package com.example.sigmaindustry.presentation.auth.profile
+package com.example.sigmaindustry.presentation.auth.profile.edit
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenEvent
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -37,17 +42,12 @@ fun EditProfileView(
     user: User,
     event: KSuspendFunction1<ProfileScreenEvent, Unit>,
     logOut: () -> Unit
-){
-
-    var error by remember {
-        mutableStateOf("")
-    }
-
+) {
+    var error by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf(user.firstName) }
     var lastName by remember { mutableStateOf(user.lastName) }
     var isValidFirstName by remember { mutableStateOf(false) }
     var isValidLastName by remember { mutableStateOf(false) }
-
     var birthDate by remember { mutableStateOf(user.birthDate) }
 
     val mContext = LocalContext.current
@@ -57,20 +57,27 @@ fun EditProfileView(
     val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
     mCalendar.time = Date()
 
-
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, year: Int, month: Int, day: Int ->
             birthDate = "$year-$month-$day"
-        }, mYear, mMonth, mDay
+        },
+        mYear,
+        mMonth,
+        mDay
     )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         Text(
-            text = "Remember you need to sign in again if you update profile"
+            text = "Remember you need to sign in again if you update profile",
+            modifier = Modifier.padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
             value = firstName,
             onValueChange = { input ->
@@ -78,6 +85,9 @@ fun EditProfileView(
                 isValidFirstName = input.isNotEmpty()
             },
             label = { Text("First Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
         OutlinedTextField(
@@ -87,21 +97,33 @@ fun EditProfileView(
                 isValidLastName = input.isNotEmpty()
             },
             label = { Text("Last Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
-        Button(onClick = { mDatePickerDialog.show() }) {
+        Button(
+            onClick = { mDatePickerDialog.show() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
             Text(text = "Pick birth date: $birthDate", color = Color.White)
         }
 
+        Text(error, modifier = Modifier.padding(bottom = 16.dp))
 
-        Text(error)
-        Row() {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Button(
                 onClick = {
                     val isValid = listOf(
                         firstName.isNotEmpty(),
                         lastName.isNotEmpty(),
-                        birthDate.isNotEmpty())
+                        birthDate.isNotEmpty()
+                    )
                     if (isValid.contains(false)) {
                         error = "Error from: "
                         if (!isValid[0]) {
@@ -131,15 +153,17 @@ fun EditProfileView(
                         logOut()
                         onUpdateRequest()
                     }
-                }
+                },
+                modifier = Modifier.weight(1f)
             ) {
                 Text(text = "Update")
             }
+
             Spacer(modifier = Modifier.width(10.dp))
+
             Button(
-                onClick = {
-                    onUpdateRequest()
-                }
+                onClick = { onUpdateRequest() },
+                modifier = Modifier.weight(1f)
             ) {
                 Text(text = "Cancel")
             }

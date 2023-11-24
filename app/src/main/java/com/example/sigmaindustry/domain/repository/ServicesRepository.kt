@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
+import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.Token
@@ -17,6 +18,7 @@ interface ServicesRepository {
     suspend fun login(loginRequest: LoginRequest): LoginResponse
     suspend fun signUp(user: User): LoginResponse
     suspend fun updateUser(userUpdate: UserUpdate)
+    suspend fun updateProvider(userUpdate: ProviderUpdate)
     suspend fun registerProvider(provider: RegisterProvider)
     suspend fun authenticate(token: Token): AuthenticateResponse
     fun searchServices(searchQuery: String): Flow<PagingData<Service>>

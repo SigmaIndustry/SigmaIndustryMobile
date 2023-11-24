@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.data.remote.dto.Token
+import com.example.sigmaindustry.domain.usecases.UpdateProvider
 import com.example.sigmaindustry.domain.usecases.UpdateUser
 import com.example.sigmaindustry.domain.usecases.authenticate.Authenticate
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class ProfileScreenViewModel @Inject constructor(
     private val readTokenUseCase: ReadToken,
     private val authenticateUseCase: Authenticate,
-    private val updateUser: UpdateUser
+    private val updateUser: UpdateUser,
+    private val updateProvider: UpdateProvider
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private var _state = mutableStateOf(ProfileScreenState())
@@ -35,6 +37,9 @@ class ProfileScreenViewModel @Inject constructor(
             is ProfileScreenEvent.UpdateUser -> {
                 _state.value = _state.value.copy(update = event.user)
             }
+            is ProfileScreenEvent.UpdateProvider -> {
+                _state.value = _state.value.copy(updateProvider = event.provider)
+            }
 
             is ProfileScreenEvent.ProfileScreen -> {
                 authenticate()
@@ -47,16 +52,12 @@ class ProfileScreenViewModel @Inject constructor(
             is ProfileScreenEvent.Update -> {
                 updateUser()
             }
+            is ProfileScreenEvent.UpdateProviderEvent -> {
+                updateProvider()
+            }
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun readToken() {
-        GlobalScope.launch {
-            val token = async { readTokenUseCase() }
-            _state.value = _state.value.copy(token = token.await())
-        }
-    }
 
     @OptIn(DelicateCoroutinesApi::class)
     suspend fun authenticate() {
@@ -82,6 +83,12 @@ class ProfileScreenViewModel @Inject constructor(
     suspend fun updateUser() {
         GlobalScope.launch {
             updateUser(state.value.update!!)
+        }
+    }
+    @OptIn(DelicateCoroutinesApi::class)
+    suspend fun updateProvider() {
+        GlobalScope.launch {
+            updateProvider(state.value.updateProvider!!)
         }
     }
 }

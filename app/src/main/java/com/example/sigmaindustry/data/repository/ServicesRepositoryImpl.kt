@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.sigmaindustry.data.remote.AuthenticateSource
 import com.example.sigmaindustry.data.remote.LoginSource
+import com.example.sigmaindustry.data.remote.ProviderUpdateSource
 import com.example.sigmaindustry.data.remote.RegisterProviderSource
 import com.example.sigmaindustry.data.remote.SearchServicesPagingSource
 import com.example.sigmaindustry.data.remote.ServicesApi
@@ -16,6 +17,7 @@ import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
 import com.example.sigmaindustry.data.remote.dto.PostRateRequest
+import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.Token
@@ -55,6 +57,10 @@ class ServicesRepositoryImpl @Inject constructor(
 
     override suspend fun updateUser(userUpdate: UserUpdate) {
         UserUpdateSource(servicesApi).updateUser(userUpdate)
+    }
+
+    override suspend fun updateProvider(providerUpdate: ProviderUpdate) {
+        ProviderUpdateSource(servicesApi).updateProvider(providerUpdate)
     }
     override suspend fun registerProvider(provider: RegisterProvider) {
         RegisterProviderSource(servicesApi).registerProvider(provider)

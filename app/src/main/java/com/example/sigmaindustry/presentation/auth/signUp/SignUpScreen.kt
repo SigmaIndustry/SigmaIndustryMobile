@@ -5,6 +5,8 @@ import android.widget.DatePicker
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -23,8 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Role
 import com.example.sigmaindustry.data.remote.dto.Sex
 import com.example.sigmaindustry.presentation.Dimens
@@ -35,7 +38,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
-
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun SignUpScreen(
@@ -44,11 +46,8 @@ fun SignUpScreen(
     viewModel: SignUpViewModel,
     toProfile: () -> Unit
 ) {
-
     var birthDate by remember { mutableStateOf("") }
-    var error by remember {
-        mutableStateOf("")
-    }
+    var error by remember { mutableStateOf("") }
 
     val mContext = LocalContext.current
     val mCalendar = Calendar.getInstance()
@@ -64,127 +63,180 @@ fun SignUpScreen(
         }, mYear, mMonth, mDay
     )
 
-
     Column(
         modifier = Modifier
-            .padding(
-                top = Dimens.MediumPadding1,
-                start = Dimens.MediumPadding1,
-                end = Dimens.MediumPadding1
-            )
+            .fillMaxSize()
+            .padding(Dimens.MediumPadding1)
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
     ) {
+        // User Information
         OutlinedTextField(
             value = state.user.email,
             onValueChange = { viewModel.updateUser(state.user.copy(email = it)) },
             label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
             value = state.user.password,
             onValueChange = { viewModel.updateUser(state.user.copy(password = it)) },
             label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
+
         OutlinedTextField(
             value = state.user.firstName,
             onValueChange = { viewModel.updateUser(state.user.copy(firstName = it)) },
             label = { Text("First Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
         OutlinedTextField(
             value = state.user.lastName,
             onValueChange = { viewModel.updateUser(state.user.copy(lastName = it)) },
             label = { Text("Last Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
-        Button(onClick = { mDatePickerDialog.show() }) {
+        // Birthdate and Sex
+        Button(
+            onClick = { mDatePickerDialog.show() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
             Text(text = "Pick birth date: $birthDate", color = Color.White)
         }
+
         Text("Choose your sex")
-        Row()
-        {
+        Row {
+            // Male Button
             Button(
                 onClick = { viewModel.updateUser(state.user.copy(sex = Sex.Male.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.user.sex == Sex.Male.toString) Color(
-                        0xFF6650a4
-                    ) else Color.Gray
-                )
+                    containerColor = if (state.user.sex == Sex.Male.toString) Color(0xFF6650a4) else Color.Gray
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 16.dp)
             ) {
                 Text("Male")
             }
+
+            // Female Button
             Button(
                 onClick = { viewModel.updateUser(state.user.copy(sex = Sex.Female.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.user.sex == Sex.Female.toString) Color(
-                        0xFF6650a4
-                    ) else Color.Gray
-                )
+                    containerColor = if (state.user.sex == Sex.Female.toString) Color(0xFF6650a4) else Color.Gray
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 16.dp)
             ) {
                 Text("Female")
             }
         }
+
+        // Choose your role
         Text("Choose your role")
-        Row()
-        {
+        Row {
+            // User Button
             Button(
                 onClick = { viewModel.updateUser(state.user.copy(role = Role.User.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.user.role == Role.User.toString) Color(
-                        0xFF6650a4
-                    ) else Color.Gray
-                )
+                    containerColor = if (state.user.role == Role.User.toString) Color(0xFF6650a4) else Color.Gray
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 16.dp)
             ) {
-
                 Text("User")
             }
+
+            // Service Provider Button
             Button(
                 onClick = { viewModel.updateUser(state.user.copy(role = Role.ServiceProvider.toString)) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (state.user.role == Role.ServiceProvider.toString) Color(
-                        0xFF6650a4
-                    ) else Color.Gray
-                )
+                    containerColor = if (state.user.role == Role.ServiceProvider.toString) Color(0xFF6650a4) else Color.Gray
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = 16.dp)
             ) {
-
                 Text("Service provider")
             }
         }
+
+        // Service Provider Information
         if (state.user.role == Role.ServiceProvider.toString) {
             OutlinedTextField(
-                value = state.provider.businessName ,
+                value = state.provider.businessName,
                 onValueChange = { viewModel.updateProvider(state.provider.copy(businessName = it)) },
                 label = { Text("Business name") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
+
             OutlinedTextField(
                 value = state.provider.description,
                 onValueChange = { viewModel.updateProvider(state.provider.copy(description = it)) },
                 label = { Text("Description") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
+
             OutlinedTextField(
                 value = state.provider.phoneNumber,
                 onValueChange = { viewModel.updateProvider(state.provider.copy(phoneNumber = it)) },
                 label = { Text("Phone number") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
+
             OutlinedTextField(
                 value = state.provider.city,
                 onValueChange = { viewModel.updateProvider(state.provider.copy(city = it)) },
                 label = { Text("City") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
+
             OutlinedTextField(
                 value = state.provider.workTime,
                 onValueChange = { viewModel.updateProvider(state.provider.copy(workTime = it)) },
                 label = { Text("Work time") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
         }
-        Text(text = error)
+
+        // Display Error
+        Text(text = error, color = Color.Red, modifier = Modifier.padding(bottom = 16.dp))
+
+        // Sign-up Button
         Button(
             onClick = {
-                val isValid = listOf(Validator.validateMail(state.user.email),
-                        Validator.validatePassword(state.user.password),
-                        state.user.firstName.isNotEmpty(),
-                        state.user.lastName.isNotEmpty(),
-                        birthDate.isNotEmpty())
+                val isValid = listOf(
+                    Validator.validateMail(state.user.email),
+                    Validator.validatePassword(state.user.password),
+                    state.user.firstName.isNotEmpty(),
+                    state.user.lastName.isNotEmpty(),
+                    birthDate.isNotEmpty())
                 if (isValid.contains(false)) {
                     error = "Error from: "
                     if (!isValid[0]) {
@@ -205,18 +257,14 @@ fun SignUpScreen(
                     return@Button
                 }
                 error = ""
-                val validProvider = listOf(state.user.role == Role.ServiceProvider.toString,
-                        state.provider.city.isNotEmpty(),
-                        state.provider.description.isNotEmpty(),
-                        state.provider.phoneNumber.isNotEmpty(),
-                        state.provider.workTime.isNotEmpty(),
-                        state.provider.businessName.isNotEmpty())
-                GlobalScope.launch {
-                    viewModel.updateUser(state.user.copy(birthDate = birthDate,
-                        photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
-                    event(SignUpEvent.SignUp)
+                val validProvider = listOf(
+                    state.user.role == Role.ServiceProvider.toString,
+                    state.provider.city.isNotEmpty(),
+                    state.provider.description.isNotEmpty(),
+                    state.provider.phoneNumber.isNotEmpty(),
+                    state.provider.workTime.isNotEmpty(),
+                    state.provider.businessName.isNotEmpty())
 
-                    delay(2000)
 
                     if (validProvider.contains(false)) {
                         viewModel.updateProvider(state.provider.copy(email = state.user.email))
@@ -238,16 +286,28 @@ fun SignUpScreen(
                         if (!validProvider[5]) {
                             error += "business name."
                         }
+
                     }
+                GlobalScope.launch {
+                    viewModel.updateUser(state.user.copy(birthDate = birthDate,
+                        photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
+                    event(SignUpEvent.SignUp)
+
+                    delay(2000)
                     toProfile()
                 }
 
             },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
-            Text(text = "Sign up", fontSize = 20.sp)
+            Text(text = "Sign up", fontSize = 18.sp)
         }
 
         Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
-        Text(text = state.loginResponse.token)
+
+        // Display Token (You may customize this part based on your needs)
+      //  Text(text = state.loginResponse.token)
     }
 }

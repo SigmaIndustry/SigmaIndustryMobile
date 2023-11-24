@@ -2,7 +2,9 @@ package com.example.sigmaindustry.presentation.auth.selectAuth
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
@@ -59,7 +61,6 @@ fun SelectAuthScreen(
 
             AuthType.LogIn -> {
                 val logInViewModel: LoginViewModel = hiltViewModel()
-                val state = logInViewModel.state.value
                 BackHandler(true) {
                     event(SelectAuthEvent.ChangeAuthType(AuthType.None))
                 }
@@ -83,24 +84,33 @@ fun SelectAuthScreen(
 
 @Composable
 fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
-    Button(
-        onClick = {
-            changeAuthType(AuthType.LogIn)
-        },
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 32.dp)
+            .padding(16.dp)
     ) {
-        Text(text = "Log in", fontSize = 40.sp)
-    }
-    Button(
-        onClick = {
-            changeAuthType(AuthType.LogUp)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 32.dp)
-    ) {
-        Text(text = "Sign up", fontSize = 40.sp)
+        Button(
+            onClick = {
+                changeAuthType(AuthType.LogIn)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            Text(text = "Log in", fontSize = 20.sp)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                changeAuthType(AuthType.LogUp)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            Text(text = "Sign up", fontSize = 20.sp)
+        }
     }
 }

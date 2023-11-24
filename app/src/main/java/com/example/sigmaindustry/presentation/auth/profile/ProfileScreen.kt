@@ -1,47 +1,39 @@
 package com.example.sigmaindustry.presentation.auth.profile
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.sigmaindustry.data.remote.dto.User
-import com.example.sigmaindustry.data.remote.dto.UserUpdate
-import com.example.sigmaindustry.presentation.Dimens
-import com.example.sigmaindustry.util.Validator
-import kotlinx.coroutines.GlobalScope
+import com.example.sigmaindustry.presentation.auth.profile.edit.EditProfileView
+import com.example.sigmaindustry.presentation.auth.profile.edit.EditProviderProfileView
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Date
 import kotlin.reflect.KSuspendFunction1
 
 
@@ -53,8 +45,7 @@ fun ProfileScreen(
 ) {
 
     Column(
-        horizontalAlignment = CenterHorizontally,
-        modifier = Modifier.padding(Dimens.MediumPadding1)
+        horizontalAlignment = CenterHorizontally
     ) {
         when (state.token) {
             null -> {
@@ -77,155 +68,241 @@ fun ProfileScreen(
                         state.token = null
                         logOut()
                     }
-                    var openAlertDialog = remember { mutableStateOf(false) }
+                    val openAlertDialog = remember { mutableStateOf(false) }
                     when (openAlertDialog.value) {
                         false -> {
                             Column(
-                                modifier =
-                                Modifier.verticalScroll(rememberScrollState()),
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(16.dp),
                                 horizontalAlignment = CenterHorizontally
                             ) {
-                                AsyncImage(
-                                    model = state.authenticateResponse?.user?.photoUrl,
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
+                                // User information
+                                Box(
                                     modifier = Modifier
                                         .size(144.dp)
-                                        .clip(shape = CircleShape)
-                                )
-
-                                Text(
-                                    text = (state.authenticateResponse?.user?.firstName) +
-                                            " " +
-                                            (state.authenticateResponse?.user?.lastName),
-                                    style = TextStyle(
-                                        fontSize = 44.sp
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = state.authenticateResponse?.user?.email ?: "null",
-                                    style = TextStyle(
-                                        fontSize = 20.sp,
-                                        color = Color.Gray,
-                                        letterSpacing = (0.8).sp
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                Text(
-                                    text = "Born in " + state.authenticateResponse?.user?.birthDate,
-                                    style = TextStyle(
-                                        fontSize = 28.sp,
-                                        color = Color.Black,
-                                        letterSpacing = (0.8).sp
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = state.authenticateResponse?.user?.sex ?: "null",
-                                    style = TextStyle(
-                                        fontSize = 28.sp,
-                                        color = Color.Black,
-                                        letterSpacing = (0.8).sp
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(modifier = Modifier.height(40.dp))
-                                if (state.authenticateResponse?.provider != null) {
-                                    Text(
-                                        text = "Provider info:",
-                                        style = TextStyle(
-                                            fontSize = 30.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(20.dp))
-                                    Text(
-                                        text = state.authenticateResponse.provider.businessName,
-                                        style = TextStyle(
-                                            fontSize = 30.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    Text(
-                                        text = state.authenticateResponse.provider.description,
-                                        style = TextStyle(
-                                            fontSize = 14.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Phone: +380" + state.authenticateResponse.provider.phoneNumber,
-                                        style = TextStyle(
-                                            fontSize = 28.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "City: " + state.authenticateResponse.provider.city,
-                                        style = TextStyle(
-                                            fontSize = 28.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Work time: " + state.authenticateResponse.provider.workTime,
-                                        style = TextStyle(
-                                            fontSize = 18.sp,
-                                            color = Color.Black,
-                                            letterSpacing = (0.8).sp
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
+                                        .clip(CircleShape)
+                                ) {
+                                    AsyncImage(
+                                        model = state.authenticateResponse?.user?.photoUrl,
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
                                     )
                                 }
-                                //Text("Token is ${state.token}")
-                                Row {
-                                    Button(onClick = {
 
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                Text(
+                                    text = "${state.authenticateResponse?.user?.firstName} ${state.authenticateResponse?.user?.lastName}",
+                                    style = TextStyle(
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                Text(
+                                    text = state.authenticateResponse?.user?.email
+                                        ?: "Email not available",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        color = Color.Gray,
+                                        letterSpacing = 0.8.sp
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Divider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(1.dp), color = Color.Gray
+                                )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                // User details
+                                Text(
+                                    text = "Born in ${state.authenticateResponse?.user?.birthDate ?: "N/A"}",
+                                    style = TextStyle(
+                                        fontSize = 18.sp,
+                                        color = Color.Black,
+                                        letterSpacing = 0.8.sp
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                Text(
+                                    text = state.authenticateResponse?.user?.sex
+                                        ?: "Gender not specified",
+                                    style = TextStyle(
+                                        fontSize = 18.sp,
+                                        color = Color.Black,
+                                        letterSpacing = 0.8.sp
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Divider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(1.dp), color = Color.Gray
+                                )
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                // Provider information
+                                if(state.authenticateResponse?.provider != null) {
+                                    state.authenticateResponse.provider.let { provider ->
+                                        Text(
+                                            text = "Provider info:",
+                                            style = TextStyle(
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Spacer(modifier = Modifier.height(12.dp))
+
+                                        Text(
+                                            text = provider.businessName,
+                                            style = TextStyle(
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Divider(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(1.dp), color = Color.Gray
+                                        )
+
+                                        Spacer(modifier = Modifier.height(8.dp))
+
+                                        Text(
+                                            text = provider.description,
+                                            style = TextStyle(
+                                                fontSize = 14.sp,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Divider(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(1.dp), color = Color.Gray
+                                        )
+
+                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                        Text(
+                                            text = "Phone: +380${provider.phoneNumber}",
+                                            style = TextStyle(
+                                                fontSize = 18.sp,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Divider(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(1.dp), color = Color.Gray
+                                        )
+
+                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                        Text(
+                                            text = "City: ${provider.city}",
+                                            style = TextStyle(
+                                                fontSize = 18.sp,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        Divider(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(1.dp), color = Color.Gray
+                                        )
+
+                                        Spacer(modifier = Modifier.height(4.dp))
+
+                                        Text(
+                                            text = "Work time: ${provider.workTime}",
+                                            style = TextStyle(
+                                                fontSize = 14.sp,
+                                                color = Color.Black,
+                                                letterSpacing = 0.8.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                // Buttons
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Button(onClick = {
                                         openAlertDialog.value = true
                                     }) {
-                                        Text("Edit profile")
+                                        Text("Edit Profile")
                                     }
-                                    Spacer(modifier = Modifier.width(10.dp))
+
                                     Button(onClick = {
                                         state.token = null
                                         logOut()
                                     }) {
-                                        Text("LogOut")
+                                        Text("Log Out")
                                     }
                                 }
                             }
+
                         }
 
+
                         true -> {
-                            if (state.authenticateResponse?.user != null && state.token != null) {
+                            if (state.authenticateResponse?.provider != null && state.token != null) {
+                                EditProviderProfileView(
+                                    onUpdateRequest = { openAlertDialog.value = false },
+                                    user = state.authenticateResponse.user,
+                                    provider = state.authenticateResponse.provider,
+                                    token = state.token,
+                                    event = event
+                                ) {
+                                    logOut()
+                                }
+                            } else if (state.authenticateResponse?.user != null && state.token != null) {
                                 EditProfileView(
                                     onUpdateRequest = { openAlertDialog.value = false },
                                     user = state.authenticateResponse.user,
@@ -238,155 +315,6 @@ fun ProfileScreen(
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditProfileView(
-    onUpdateRequest: () -> Unit,
-    token: String?,
-    user: User,
-    event: KSuspendFunction1<ProfileScreenEvent, Unit>,
-    logOut: () -> Unit
-){
-
-    var error by remember {
-        mutableStateOf("")
-    }
-
-    var email by remember { mutableStateOf(user.email) }
-    var password by remember { mutableStateOf("") }
-    var firstName by remember { mutableStateOf(user.firstName) }
-    var lastName by remember { mutableStateOf(user.lastName) }
-    var isValidEmail by remember { mutableStateOf(false) }
-    var isValidPassword by remember { mutableStateOf(false) }
-    var isValidFirstName by remember { mutableStateOf(false) }
-    var isValidLastName by remember { mutableStateOf(false) }
-    val emailRequiredChars = setOf('@', '.')
-
-    var birthDate by remember { mutableStateOf(user.birthDate) }
-
-    val mContext = LocalContext.current
-    val mCalendar = Calendar.getInstance()
-    val mYear = mCalendar.get(Calendar.YEAR)
-    val mMonth = mCalendar.get(Calendar.MONTH)
-    val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
-    mCalendar.time = Date()
-
-
-    val mDatePickerDialog = DatePickerDialog(
-        mContext,
-        { _: DatePicker, year: Int, month: Int, day: Int ->
-            birthDate = "$year-$month-$day"
-        }, mYear, mMonth, mDay
-    )
-
-    Column(
-         horizontalAlignment = CenterHorizontally,
-    ) {
-        Text(
-            text = "Remember you need to sign in again if you update profile"
-        )
-        OutlinedTextField(
-            value = email,
-            onValueChange = { input ->
-                email = input
-                isValidEmail = input.isNotEmpty() && input.all(emailRequiredChars::contains)
-            },
-            label = { Text("Email") },
-        )
-        OutlinedTextField(
-            value = firstName,
-            onValueChange = { input ->
-                firstName = input
-                isValidFirstName = input.isNotEmpty()
-            },
-            label = { Text("First Name") },
-        )
-
-        OutlinedTextField(
-            value = lastName,
-            onValueChange = { input ->
-                lastName = input
-                isValidLastName = input.isNotEmpty()
-            },
-            label = { Text("Last Name") },
-        )
-
-        Button(onClick = { mDatePickerDialog.show() }) {
-            Text(text = "Pick birth date: $birthDate", color = Color.White)
-        }
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { input ->
-                password = input
-                isValidPassword = input.length >= 6
-            },
-            label = { Text("Password") },
-        )
-        Text(error)
-        Row() {
-            Button(
-                onClick = {
-                    val isValid = listOf(
-                        Validator.validateMail(email),
-                        Validator.validatePassword(password),
-                        firstName.isNotEmpty(),
-                        lastName.isNotEmpty(),
-                        birthDate.isNotEmpty())
-                    if (isValid.contains(false)) {
-                        error = "Error from: "
-                        if (!isValid[0]) {
-                            error += "email, "
-                        }
-                        if (!isValid[1]) {
-                            error += "password, "
-                        }
-                        if (!isValid[2]) {
-                            error += "first name, "
-                        }
-                        if (!isValid[3]) {
-                            error += "last name, "
-                        }
-                        if (!isValid[4]) {
-                            error += "birth day."
-                        }
-                        return@Button
-                    }
-
-                    GlobalScope.launch {
-                        event(
-                            ProfileScreenEvent.UpdateUser(
-                                UserUpdate(
-                                    token = token ?: "",
-                                    email,
-                                    password,
-                                    firstName,
-                                    lastName,
-                                    birthDate
-                                )
-                            )
-                        )
-                        event(ProfileScreenEvent.Update)
-                        logOut()
-                        onUpdateRequest()
-                    }
-                }
-            ) {
-                Text(text = "Update")
-            }
-            Spacer(modifier = Modifier.width(10.dp))
-            Button(
-                onClick = {
-                        onUpdateRequest()
-                }
-            ) {
-                Text(text = "Cancel")
             }
         }
     }

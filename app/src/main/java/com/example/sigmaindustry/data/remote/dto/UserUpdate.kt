@@ -5,19 +5,28 @@ import com.google.gson.annotations.SerializedName
 data class UserUpdate(
     @SerializedName("token")
     var token: String,
-    @SerializedName("email")
-    var email: String,
-
-    @SerializedName("password")
-    var password: String,
 
     @SerializedName("first_name")
-    var firstName: String,
+    var firstName: String?,
 
     @SerializedName("last_name")
-    var lastName: String,
+    var lastName: String?,
 
     @SerializedName("birth_date")
-    var birthDate: String,
-
+    var birthDate: String?,
+//
+//    @SerializedName("business_name")
+//    var businessName: String? = null,
+//
+//    @SerializedName("description")
+//    var description: String? = null,
+//
+//    @SerializedName("phone_number")
+//    var phoneNumber: String? = null,
+//
+//    @SerializedName("city")
+//    var city: String? = null,
+//
+//    @SerializedName("work_time")
+//    var workTime: String? = null
 )

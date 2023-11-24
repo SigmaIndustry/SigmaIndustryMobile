@@ -53,6 +53,7 @@ android {
 
 dependencies {
 
+    implementation("com.github.a914-gowtham:compose-ratingbar:1.2.5")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
@@ -69,45 +70,32 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.navigation:navigation-compose:2.7.5")
-    
-
     //Splash Api
     implementation("androidx.core:core-splashscreen:1.0.1")
-
-
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
     //Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
-
     //Datastore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
-
     //Compose Foundation
     implementation ("androidx.compose.foundation:foundation:1.5.4")
-
     //Accompanist
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
-
     //Paging 3
     val pagingVersion = "3.2.1"
     implementation ("androidx.paging:paging-runtime-ktx:$pagingVersion")
     implementation ("androidx.paging:paging-compose:3.3.0-alpha02")
-
     //Room
     val roomVersion = "2.6.0"
     implementation ("androidx.room:room-runtime:$roomVersion")
     kapt ("androidx.room:room-compiler:$roomVersion")
     implementation ("androidx.room:room-ktx:2.6.0")
-
-
 }
 kapt {
     correctErrorTypes = true

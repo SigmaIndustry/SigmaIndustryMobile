@@ -42,6 +42,9 @@ import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
 import com.example.sigmaindustry.presentation.Dimens.ServiceImageHeight
 import com.example.sigmaindustry.presentation.details.components.DetailsTopBar
 import com.example.sigmaindustry.util.UIComponent
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarConfig
+import com.gowtham.ratingbar.StepSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +69,7 @@ fun DetailsScreen(
     var showDialog by remember {
         mutableStateOf(false)
     }
-
+    event(DetailsEvent.Load)
     val s = viewModel.changeServiceCategory(service)
     Column(
         modifier = Modifier
@@ -161,15 +164,14 @@ fun DetailsScreen(
                         Text("Rate")
                     }
                 }
-                Text("1 to 5", Modifier.align(CenterHorizontally) )
-                Row {
-                    Slider(value = ratingBar , onValueChange = {ratingBar = it},
-                        valueRange = 0f..5f, steps = 8)
-                    // TODO unvisible
+                RatingBar(value = ratingBar, onValueChange = {ratingBar = it},
+                    onRatingChanged = {}, config = RatingBarConfig().stepSize(StepSize.HALF))
+                when (viewModel.isTokenPresent) {
+                    true -> Button(onClick = { event(DetailsEvent.ShowDialog) }) {
+                        Text("Order")
+                    }
 
-                }
-                Button(onClick = { event(DetailsEvent.ShowDialog) }) {
-                    Text("Order")
+                    else -> {}
                 }
 
                 var phoneNumber by remember {
@@ -202,4 +204,5 @@ fun DetailsScreen(
         }
     }
 }
+
 

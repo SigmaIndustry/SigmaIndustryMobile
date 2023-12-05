@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition(condition = { viewModel.splashCondition.value })
         }
-        print("ping")
         setContent {
             SigmaIndustryTheme(dynamicColor = false) {
                 val isSystemInDarkMode = isSystemInDarkTheme()

@@ -66,8 +66,6 @@ fun ProfileScreen(
                 Column(
                     horizontalAlignment = CenterHorizontally
                 ) {
-
-
                     if (state.token == "") {
                         state.token = null
                         logOut()

@@ -9,7 +9,6 @@ private var isTokenPresent = false
 class ReadToken @Inject constructor(
     private val localUserManger: LocalUserManger,
 ) {
-
     suspend operator fun invoke(): String? {
         val token = localUserManger.readToken()
         isTokenPresent = token != null

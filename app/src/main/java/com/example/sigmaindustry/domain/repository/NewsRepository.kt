@@ -17,5 +17,4 @@ interface NewsRepository {
     fun searchNews(searchQuery: String): Flow<PagingData<ServiceResponse>>
 
     fun getProvider(providerId: Int): ProviderResponse
-
 }

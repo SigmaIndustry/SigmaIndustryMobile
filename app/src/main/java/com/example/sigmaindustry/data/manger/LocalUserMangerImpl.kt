@@ -46,8 +46,8 @@ class LocalUserMangerImpl @Inject constructor(
         val appToken = application.dataStore.data.map { preferences ->
             preferences[PreferenceKeys.TOKEN]
         }.first()
-        println("Token: $token")
-        return appToken ?: token
+        println("Token: $token, appToken: $appToken")
+        return token
     }
 
 }

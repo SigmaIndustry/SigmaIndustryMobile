@@ -18,6 +18,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -43,7 +44,7 @@ import kotlin.reflect.KSuspendFunction1
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun ProfileScreen(
-    state: ProfileScreenState,
+    state: State<ProfileScreenState>,
     event: KSuspendFunction1<ProfileScreenEvent, Unit>,
     logOut: () -> Unit
 ) {
@@ -51,23 +52,20 @@ fun ProfileScreen(
     Column(
         horizontalAlignment = CenterHorizontally
     ) {
-        when (state.token) {
+        when (state.value.token) {
             null -> {
                 Text("Wait", modifier = Modifier.align(alignment = CenterHorizontally))
-
-                LaunchedEffect(state) {
-                    delay(2000)
+                LaunchedEffect(null) {
                     event(ProfileScreenEvent.Authenticate)
                 }
 
             }
-
             else -> {
                 Column(
                     horizontalAlignment = CenterHorizontally
                 ) {
-                    if (state.token == "") {
-                        state.token = null
+                    if (state.value.token == "") {
+                        state.value.token = null
                         logOut()
                     }
                     val openEditDialog = remember { mutableStateOf(0) }
@@ -86,7 +84,7 @@ fun ProfileScreen(
                                         .clip(CircleShape)
                                 ) {
                                     AsyncImage(
-                                        model = state.authenticateResponse?.user?.photoUrl,
+                                        model = state.value.authenticateResponse?.user?.photoUrl,
                                         contentDescription = null,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxSize()
@@ -96,7 +94,7 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Text(
-                                    text = "${state.authenticateResponse?.user?.firstName} ${state.authenticateResponse?.user?.lastName}",
+                                    text = "${state.value.authenticateResponse?.user?.firstName} ${state.value.authenticateResponse?.user?.lastName}",
                                     style = TextStyle(
                                         fontSize = 24.sp,
                                         fontWeight = FontWeight.Bold
@@ -108,7 +106,7 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(4.dp))
 
                                 Text(
-                                    text = state.authenticateResponse?.user?.email
+                                    text = state.value.authenticateResponse?.user?.email
                                         ?: "Email not available",
                                     style = TextStyle(
                                         fontSize = 16.sp,
@@ -129,7 +127,7 @@ fun ProfileScreen(
 
                                 // User details
                                 Text(
-                                    text = "Born in ${state.authenticateResponse?.user?.birthDate ?: "N/A"}",
+                                    text = "Born in ${state.value.authenticateResponse?.user?.birthDate ?: "N/A"}",
                                     style = TextStyle(
                                         fontSize = 18.sp,
                                         color = Color.Black,
@@ -142,7 +140,7 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(4.dp))
 
                                 Text(
-                                    text = state.authenticateResponse?.user?.sex
+                                    text = state.value.authenticateResponse?.user?.sex
                                         ?: "Gender not specified",
                                     style = TextStyle(
                                         fontSize = 18.sp,
@@ -162,8 +160,8 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 // Provider information
-                                if(state.authenticateResponse?.provider != null) {
-                                    state.authenticateResponse.provider.let { provider ->
+                                if(state.value.authenticateResponse?.provider != null) {
+                                    state.value.authenticateResponse!!.provider.let { provider ->
                                         Text(
                                             text = "Provider info:",
                                             style = TextStyle(
@@ -280,7 +278,7 @@ fun ProfileScreen(
                                     }) {
                                         Text("Edit Profile")
                                     }
-                                    if(state.authenticateResponse?.provider != null) {
+                                    if(state.value.authenticateResponse?.provider != null) {
                                         Button(onClick = {
                                                  GlobalScope.launch {
                                                      delay(2000)
@@ -292,7 +290,7 @@ fun ProfileScreen(
                                         }
                                     }
                                     Button(onClick = {
-                                        state.token = null
+                                        state.value.token = null
                                         logOut()
                                     }) {
                                         Text("Log Out")
@@ -304,21 +302,21 @@ fun ProfileScreen(
 
 
                         1 -> {
-                            if (state.authenticateResponse?.provider != null && state.token != null) {
+                            if (state.value.authenticateResponse?.provider != null && state.value.token != null) {
                                 EditProviderProfileView(
                                     onUpdateRequest = { openEditDialog.value = 0 },
-                                    user = state.authenticateResponse.user,
-                                    provider = state.authenticateResponse.provider,
-                                    token = state.token,
+                                    user = state.value.authenticateResponse!!.user,
+                                    provider = state.value.authenticateResponse!!.provider,
+                                    token = state.value.token,
                                     event = event
                                 ) {
                                     logOut()
                                 }
-                            } else if (state.authenticateResponse?.user != null && state.token != null) {
+                            } else if (state.value.authenticateResponse?.user != null && state.value.token != null) {
                                 EditProfileView(
                                     onUpdateRequest = { openEditDialog.value = 0 },
-                                    user = state.authenticateResponse.user,
-                                    token = state.token,
+                                    user = state.value.authenticateResponse!!.user,
+                                    token = state.value.token,
                                     event = event
                                 ) {
                                     logOut()
@@ -328,12 +326,12 @@ fun ProfileScreen(
                         }
 
                         2 -> {
-                            if (state.authenticateResponse?.provider != null && state.token != null) {
+                            if (state.value.authenticateResponse?.provider != null && state.value.token != null) {
                                 EditProviderProfileView(
                                     onUpdateRequest = { openEditDialog.value = 0 },
-                                    user = state.authenticateResponse.user,
-                                    provider = state.authenticateResponse.provider,
-                                    token = state.token,
+                                    user = state.value.authenticateResponse!!.user,
+                                    provider = state.value.authenticateResponse!!.provider,
+                                    token = state.value.token,
                                     event = event
                                 ) {
                                     logOut()

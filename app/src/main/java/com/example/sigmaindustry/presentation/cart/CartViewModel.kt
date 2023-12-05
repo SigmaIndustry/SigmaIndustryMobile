@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.domain.repository.ServicesRepository
-import com.example.sigmaindustry.domain.usecases.token.ReadToken
+import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     val serviceProvider: ServicesRepository,
-    val readToken: ReadToken
+    val readToken: ReadTokenUseCase
 ) : ViewModel() {
     var _state = mutableStateOf(CartState(HistoryResponse(listOf())))
         private set

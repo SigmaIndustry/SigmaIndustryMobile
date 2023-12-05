@@ -16,14 +16,13 @@ fun NavGraph(
 ) {
     val navController = rememberNavController()
 
-    val newsNavigatorViewModel: NewsNavigatorViewModel = hiltViewModel()
-
     NavHost(navController = navController, startDestination = startDestination) {
         navigation(
             route = Route.NewsNavigation.route,
             startDestination = Route.NewsNavigatorScreen.route
         ) {
             composable(route = Route.NewsNavigatorScreen.route){
+                val newsNavigatorViewModel: NewsNavigatorViewModel = hiltViewModel()
                 NewsNavigator(newsNavigatorViewModel)
             }
         }

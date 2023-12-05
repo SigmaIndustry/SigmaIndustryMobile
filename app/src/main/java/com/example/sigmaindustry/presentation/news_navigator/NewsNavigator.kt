@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
+import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthViewModel
 import com.example.sigmaindustry.presentation.cart.CartView
@@ -45,12 +48,8 @@ import com.example.sigmaindustry.presentation.news_navigator.components.NewsBott
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.Appendable
-import javax.inject.Inject
 
 
 
@@ -68,6 +67,9 @@ fun NewsNavigator(
         )
     }
 
+    SideEffect {
+        viewModel.onEvent(NewsNavigatorEvent.GetToken)
+    }
     val navController = rememberNavController()
     val backStackState = navController.currentBackStackEntryAsState().value
     var selectedItem by rememberSaveable {
@@ -109,9 +111,9 @@ fun NewsNavigator(
                             route = Route.SearchScreen.route
                         )
 
-                        2 -> navigateToTab(
+                        2 -> navigateToProfile(
                             navController = navController,
-                            Route.SelectAuthScreen.route
+                            viewModel = viewModel
                         )
                         3 -> navigateToTab(
                             navController = navController,
@@ -191,6 +193,13 @@ fun NewsNavigator(
                 val state = viewModel.state
                 CartView(event = viewModel::onEvent, viewModel = viewModel,  state = state)
             }
+            composable(route = Route.ProfileScreen.route) {
+                val viewModel: ProfileScreenViewModel = hiltViewModel()
+                val state = viewModel.state
+                ProfileScreen(state = state, event = viewModel::onEvent) {
+                    
+                }
+            }
         }
     }
 }
@@ -217,15 +226,13 @@ private fun navigateToTab(navController: NavController, route: String) {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 private fun navigateToProfile(navController: NavController, viewModel: NewsNavigatorViewModel) {
-
-        GlobalScope.launch {
-            viewModel.onEvent(NewsNavigatorEvent.GetToken)
-            if(viewModel.state.value.token == null){
-                navController.navigate(Route.SelectAuthScreen.route)
-            }
+        if(viewModel.state.value.token == null){
+            navController.navigate(Route.SelectAuthScreen.route)
+        } else {
+            navController.navigate(Route.ProfileScreen.route)
         }
-
 
 
 //    navController.navigate(   Route.SelectAuthScreen.route) {

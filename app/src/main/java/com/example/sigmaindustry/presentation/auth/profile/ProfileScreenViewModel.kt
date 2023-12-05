@@ -9,7 +9,7 @@ import com.example.sigmaindustry.domain.usecases.UpdateProvider
 import com.example.sigmaindustry.domain.usecases.UpdateUser
 import com.example.sigmaindustry.domain.usecases.authenticate.Authenticate
 import com.example.sigmaindustry.domain.usecases.news.GetProviderServices
-import com.example.sigmaindustry.domain.usecases.token.ReadToken
+import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val readTokenUseCase: ReadToken,
+    private val readTokenUseCase: ReadTokenUseCase,
     private val authenticateUseCase: Authenticate,
     private val updateUser: UpdateUser,
     private val updateProviderServices: GetProviderServices,
@@ -43,9 +43,11 @@ class ProfileScreenViewModel @Inject constructor(
                 _state.value = _state.value.copy(updateProvider = event.provider)
             }
 
-            is ProfileScreenEvent.UpdateProviderServices ->{
-                _state.value = _state.value.copy(providerServiceList = event.services)
-            }
+//            is ProfileScreenEvent.UpdateProviderServices ->{
+//                _state.value = _state.value.copy(providerServiceList = event.services)
+//            }
+
+
             is ProfileScreenEvent.ProfileScreen -> {
                 authenticate()
             }

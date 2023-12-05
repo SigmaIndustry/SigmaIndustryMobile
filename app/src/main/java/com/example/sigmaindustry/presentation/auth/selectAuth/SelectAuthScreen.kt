@@ -77,6 +77,8 @@ fun SelectAuthScreen(
                     event = logginedViewModel::onEvent
                 ) { event(SelectAuthEvent.ChangeAuthType(AuthType.None)) }
             }
+
+            else -> {}
         }
     }
 }

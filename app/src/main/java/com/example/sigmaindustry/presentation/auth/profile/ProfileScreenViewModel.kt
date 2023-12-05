@@ -8,6 +8,7 @@ import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.domain.usecases.UpdateProvider
 import com.example.sigmaindustry.domain.usecases.UpdateUser
 import com.example.sigmaindustry.domain.usecases.authenticate.Authenticate
+import com.example.sigmaindustry.domain.usecases.news.GetProviderServices
 import com.example.sigmaindustry.domain.usecases.token.ReadToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -21,6 +22,7 @@ class ProfileScreenViewModel @Inject constructor(
     private val readTokenUseCase: ReadToken,
     private val authenticateUseCase: Authenticate,
     private val updateUser: UpdateUser,
+    private val updateProviderServices: GetProviderServices,
     private val updateProvider: UpdateProvider
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -41,6 +43,9 @@ class ProfileScreenViewModel @Inject constructor(
                 _state.value = _state.value.copy(updateProvider = event.provider)
             }
 
+            is ProfileScreenEvent.UpdateProviderServices ->{
+                _state.value = _state.value.copy(providerServiceList = event.services)
+            }
             is ProfileScreenEvent.ProfileScreen -> {
                 authenticate()
             }
@@ -49,7 +54,11 @@ class ProfileScreenViewModel @Inject constructor(
                 authenticate()
             }
 
-            
+            is ProfileScreenEvent.UpdateProviderServicesEvent -> {
+                updateProviderServices()
+
+            }
+
             is ProfileScreenEvent.UpdateProviderEvent -> {
                 updateProvider()
             }
@@ -84,6 +93,14 @@ class ProfileScreenViewModel @Inject constructor(
             updateUser(state.value.update!!)
         }
     }
+
+
+     private fun updateProviderServices() {
+        GlobalScope.launch {
+            updateProviderServices(state.value.authenticateResponse?.provider?.providerID!!)
+        }
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     suspend fun updateProvider() {
         GlobalScope.launch {

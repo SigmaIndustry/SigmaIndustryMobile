@@ -33,10 +33,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.sigmaindustry.presentation.auth.profile.edit.EditProfileView
 import com.example.sigmaindustry.presentation.auth.profile.edit.EditProviderProfileView
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.reflect.KSuspendFunction1
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun ProfileScreen(
     state: ProfileScreenState,
@@ -68,9 +72,9 @@ fun ProfileScreen(
                         state.token = null
                         logOut()
                     }
-                    val openAlertDialog = remember { mutableStateOf(false) }
-                    when (openAlertDialog.value) {
-                        false -> {
+                    val openEditDialog = remember { mutableStateOf(0) }
+                    when (openEditDialog.value) {
+                        0 -> {
                             Column(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState())
@@ -274,13 +278,17 @@ fun ProfileScreen(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Button(onClick = {
-                                        openAlertDialog.value = true
+                                        openEditDialog.value = 1
                                     }) {
                                         Text("Edit Profile")
                                     }
                                     if(state.authenticateResponse?.provider != null) {
                                         Button(onClick = {
-
+                                                 GlobalScope.launch {
+                                                     delay(2000)
+                                                     event(ProfileScreenEvent.UpdateProviderServicesEvent)
+                                                     openEditDialog.value = 2
+                                                 }
                                         }) {
                                             Text("Watch my services")
                                         }
@@ -297,10 +305,10 @@ fun ProfileScreen(
                         }
 
 
-                        true -> {
+                        1 -> {
                             if (state.authenticateResponse?.provider != null && state.token != null) {
                                 EditProviderProfileView(
-                                    onUpdateRequest = { openAlertDialog.value = false },
+                                    onUpdateRequest = { openEditDialog.value = 0 },
                                     user = state.authenticateResponse.user,
                                     provider = state.authenticateResponse.provider,
                                     token = state.token,
@@ -310,7 +318,7 @@ fun ProfileScreen(
                                 }
                             } else if (state.authenticateResponse?.user != null && state.token != null) {
                                 EditProfileView(
-                                    onUpdateRequest = { openAlertDialog.value = false },
+                                    onUpdateRequest = { openEditDialog.value = 0 },
                                     user = state.authenticateResponse.user,
                                     token = state.token,
                                     event = event
@@ -318,6 +326,22 @@ fun ProfileScreen(
                                     logOut()
                                 }
                             }
+
+                        }
+
+                        2 -> {
+                            if (state.authenticateResponse?.provider != null && state.token != null) {
+                                EditProviderProfileView(
+                                    onUpdateRequest = { openEditDialog.value = 0 },
+                                    user = state.authenticateResponse.user,
+                                    provider = state.authenticateResponse.provider,
+                                    token = state.token,
+                                    event = event
+                                ) {
+                                    logOut()
+                                }
+                            }
+
                         }
                     }
                 }

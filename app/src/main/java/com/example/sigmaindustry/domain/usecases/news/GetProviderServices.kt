@@ -9,9 +9,9 @@ import javax.inject.Inject
 class GetProviderServices @Inject constructor(
     private val servicesRepository: ServicesRepository
 ) {
-    operator fun invoke(searchQuery: String): Flow<PagingData<Service>> {
-        return servicesRepository.searchServices(
-            searchQuery = searchQuery,
+    operator fun invoke(providerID: String): Flow<PagingData<Service>> {
+        return servicesRepository.getServices(
+            providerID = providerID,
         )
     }
 }

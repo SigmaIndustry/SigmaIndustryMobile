@@ -61,7 +61,7 @@ fun NewsNavigator(
         else -> selectedItem
     }
 
-r
+
     val isBottomBarVisible = remember(key1 = backStackState) {
         val route = backStackState?.destination?.route
          route == Route.HomeScreen.route ||

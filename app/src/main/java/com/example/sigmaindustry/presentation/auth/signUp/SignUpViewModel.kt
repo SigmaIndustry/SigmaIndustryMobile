@@ -7,7 +7,7 @@ import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.domain.usecases.RegisterProvider as RegisterProviderUS
 import com.example.sigmaindustry.domain.usecases.signUp.SignUp
-import com.example.sigmaindustry.domain.usecases.token.ReadToken
+import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import com.example.sigmaindustry.domain.usecases.token.SaveToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -20,7 +20,7 @@ class SignUpViewModel @Inject constructor(
     private val signUp: SignUp,
     private val registerProvider: RegisterProviderUS,
     private val saveToken: SaveToken,
-    private val readToken: ReadToken
+    private val readTokenUseCase: ReadTokenUseCase
 ) : ViewModel() {
 
     private var _state = mutableStateOf(SignUpState())
@@ -60,7 +60,7 @@ class SignUpViewModel @Inject constructor(
             )
             saveToken(signUpResult.token)
             println("Token is: ${signUpResult.token}")
-            readToken()?.let{
+            readTokenUseCase()?.let{
                 _state.value = _state.value.copy(token = it)
             }
 

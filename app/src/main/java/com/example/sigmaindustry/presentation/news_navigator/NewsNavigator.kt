@@ -44,6 +44,7 @@ import com.example.sigmaindustry.presentation.news_navigator.components.BottomNa
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
+import kotlinx.coroutines.launch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -52,9 +53,11 @@ import java.lang.Appendable
 import javax.inject.Inject
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsNavigator(
+    viewModel: NewsNavigatorViewModel
 ) {
     val bottomNavigationItems = remember {
         listOf(
@@ -212,6 +215,28 @@ private fun navigateToTab(navController: NavController, route: String) {
         launchSingleTop = true
         restoreState = true
     }
+}
+
+private fun navigateToProfile(navController: NavController, viewModel: NewsNavigatorViewModel) {
+
+        GlobalScope.launch {
+            viewModel.onEvent(NewsNavigatorEvent.GetToken)
+            if(viewModel.state.value.token == null){
+                navController.navigate(Route.SelectAuthScreen.route)
+            }
+        }
+
+
+
+//    navController.navigate(   Route.SelectAuthScreen.route) {
+//        navController.graph.startDestinationRoute?.let { screen_route ->
+//            popUpTo(screen_route) {
+//                saveState = true
+//            }
+//        }
+//        launchSingleTop = true
+//        restoreState = true
+//    }
 }
 
 

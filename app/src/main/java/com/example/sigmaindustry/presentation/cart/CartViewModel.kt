@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.domain.repository.ServicesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +20,12 @@ class CartViewModel @Inject constructor(
 
     val state: State<CartState> = _state
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun onEvent(event: CartViewEvent) {
         when (event) {
             is CartViewEvent.Load -> {
                 GlobalScope.launch {
                     val resp = serviceProvider.getHistory("sigma@nure.ua")
-                    println(resp.entries)
                     _state.value = _state.value.copy(history = resp)
                 }
             }

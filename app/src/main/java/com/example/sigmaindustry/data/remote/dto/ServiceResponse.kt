@@ -29,6 +29,9 @@ data class Service(
     @SerializedName("pictures")
     var pictures: List<String>,
 
+    @SerializedName("geolocation")
+    val geolocation: GeoRespParc?,
+
     @SerializedName("description")
     var description: String,
 
@@ -45,3 +48,12 @@ data class Service(
     var provider: Int
 
 ): Parcelable
+@Parcelize
+data class GeoRespParc (
+    val id: Int,
+    val country: String,
+    val region: String,
+    val city: String,
+    val latitude: Double,
+    val longitude: Double,
+) :Parcelable

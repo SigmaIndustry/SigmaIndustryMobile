@@ -2,9 +2,16 @@ package com.example.sigmaindustry.presentation.cart
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Space
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
@@ -15,12 +22,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.sigmaindustry.data.remote.dto.EntriesResponse
 import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.presentation.Dimens.ServiceCardSize
+import com.example.sigmaindustry.presentation.Dimens.ServiceImageHeight
 import kotlinx.coroutines.delay
 
 
@@ -43,6 +57,7 @@ fun CartView(
             .statusBarsPadding()){
         LazyColumn() {
             items(state.value.history.entries.size) {
+                Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
                 CartCardView(entry = state.value.history.entries[it])
             }
         }
@@ -52,15 +67,25 @@ fun CartView(
 
 @Composable
 fun CartCardView(entry: EntriesResponse) {
-    Column {
-        Text("Send to ${entry.email} message: ${entry.message}")
+    val context = LocalContext.current
+    Row {
+        AsyncImage(
+            modifier = Modifier
+                .size(ServiceCardSize)
+                .clip(MaterialTheme.shapes.medium),
+            model = ImageRequest.Builder(context).data(entry.service.pictures[0]).build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Column {
+            Text("Send to ${entry.email}")
+            Text("Message: ${entry.message.split("|")[0]}")
 
-        val context = LocalContext.current
-        val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/place/%D0%94%D0%B8%D0%BD%D0%B0%D0%BC%D0%BE/@50.0209193,36.2283769,15z/data=!4m9!3m8!1s0x4127a1c538f602ed:0xd66871083e9f3c73!5m2!4m1!1i2!8m2!3d50.0192764!4d36.2383584!16s%2Fg%2F11xc0pdkc?entry=ttu")) }
+            val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/@${entry.service.geolocation.latitude},${entry.service.geolocation.longitude},18z")) }
+            Button(onClick = { context.startActivity(intent) }) {
+                Text(text = "Navigate to Google!")
+            }
 
-        Button(onClick = { context.startActivity(intent) }) {
-            Text(text = "Navigate to Google!")
         }
-
     }
 }

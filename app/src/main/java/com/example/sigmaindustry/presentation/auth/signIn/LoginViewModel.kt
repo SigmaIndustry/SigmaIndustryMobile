@@ -28,12 +28,9 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.UpdateLoginRequest -> {
                 _state.value = _state.value.copy(loginRequest = event.loginRequest)
             }
-
             is LoginEvent.Login -> {
                 login()
             }
-
-            else -> {}
         }
     }
 

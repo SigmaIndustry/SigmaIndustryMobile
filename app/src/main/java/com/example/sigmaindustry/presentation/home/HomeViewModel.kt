@@ -17,6 +17,7 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     fun changeServiceCategory(s: Service): Service {
+        println("Service: $s")
         return s.copy(category = servicesRepository.getCategories()[s.category] ?: "Unknown")
     }
 

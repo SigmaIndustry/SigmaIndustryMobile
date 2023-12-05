@@ -30,8 +30,7 @@ fun CartView(
     viewModel: CartViewModel,
     state: State<CartState>
 ) {
-    LaunchedEffect(state) {
-        delay(2000)
+    LaunchedEffect(null) {
         event(CartViewEvent.Load)
     }
     Column(
@@ -55,7 +54,6 @@ fun CartView(
 fun CartCardView(entry: EntriesResponse) {
     Column {
         Text("Send to ${entry.email} message: ${entry.message}")
-        Text("Service (id): ${entry.serviceId}")
 
         val context = LocalContext.current
         val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/place/%D0%94%D0%B8%D0%BD%D0%B0%D0%BC%D0%BE/@50.0209193,36.2283769,15z/data=!4m9!3m8!1s0x4127a1c538f602ed:0xd66871083e9f3c73!5m2!4m1!1i2!8m2!3d50.0192764!4d36.2383584!16s%2Fg%2F11xc0pdkc?entry=ttu")) }

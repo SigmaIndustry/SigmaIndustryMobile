@@ -2,6 +2,7 @@ package com.example.sigmaindustry.data.manger
 
 import android.app.Application
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,6 +21,7 @@ class LocalUserMangerImpl @Inject constructor(
     private val application: Application
 ) : LocalUserManger {
 
+    val sharedPref = application.getSharedPreferences("Token", ComponentActivity.MODE_PRIVATE)
     override suspend fun saveAppEntry() {
         application.dataStore.edit { settings ->
             settings[PreferenceKeys.APP_ENTRY] = true
@@ -30,6 +32,7 @@ class LocalUserMangerImpl @Inject constructor(
         application.dataStore.edit { settings ->
             settings[PreferenceKeys.TOKEN] = token
         }
+        sharedPref.edit().putString("token", token).apply()
     }
 
     override fun readAppEntry(): Flow<Boolean> {
@@ -39,11 +42,12 @@ class LocalUserMangerImpl @Inject constructor(
     }
 
     override suspend fun readToken(): String? {
-
-        return application.dataStore.data.map { preferences ->
-        preferences[PreferenceKeys.TOKEN] ?: null
+        val token = sharedPref.getString("token", "")
+        val appToken = application.dataStore.data.map { preferences ->
+            preferences[PreferenceKeys.TOKEN]
         }.first()
-
+        println("Token: $token, appToken: $appToken")
+        return token
     }
 
 }

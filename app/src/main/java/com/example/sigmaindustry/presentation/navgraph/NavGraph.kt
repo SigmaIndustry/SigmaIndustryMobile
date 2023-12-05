@@ -15,7 +15,9 @@ fun NavGraph(
     startDestination: String
 ) {
     val navController = rememberNavController()
+
     val newsNavigatorViewModel: NewsNavigatorViewModel = hiltViewModel()
+
     NavHost(navController = navController, startDestination = startDestination) {
         navigation(
             route = Route.NewsNavigation.route,

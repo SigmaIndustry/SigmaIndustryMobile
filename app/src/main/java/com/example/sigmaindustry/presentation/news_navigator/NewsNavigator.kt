@@ -1,18 +1,28 @@
 package com.example.sigmaindustry.presentation.news_navigator
 
+import android.app.Application
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,8 +44,15 @@ import com.example.sigmaindustry.presentation.news_navigator.components.BottomNa
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
+import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Appendable
+import javax.inject.Inject
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,10 +61,10 @@ fun NewsNavigator(
 ) {
     val bottomNavigationItems = remember {
         listOf(
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Home"),
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Search"),
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Profile"),
-            BottomNavigationItem(icon = R.drawable.ic_launcher_background, text = "Cart"),
+            BottomNavigationItem(icon = Icons.Filled.Home, text = "Home"),
+            BottomNavigationItem(icon = Icons.Filled.Search, text = "Search"),
+            BottomNavigationItem(icon = Icons.Filled.Person, text = "Profile"),
+            BottomNavigationItem(icon = Icons.Filled.ShoppingCart, text = "Cart"),
         )
     }
 
@@ -131,8 +148,6 @@ fun NewsNavigator(
                     }
                 )
             }
-
-
 
             composable(route = Route.SearchScreen.route) {
                 val viewModel: SearchViewModel = hiltViewModel()

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,7 +53,6 @@ fun SearchBar(
             onClick?.invoke()
         }
     }
-
     Box(modifier = modifier) {
         TextField(
             modifier = Modifier
@@ -62,7 +63,7 @@ fun SearchBar(
             readOnly = readOnly,
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    Icons.Filled.Search,
                     contentDescription = null,
                     modifier = Modifier.size(IconSize),
                     tint = colorResource(id = R.color.white)

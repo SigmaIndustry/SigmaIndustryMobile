@@ -35,7 +35,6 @@ class ProfileScreenViewModel @Inject constructor(
             is ProfileScreenEvent.UpdateToken -> {
                 _state.value = _state.value.copy(token = event.token)
             }
-
             is ProfileScreenEvent.UpdateUser -> {
                 _state.value = _state.value.copy(update = event.user)
             }
@@ -48,25 +47,23 @@ class ProfileScreenViewModel @Inject constructor(
 //            }
 
 
+//
+//            is ProfileScreenEvent.UpdateProviderServices ->{
+//                //_state.value = _state.value.copy(providerServiceList = event.services)
+//            }
             is ProfileScreenEvent.ProfileScreen -> {
                 authenticate()
             }
-
             is ProfileScreenEvent.Authenticate -> {
                 authenticate()
             }
-
             is ProfileScreenEvent.UpdateProviderServicesEvent -> {
                 updateProviderServices()
-
             }
-
             is ProfileScreenEvent.UpdateProviderEvent -> {
                 updateProvider()
             }
-
             is ProfileScreenEvent.Update -> updateUser()
-
         }
     }
 

@@ -8,6 +8,9 @@ data class ProviderRequest (
 )
 
 data class ProviderResponse (
+    @SerializedName("id")
+    val providerID: String,
+
     @SerializedName("business_name")
     val businessName: String = "",
 

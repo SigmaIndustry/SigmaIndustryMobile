@@ -23,9 +23,7 @@ import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthViewModel
-import com.example.sigmaindustry.presentation.cart.CartState
 import com.example.sigmaindustry.presentation.cart.CartView
-import com.example.sigmaindustry.presentation.cart.CartViewEvent
 import com.example.sigmaindustry.presentation.cart.CartViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
@@ -59,10 +57,11 @@ fun NewsNavigator(
         Route.HomeScreen.route -> 0
         Route.SearchScreen.route -> 1
         Route.SelectAuthScreen.route -> 2
+        Route.CardScreen.route -> 3
         else -> selectedItem
     }
 
-
+r
     val isBottomBarVisible = remember(key1 = backStackState) {
         val route = backStackState?.destination?.route
          route == Route.HomeScreen.route ||

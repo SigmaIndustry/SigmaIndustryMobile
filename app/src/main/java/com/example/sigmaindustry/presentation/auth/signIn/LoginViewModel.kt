@@ -32,6 +32,8 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.Login -> {
                 login()
             }
+
+            else -> {}
         }
     }
 

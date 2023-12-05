@@ -11,7 +11,7 @@ data class ServiceResponse (
     var statusCode: Int,
 
     @SerializedName("size")
-    var size: Int,
+    var size: Int = 10,
 
     @SerializedName("results")
     var results: List<Service>

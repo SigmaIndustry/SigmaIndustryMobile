@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.sigmaindustry.data.remote.AuthenticateSource
+import com.example.sigmaindustry.data.remote.GetProviderServicesSource
 import com.example.sigmaindustry.data.remote.HistorySource
 import com.example.sigmaindustry.data.remote.LoginSource
 import com.example.sigmaindustry.data.remote.ProviderUpdateSource
@@ -14,7 +15,6 @@ import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
 import com.example.sigmaindustry.data.remote.UserUpdateSource
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
-import com.example.sigmaindustry.data.remote.dto.EntriesResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
@@ -81,6 +81,18 @@ class ServicesRepositoryImpl @Inject constructor(
                 SearchServicesPagingSource(
                     api = servicesApi,
                     searchQuery = searchQuery,
+                )
+            }
+        ).flow
+    }
+
+    override fun getServices(providerID: String): Flow<PagingData<Service>> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = {
+                GetProviderServicesSource(
+                    servicesApi = servicesApi,
+                    providerID = providerID
                 )
             }
         ).flow

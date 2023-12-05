@@ -52,6 +52,9 @@ interface ServicesApi {
     @GET("api/get_history/{email}")
     suspend fun getHistory(@Path("email") email: String): HistoryResponse
 
+    @GET("api/service/list/@{provider_id}")
+    suspend fun getProviderServices(@Path("provider_id") providerId: String): ServiceResponse
+
 //    @POST("everything")
 //    suspend fun searchNews(
 //        @Query("q") searchQuery: String,

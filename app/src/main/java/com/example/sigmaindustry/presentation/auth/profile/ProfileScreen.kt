@@ -278,7 +278,13 @@ fun ProfileScreen(
                                     }) {
                                         Text("Edit Profile")
                                     }
+                                    if(state.authenticateResponse?.provider != null) {
+                                        Button(onClick = {
 
+                                        }) {
+                                            Text("Watch my services")
+                                        }
+                                    }
                                     Button(onClick = {
                                         state.token = null
                                         logOut()

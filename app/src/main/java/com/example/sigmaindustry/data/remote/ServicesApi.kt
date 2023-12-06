@@ -53,6 +53,7 @@ interface ServicesApi {
 
     @POST("api/service/create")
     suspend fun createService(@Body request: AddService)
+
     @GET("api/get_history/{email}")
     suspend fun getHistory(@Path("email") email: String): HistoryResponse
 

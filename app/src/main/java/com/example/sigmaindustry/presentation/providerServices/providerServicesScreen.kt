@@ -13,10 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens
 import com.example.sigmaindustry.presentation.home.components.ServiceCard
@@ -26,7 +23,7 @@ fun ProviderServicesScreen(
     state: State<ProviderServicesState>,
     viewModel: ProviderServicesViewModel,
     event: (ProviderServicesEvent) -> Unit,
-    // navigateToAddService: () -> Unit,
+     navigateToAddService: () -> Unit,
     navigateToDetails: (Service) -> Unit
 ) {
     LaunchedEffect(key1 = null) {
@@ -56,7 +53,7 @@ fun ProviderServicesScreen(
             .fillMaxWidth()
             .padding(vertical = 16.dp),
             onClick = {
-                /*TODO*/
+                navigateToAddService()
             }) {
             Text(text = "Add new Service")
         }

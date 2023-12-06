@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.User
-import com.example.sigmaindustry.domain.usecases.RegisterProvider as RegisterProviderUS
 import com.example.sigmaindustry.domain.usecases.signUp.SignUp
 import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import com.example.sigmaindustry.domain.usecases.token.SaveToken
@@ -14,6 +13,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.sigmaindustry.domain.usecases.RegisterProvider as RegisterProviderUS
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -63,17 +63,14 @@ class SignUpViewModel @Inject constructor(
             readTokenUseCase()?.let{
                 _state.value = _state.value.copy(token = it)
             }
-
         }
     }
     @OptIn(DelicateCoroutinesApi::class)
     private fun registerProvider() {
-
         GlobalScope.launch {
              registerProvider(
                 provider = _state.value.provider,
             )
-
         }
     }
 

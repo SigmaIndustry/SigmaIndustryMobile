@@ -1,6 +1,5 @@
 package com.example.sigmaindustry.presentation.auth.selectAuth
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,19 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sigmaindustry.presentation.Dimens
-import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
-import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
-import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
-import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
-import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
-import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
 
 @Composable
 fun SelectAuthScreen(
     viewModel: SelectAuthViewModel,
     event: (SelectAuthEvent) -> Unit,
+    toLogin: () -> Unit,
+    toSignUp: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -36,56 +30,20 @@ fun SelectAuthScreen(
             )
             .statusBarsPadding()
     ) {
-        when (viewModel.state.value.checkedAuthType) {
-            AuthType.None -> ChangeButtons(changeAuthType = {
-                event(
-                    SelectAuthEvent.ChangeAuthType(
-                        it
-                    )
-                )
-            })
 
-            AuthType.LogUp -> {
-                val viewModel: SignUpViewModel = hiltViewModel()
-                val state = viewModel.state.value
-                BackHandler(true) {
-                    event(SelectAuthEvent.ChangeAuthType(AuthType.None))
-                }
-                SignUpScreen(
-                    state = state,
-                    event = viewModel::onEvent,
-                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))},
-                    viewModel = viewModel
-                )
-            }
-
-            AuthType.LogIn -> {
-                val logInViewModel: LoginViewModel = hiltViewModel()
-                BackHandler(true) {
-                    event(SelectAuthEvent.ChangeAuthType(AuthType.None))
-                }
-                LoginScreen(
-                    event = logInViewModel::onEvent,
-                    toProfile = {event(SelectAuthEvent.ChangeAuthType(AuthType.Loggined))}
-                )
-            }
-            AuthType.Loggined -> {
-                val logginedViewModel: ProfileScreenViewModel = hiltViewModel()
-                val state = logginedViewModel.state
-                ProfileScreen(
-                    state = state,
-                    event = logginedViewModel::onEvent
-                ) { event(SelectAuthEvent.ChangeAuthType(AuthType.None)) }
-            }
-
-            else -> {}
-        }
+        ChangeButtons(
+            toLogin = toLogin, toSignUp =
+            toSignUp
+        )
     }
 }
 
 
 @Composable
-fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
+fun ChangeButtons(
+    toLogin: () -> Unit,
+    toSignUp: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,7 +51,7 @@ fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
     ) {
         Button(
             onClick = {
-                changeAuthType(AuthType.LogIn)
+                toLogin()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +64,7 @@ fun ChangeButtons(changeAuthType: (AuthType) -> Unit) {
 
         Button(
             onClick = {
-                changeAuthType(AuthType.LogUp)
+                toSignUp()
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -7,7 +7,7 @@ class SaveToken @Inject constructor(
     private val localUserManger: LocalUserManger
 ) {
 
-    suspend operator fun invoke(token: String) {
+    suspend operator fun invoke(token: String?) {
         return localUserManger.saveToken(token)
     }
 

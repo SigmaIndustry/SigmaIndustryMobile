@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.presentation.auth.signUp
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Column
@@ -10,11 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,11 +38,14 @@ import com.example.sigmaindustry.data.remote.dto.Sex
 import com.example.sigmaindustry.presentation.Dimens
 import com.example.sigmaindustry.util.Validator
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun SignUpScreen(
@@ -55,7 +63,7 @@ fun SignUpScreen(
     val mMonth = mCalendar.get(Calendar.MONTH)
     val mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
     mCalendar.time = Date()
-
+    var loading by remember { mutableStateOf(false) }
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, year: Int, month: Int, day: Int ->
@@ -68,7 +76,8 @@ fun SignUpScreen(
             .fillMaxSize()
             .padding(Dimens.MediumPadding1)
             .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // User Information
         OutlinedTextField(
@@ -288,13 +297,17 @@ fun SignUpScreen(
                         }
 
                     }
+                loading = true
                 GlobalScope.launch {
                     viewModel.updateUser(state.user.copy(birthDate = birthDate,
                         photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
                     event(SignUpEvent.SignUp)
 
-                    delay(2000)
-                    toProfile()
+                    delay(6000)
+                    withContext (Dispatchers.Main) {
+                        toProfile()
+                    }
+
                 }
 
             },
@@ -306,6 +319,14 @@ fun SignUpScreen(
         }
 
         Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
+
+
+        if (!loading) return
+
+        CircularProgressIndicator(
+            modifier = Modifier.width(64.dp).padding(bottom = 70.dp, top = 70.dp),
+            color = MaterialTheme.colorScheme.secondary,
+        )
 
         // Display Token (You may customize this part based on your needs)
       //  Text(text = state.loginResponse.token)

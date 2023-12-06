@@ -28,11 +28,20 @@ class LocalUserMangerImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveToken(token: String) {
-        application.dataStore.edit { settings ->
-            settings[PreferenceKeys.TOKEN] = token
+    override suspend fun saveToken(token: String?) {
+        if (token != null) {
+            application.dataStore.edit { settings ->
+                settings[PreferenceKeys.TOKEN] = token
+            }
+            sharedPref.edit().putString("token", token).apply()
+        } else{
+            application.dataStore.edit {settings ->
+                settings.remove(PreferenceKeys.TOKEN)
+            }
+            sharedPref.edit().remove("token").commit()
+                val tokenResult = sharedPref.getString("token", null)
+            println("Token set to null, actually token is $tokenResult")
         }
-        sharedPref.edit().putString("token", token).apply()
     }
 
     override fun readAppEntry(): Flow<Boolean> {
@@ -42,7 +51,7 @@ class LocalUserMangerImpl @Inject constructor(
     }
 
     override suspend fun readToken(): String? {
-        val token = sharedPref.getString("token", "")
+        val token = sharedPref.getString("token", null)
         val appToken = application.dataStore.data.map { preferences ->
             preferences[PreferenceKeys.TOKEN]
         }.first()

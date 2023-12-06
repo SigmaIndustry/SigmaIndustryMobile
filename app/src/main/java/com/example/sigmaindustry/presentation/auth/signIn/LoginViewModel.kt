@@ -9,6 +9,7 @@ import com.example.sigmaindustry.domain.usecases.token.SaveToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,11 +24,12 @@ class LoginViewModel @Inject constructor(
     val state: State<LoginState> = _state
 
 
-    fun onEvent(event: LoginEvent) {
+    suspend fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.UpdateLoginRequest -> {
                 _state.value = _state.value.copy(loginRequest = event.loginRequest)
             }
+
             is LoginEvent.Login -> {
                 login()
             }
@@ -35,18 +37,21 @@ class LoginViewModel @Inject constructor(
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun login() {
+    private suspend fun login() {
         GlobalScope.launch {
-             val loginResult = login(
-                loginRequest = _state.value.loginRequest,
-            )
-            saveToken(loginResult.token)
-            println("Token is: ${loginResult.token}")
-            readTokenUseCase()?.let{
-                 _state.value = _state.value.copy(token = it)
+            val loginResult = async {
+                login(
+                    loginRequest = _state.value.loginRequest,
+                )
             }
+            saveToken(loginResult.await().token)
+            println("Token is: ${loginResult.await().token}")
+            readTokenUseCase()?.let {
+                _state.value = _state.value.copy(token = it)
+            }
+
         }
+
+
     }
-
-
 }

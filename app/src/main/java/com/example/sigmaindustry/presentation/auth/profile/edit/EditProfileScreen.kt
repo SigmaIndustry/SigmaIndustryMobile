@@ -28,8 +28,10 @@ import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenEvent
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
 import kotlin.reflect.KSuspendFunction1
@@ -150,8 +152,10 @@ fun EditProfileView(
                             )
                         )
                         event(ProfileScreenEvent.Update)
-                        logOut()
-                        onUpdateRequest()
+                        withContext (Dispatchers.Main) {
+                            logOut()
+                            onUpdateRequest()
+                        }
                     }
                 },
                 modifier = Modifier.weight(1f)

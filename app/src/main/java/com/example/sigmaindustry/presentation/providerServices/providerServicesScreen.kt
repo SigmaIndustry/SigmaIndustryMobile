@@ -1,4 +1,4 @@
-package com.example.sigmaindustry.presentation.auth.profile.providerServices
+package com.example.sigmaindustry.presentation.providerServices
 
 import androidx.compose.runtime.Composable
 import androidx.paging.PagingData

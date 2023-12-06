@@ -77,6 +77,7 @@ fun ProfileScreen(
                                     .padding(16.dp),
                                 horizontalAlignment = CenterHorizontally
                             ) {
+                                Spacer(modifier = Modifier.height(30.dp))
                                 // User information
                                 Box(
                                     modifier = Modifier
@@ -290,7 +291,6 @@ fun ProfileScreen(
                                         }
                                     }
                                     Button(onClick = {
-                                        state.value.token = null
                                         logOut()
                                     }) {
                                         Text("Log Out")

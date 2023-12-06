@@ -1,7 +1,5 @@
 package com.example.sigmaindustry.presentation.news_navigator
 
-import android.app.Application
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,28 +12,28 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreen
 import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenViewModel
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthScreen
 import com.example.sigmaindustry.presentation.auth.selectAuth.SelectAuthViewModel
+import com.example.sigmaindustry.presentation.auth.signIn.LoginScreen
+import com.example.sigmaindustry.presentation.auth.signIn.LoginViewModel
+import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
+import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
 import com.example.sigmaindustry.presentation.cart.CartView
 import com.example.sigmaindustry.presentation.cart.CartViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
@@ -47,16 +45,18 @@ import com.example.sigmaindustry.presentation.news_navigator.components.BottomNa
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsNavigator(
-    viewModel: NewsNavigatorViewModel
+    navigatorViewModel: NewsNavigatorViewModel
 ) {
     val bottomNavigationItems = remember {
         listOf(
@@ -68,7 +68,7 @@ fun NewsNavigator(
     }
 
     SideEffect {
-        viewModel.onEvent(NewsNavigatorEvent.GetToken)
+        // navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
     }
     val navController = rememberNavController()
     val backStackState = navController.currentBackStackEntryAsState().value
@@ -79,6 +79,7 @@ fun NewsNavigator(
         Route.HomeScreen.route -> 0
         Route.SearchScreen.route -> 1
         Route.SelectAuthScreen.route -> 2
+        Route.ProfileScreen.route -> 2
         Route.CardScreen.route -> 3
         else -> selectedItem
     }
@@ -86,11 +87,12 @@ fun NewsNavigator(
 
     val isBottomBarVisible = remember(key1 = backStackState) {
         val route = backStackState?.destination?.route
-         route == Route.HomeScreen.route ||
+        route == Route.HomeScreen.route ||
                 route == Route.SearchScreen.route ||
                 route == Route.BookmarkScreen.route ||
                 route == Route.SelectAuthScreen.route ||
-                route == Route.CardScreen.route
+                route == Route.CardScreen.route ||
+                route == Route.ProfileScreen.route
     }
 
 
@@ -113,8 +115,10 @@ fun NewsNavigator(
 
                         2 -> navigateToProfile(
                             navController = navController,
-                            viewModel = viewModel
+                            viewModel = navigatorViewModel,
+                            navigatorViewModel
                         )
+
                         3 -> navigateToTab(
                             navController = navController,
                             Route.CardScreen.route
@@ -168,10 +172,38 @@ fun NewsNavigator(
                 )
             }
 
+            composable(route = Route.SignUpScreen.route) {
+                val viewModel: SignUpViewModel = hiltViewModel()
+                val state = viewModel.state.value
+                OnBackClickStateSaver(navController = navController)
+                SignUpScreen(event = viewModel::onEvent, state = state, viewModel = viewModel) {
+                    navigateToProfile(
+                        navController = navController,
+                        viewModel = navigatorViewModel,
+                        navigatorViewModel
+                    )
+                }
+            }
+
+            composable(route = Route.LoginScreen.route) {
+                val viewModel: LoginViewModel = hiltViewModel()
+                OnBackClickStateSaver(navController = navController)
+                LoginScreen(event = viewModel::onEvent) {
+                    navigateToProfile(
+                        navController = navController,
+                        viewModel = navigatorViewModel,
+                        navigatorViewModel
+                    )
+                }
+            }
+
             composable(route = Route.SelectAuthScreen.route) {
                 val viewModel: SelectAuthViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
-                SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent)
+                SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent,
+                    toLogin = { navigateToTab(navController, Route.LoginScreen.route) }) {
+                    navigateToTab(navController, Route.SignUpScreen.route)
+                }
             }
 
             composable(route = Route.DetailsScreen.route) {
@@ -191,13 +223,20 @@ fun NewsNavigator(
             composable(route = Route.CardScreen.route) {
                 val viewModel: CartViewModel = hiltViewModel()
                 val state = viewModel.state
-                CartView(event = viewModel::onEvent, viewModel = viewModel,  state = state)
+                CartView(event = viewModel::onEvent, viewModel = viewModel, state = state)
             }
+
             composable(route = Route.ProfileScreen.route) {
                 val viewModel: ProfileScreenViewModel = hiltViewModel()
+                OnBackClickStateSaver(navController = navController)
                 val state = viewModel.state
                 ProfileScreen(state = state, event = viewModel::onEvent) {
-                    
+                    navigateToTab(
+                        navController = navController,
+                        route = Route.HomeScreen.route
+                    )
+                    navigatorViewModel.onEvent(NewsNavigatorEvent.SaveToken)
+                    navigatorViewModel.state.value.token = null
                 }
             }
         }
@@ -227,12 +266,43 @@ private fun navigateToTab(navController: NavController, route: String) {
 }
 
 @OptIn(DelicateCoroutinesApi::class)
-private fun navigateToProfile(navController: NavController, viewModel: NewsNavigatorViewModel) {
-        if(viewModel.state.value.token == null){
-            navController.navigate(Route.SelectAuthScreen.route)
-        } else {
-            navController.navigate(Route.ProfileScreen.route)
+private fun navigateToProfile(
+    navController: NavController,
+    viewModel: NewsNavigatorViewModel,
+    navigatorViewModel: NewsNavigatorViewModel
+) {
+    println("navigate to profile run")
+    navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
+    GlobalScope.launch {
+        navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
+        delay(150)
+        withContext(Dispatchers.Main) {
+
+
+            if (viewModel.state.value.token == null) {
+                println("but token is nit null")
+                navController.navigate(Route.SelectAuthScreen.route) {
+                    navController.graph.startDestinationRoute?.let { screen_route ->
+                        popUpTo(screen_route) {
+                            saveState = true
+                        }
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            } else {
+                navController.navigate(Route.ProfileScreen.route) {
+                    navController.graph.startDestinationRoute?.let { screen_route ->
+                        popUpTo(screen_route) {
+                            saveState = true
+                        }
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
+    }
 
 
 //    navController.navigate(   Route.SelectAuthScreen.route) {

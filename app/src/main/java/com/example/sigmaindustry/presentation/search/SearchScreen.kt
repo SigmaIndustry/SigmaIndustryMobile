@@ -41,9 +41,8 @@ fun SearchScreen(
                 event(SearchEvent.SearchNews)
             }
         )
-        Spacer(modifier = Modifier.height(MediumPadding1))
         state.services?.let {
-            var services = it.collectAsLazyPagingItems()
+            val services = it.collectAsLazyPagingItems()
             SearchResultList(
                 services = services,
                 serviceUpdater = {s -> viewModel.changeServiceCategory(s)},

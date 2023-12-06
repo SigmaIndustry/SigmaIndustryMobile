@@ -66,7 +66,6 @@ fun SearchBar(
                     Icons.Filled.Search,
                     contentDescription = null,
                     modifier = Modifier.size(IconSize),
-                    tint = colorResource(id = R.color.white)
                 )
             },
             placeholder = {

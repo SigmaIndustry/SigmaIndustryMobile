@@ -53,10 +53,10 @@ fun ProviderServicesScreen(
         LazyColumn() {
             state.value.services?.entries?.let { list ->
                 items(list.size) {
+                    val ser = state.value.services!!.entries[it]
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-                    ServiceCard(
-                        s = state.value.services!!.entries[it], onClick =
-                        navigateToDetails
+           ServiceCard(s = viewModel.changeServiceCategory(ser), onClick =
+                         navigateToDetails
                     )
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.sigmaindustry.domain.repository
 
 import androidx.paging.PagingData
+import com.example.sigmaindustry.data.remote.dto.AddService
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 interface ServicesRepository {
     fun getServices(): Flow<PagingData<Service>>
    suspend fun getServices(providerID: String): ProviderServicesResponse?
+   suspend fun createService(service: AddService)
     suspend fun getHistory(email: String): HistoryResponse
     fun getCategories(): Map<String, String>
     suspend fun login(loginRequest: LoginRequest): LoginResponse

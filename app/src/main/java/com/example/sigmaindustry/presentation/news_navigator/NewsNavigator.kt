@@ -25,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,6 +42,8 @@ import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
 import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
 import com.example.sigmaindustry.presentation.cart.CartView
 import com.example.sigmaindustry.presentation.cart.CartViewModel
+import com.example.sigmaindustry.presentation.createService.CreateServiceScreen
+import com.example.sigmaindustry.presentation.createService.CreateServiceViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
 import com.example.sigmaindustry.presentation.details.DetailsViewModel
 import com.example.sigmaindustry.presentation.home.HomeScreen
@@ -202,6 +203,9 @@ fun NewsNavigator(
                             navController = navController,
                             service = service
                         )
+                    },
+                    navigateToAddService = {
+                        navigateToTab(navController, Route.CreateServicesScreen.route)
                     }
                 )
             }
@@ -225,6 +229,17 @@ fun NewsNavigator(
                     navigateToProfile(
                         navController = navController,
                         navigatorViewModel
+                    )
+                }
+            }
+            composable(route = Route.CreateServicesScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Service creation"))
+                val viewModel: CreateServiceViewModel = hiltViewModel()
+                OnBackClickStateSaver(navController = navController)
+                CreateServiceScreen(event = viewModel::onEvent) {
+                    navigateToTab(
+                        navController = navController,
+                        Route.ProviderServicesScreen.route
                     )
                 }
             }

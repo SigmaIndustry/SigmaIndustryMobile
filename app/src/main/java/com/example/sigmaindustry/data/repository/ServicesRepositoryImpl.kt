@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.sigmaindustry.data.remote.AuthenticateSource
+import com.example.sigmaindustry.data.remote.CreateServiceSource
 import com.example.sigmaindustry.data.remote.GetProviderServicesSource
 import com.example.sigmaindustry.data.remote.HistorySource
 import com.example.sigmaindustry.data.remote.LoginSource
@@ -14,6 +15,7 @@ import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
 import com.example.sigmaindustry.data.remote.UserUpdateSource
+import com.example.sigmaindustry.data.remote.dto.AddService
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
@@ -24,7 +26,6 @@ import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
-import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
@@ -93,6 +94,9 @@ class ServicesRepositoryImpl @Inject constructor(
             return GetProviderServicesSource(servicesApi).getServices(providerID)
     }
 
+    override suspend fun createService(service: AddService) {
+        CreateServiceSource(servicesApi).createService(service)
+    }
     override suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int {
         val resp = servicesApi.postRate(PostRateRequest(token, serviceId, rating, feedback))
         return resp.ratingId

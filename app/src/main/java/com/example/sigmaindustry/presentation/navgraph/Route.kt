@@ -9,7 +9,7 @@ sealed class Route(
     object CardScreen : Route(route = "cardScreen")
 
     object HomeScreen : Route(route = "homeScreen")
-
+    object CreateServicesScreen : Route(route = "createServicesScreen")
     object SearchScreen : Route(route = "searchScreen")
 
     object BookmarkScreen : Route(route = "bookMarkScreen")

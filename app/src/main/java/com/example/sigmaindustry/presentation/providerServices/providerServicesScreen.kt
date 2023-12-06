@@ -5,23 +5,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-<<<<<<< HEAD
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-=======
 import androidx.compose.material3.Button
->>>>>>> 374599aecfc1272b342b4eeb7b521a0401ba615a
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens
 import com.example.sigmaindustry.presentation.home.components.ServiceCard
@@ -31,7 +23,7 @@ fun ProviderServicesScreen(
     state: State<ProviderServicesState>,
     viewModel: ProviderServicesViewModel,
     event: (ProviderServicesEvent) -> Unit,
-    // navigateToAddService: () -> Unit,
+     navigateToAddService: () -> Unit,
     navigateToDetails: (Service) -> Unit
 ) {
     LaunchedEffect(key1 = null) {
@@ -61,7 +53,7 @@ fun ProviderServicesScreen(
             .fillMaxWidth()
             .padding(vertical = 16.dp),
             onClick = {
-                /*TODO*/
+                navigateToAddService()
             }) {
             Text(text = "Add new Service")
         }

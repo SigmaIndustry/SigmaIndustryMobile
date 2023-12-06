@@ -264,32 +264,40 @@ fun ProfileScreen(
                                     }
                                 }
 
-                                Spacer(modifier = Modifier.height(24.dp))
+                                Spacer(modifier = Modifier.height(6.dp))
 
                                 // Buttons
                                 if (state.value.authenticateResponse?.provider != null) {
-                                    Button(onClick = {
+                                    Button(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                        onClick = {
 
-                                        goToServices()
+                                            goToServices()
 
 
-                                    }) {
+                                        }) {
                                         Text("Watch my services")
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Button(onClick = {
-                                    openEditDialog.value = true
-                                }) {
+
+                                Button(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                    onClick = {
+                                        openEditDialog.value = true
+                                    }) {
                                     Text("Edit Profile")
                                 }
 
 
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Button(onClick = {
-                                    state.value.token = null
-                                    logOut()
-                                }) {
+                                Button(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                                    onClick = {
+                                        state.value.token = null
+                                        logOut()
+                                    }) {
                                     Text("Log Out")
                                 }
 

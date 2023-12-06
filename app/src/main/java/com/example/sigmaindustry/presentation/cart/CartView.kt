@@ -6,6 +6,7 @@ import android.widget.Space
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,8 +60,10 @@ fun CartView(
             .statusBarsPadding()){
         LazyColumn() {
             items(state.value.history.entries.size) {
-                Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
                 CartCardView(entry = state.value.history.entries[it])
+                Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
+                Divider()
+                Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
             }
         }
     }
@@ -68,24 +73,25 @@ fun CartView(
 @Composable
 fun CartCardView(entry: EntriesResponse) {
     val context = LocalContext.current
-    Row {
-        AsyncImage(
-            modifier = Modifier
-                .size(ServiceCardSize)
-                .clip(MaterialTheme.shapes.medium),
-            model = ImageRequest.Builder(context).data(entry.service.pictures[0]).build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-        Column {
-            Text("Send to ${entry.email}")
-            Text("Message: ${entry.message.split("|")[0]}")
-
-            val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/@${entry.service.geolocation.latitude},${entry.service.geolocation.longitude},18z")) }
-            Button(onClick = { context.startActivity(intent) }) {
-                Text(text = "Navigate to Google!")
+    Column {
+        Row {
+            AsyncImage(
+                modifier = Modifier
+                    .size(ServiceCardSize)
+                    .clip(MaterialTheme.shapes.medium),
+                model = ImageRequest.Builder(context).data(entry.service.pictures[0]).build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(Dimens.ExtraSmallPadding2))
+            Column {
+                Text("Send to ${entry.email}")
+                val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/@${entry.service.geolocation.latitude},${entry.service.geolocation.longitude},18z")) }
+                Button(onClick = { context.startActivity(intent) }) {
+                    Text(text = "Navigate to Google!")
+                }
             }
-
         }
+        Text("Message: ${entry.message.split("|")[0]}")
     }
 }

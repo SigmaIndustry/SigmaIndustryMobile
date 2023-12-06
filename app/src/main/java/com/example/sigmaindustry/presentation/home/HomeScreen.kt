@@ -25,7 +25,6 @@ import androidx.paging.compose.LazyPagingItems
 import com.example.sigmaindustry.R
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens.MediumPadding1
-import com.example.sigmaindustry.presentation.common.ArticlesList
 import com.example.sigmaindustry.presentation.common.SearchBar
 import com.example.sigmaindustry.presentation.common.SearchResultList
 

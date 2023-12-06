@@ -2,10 +2,12 @@ package com.example.sigmaindustry.presentation.providerServices
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +15,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.presentation.Dimens
@@ -22,12 +25,13 @@ import com.example.sigmaindustry.presentation.home.components.ServiceCard
 fun ProviderServicesScreen(
     state: State<ProviderServicesState>,
     viewModel: ProviderServicesViewModel,
-    event:(ProviderServicesEvent) -> Unit,
-    navigateToDetails:(Service) -> Unit
+    event: (ProviderServicesEvent) -> Unit,
+    // navigateToAddService: () -> Unit,
+    navigateToDetails: (Service) -> Unit
 ) {
-LaunchedEffect(key1 = null){
-    event(ProviderServicesEvent.GetServices)
-}
+    LaunchedEffect(key1 = null) {
+        event(ProviderServicesEvent.GetServices)
+    }
     Column(
         modifier = Modifier
             .padding(
@@ -38,7 +42,8 @@ LaunchedEffect(key1 = null){
             .statusBarsPadding()
     ) {
 
-        Text(text = "My services",
+        Text(
+            text = "My services",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
@@ -49,11 +54,20 @@ LaunchedEffect(key1 = null){
             state.value.services?.entries?.let { list ->
                 items(list.size) {
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-                    ServiceCard(s = state.value.services!!.entries[it], onClick =
-                         navigateToDetails
+                    ServiceCard(
+                        s = state.value.services!!.entries[it], onClick =
+                        navigateToDetails
                     )
                 }
             }
+        }
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+            onClick = {
+                /*TODO*/
+            }) {
+            Text(text = "Add new Service")
         }
     }
 }

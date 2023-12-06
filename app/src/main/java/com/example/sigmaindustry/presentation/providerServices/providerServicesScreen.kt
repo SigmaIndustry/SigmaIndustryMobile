@@ -1,31 +1,60 @@
 package com.example.sigmaindustry.presentation.providerServices
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.sigmaindustry.data.remote.dto.Service
-import com.example.sigmaindustry.data.remote.dto.ServiceResponse
-import com.example.sigmaindustry.data.remote.dto.User
-import com.example.sigmaindustry.presentation.auth.profile.ProfileScreenEvent
-import com.example.sigmaindustry.presentation.common.SearchResultList
-import kotlinx.coroutines.flow.Flow
-import kotlin.reflect.KSuspendFunction1
-//
-//@Composable
-//fun providerServicesScreen(
-//   // onUpdateRequest: () -> Unit,
-//   // token: String?,
-//    //user: User,
-//   // event: KSuspendFunction1<ProfileScreenEvent, Unit>,
-//   // logOut: () -> Unit
-//    services: Flow<PagingData<Service>>
-//) {
-//    services?.let {
-//        var services = it.collectAsLazyPagingItems()
-//        SearchResultList(
-//            services = services,
-//            serviceUpdater = { s -> viewModel.changeServiceCategory(s) },
-//            onClick = navigateToDetails
-//        )
-//    }
-//}
+import com.example.sigmaindustry.presentation.Dimens
+import com.example.sigmaindustry.presentation.home.components.ServiceCard
+
+@Composable
+fun ProviderServicesScreen(
+    state: State<ProviderServicesState>,
+    viewModel: ProviderServicesViewModel,
+    event:(ProviderServicesEvent) -> Unit,
+    navigateToDetails:(Service) -> Unit
+) {
+LaunchedEffect(key1 = null){
+    event(ProviderServicesEvent.GetServices)
+}
+    Column(
+        modifier = Modifier
+            .padding(
+                top = Dimens.MediumPadding1,
+                start = Dimens.MediumPadding1,
+                end = Dimens.MediumPadding1
+            )
+            .statusBarsPadding()
+    ) {
+
+        Text(text = "My services",
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
+        Spacer(modifier = Modifier.height(Dimens.MediumPadding1))
+        LazyColumn() {
+            state.value.services?.entries?.let { list ->
+                items(list.size) {
+                    Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
+                    ServiceCard(s = state.value.services!!.entries[it], onClick =
+                         navigateToDetails
+                    )
+                }
+            }
+        }
+    }
+}
+

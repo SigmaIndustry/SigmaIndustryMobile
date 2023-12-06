@@ -43,6 +43,8 @@ import com.example.sigmaindustry.presentation.home.HomeViewModel
 import com.example.sigmaindustry.presentation.navgraph.Route
 import com.example.sigmaindustry.presentation.news_navigator.components.BottomNavigationItem
 import com.example.sigmaindustry.presentation.news_navigator.components.NewsBottomNavigation
+import com.example.sigmaindustry.presentation.providerServices.ProviderServicesScreen
+import com.example.sigmaindustry.presentation.providerServices.ProviderServicesViewModel
 import com.example.sigmaindustry.presentation.search.SearchScreen
 import com.example.sigmaindustry.presentation.search.SearchViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -171,6 +173,22 @@ fun NewsNavigator(
                     }
                 )
             }
+            composable(route = Route.ProviderServicesScreen.route) {
+                val viewModel: ProviderServicesViewModel = hiltViewModel()
+                val state = viewModel.state
+                OnBackClickStateSaver(navController = navController)
+                ProviderServicesScreen(
+                    state = state,
+                    event = viewModel::onEvent,
+                    viewModel = viewModel,
+                    navigateToDetails = { service ->
+                        navigateToDetailsProvider(
+                            navController = navController,
+                            service = service
+                        )
+                    }
+                )
+            }
 
             composable(route = Route.SignUpScreen.route) {
                 val viewModel: SignUpViewModel = hiltViewModel()
@@ -219,6 +237,20 @@ fun NewsNavigator(
                         )
                     }
             }
+            composable(route = Route.DetailsScreenProvider.route) {
+                val viewModel: DetailsViewModel = hiltViewModel()
+                navController.previousBackStackEntry?.savedStateHandle?.get<Service?>("service")
+                    ?.let { service ->
+                        DetailsScreen(
+                            service = service,
+                            event = viewModel::onEvent,
+                            navigateUp = { navController.navigateUp() },
+                            sideEffect = viewModel.sideEffect,
+                            viewModel = viewModel,
+                            isProviderList = true
+                        )
+                    }
+            }
 
             composable(route = Route.CardScreen.route) {
                 val viewModel: CartViewModel = hiltViewModel()
@@ -230,13 +262,15 @@ fun NewsNavigator(
                 val viewModel: ProfileScreenViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
                 val state = viewModel.state
-                ProfileScreen(state = state, event = viewModel::onEvent) {
+                ProfileScreen(state = state, event = viewModel::onEvent, logOut =  {
                     navigateToTab(
                         navController = navController,
                         route = Route.HomeScreen.route
                     )
                     navigatorViewModel.onEvent(NewsNavigatorEvent.SaveToken)
                     navigatorViewModel.state.value.token = null
+                }){
+                    navigateToTab(navController,Route.ProviderServicesScreen.route)
                 }
             }
         }
@@ -304,16 +338,6 @@ private fun navigateToProfile(
         }
     }
 
-
-//    navController.navigate(   Route.SelectAuthScreen.route) {
-//        navController.graph.startDestinationRoute?.let { screen_route ->
-//            popUpTo(screen_route) {
-//                saveState = true
-//            }
-//        }
-//        launchSingleTop = true
-//        restoreState = true
-//    }
 }
 
 
@@ -322,5 +346,13 @@ private fun navigateToDetails(navController: NavController, service: Service) {
     println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreen.route
+    )
+}
+
+private fun navigateToDetailsProvider(navController: NavController, service: Service) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
+    println("Navigate to detail")
+    navController.navigate(
+        route = Route.DetailsScreenProvider.route
     )
 }

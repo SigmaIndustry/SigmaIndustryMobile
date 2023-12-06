@@ -1,9 +1,7 @@
 package com.example.sigmaindustry.presentation.auth.profile
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,9 +33,6 @@ import coil.compose.AsyncImage
 import com.example.sigmaindustry.presentation.auth.profile.edit.EditProfileView
 import com.example.sigmaindustry.presentation.auth.profile.edit.EditProviderProfileView
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.reflect.KSuspendFunction1
 
 
@@ -46,7 +41,8 @@ import kotlin.reflect.KSuspendFunction1
 fun ProfileScreen(
     state: State<ProfileScreenState>,
     event: KSuspendFunction1<ProfileScreenEvent, Unit>,
-    logOut: () -> Unit
+    logOut: () -> Unit,
+    goToServices: () -> Unit
 ) {
 
     Column(
@@ -60,6 +56,7 @@ fun ProfileScreen(
                 }
 
             }
+
             else -> {
                 Column(
                     horizontalAlignment = CenterHorizontally
@@ -68,9 +65,9 @@ fun ProfileScreen(
                         state.value.token = null
                         logOut()
                     }
-                    val openEditDialog = remember { mutableStateOf(0) }
+                    val openEditDialog = remember { mutableStateOf(false) }
                     when (openEditDialog.value) {
-                        0 -> {
+                        false -> {
                             Column(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState())
@@ -161,7 +158,7 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 // Provider information
-                                if(state.value.authenticateResponse?.provider != null) {
+                                if (state.value.authenticateResponse?.provider != null) {
                                     state.value.authenticateResponse!!.provider.let { provider ->
                                         Text(
                                             text = "Provider info:",
@@ -270,41 +267,41 @@ fun ProfileScreen(
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 // Buttons
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
+                                if (state.value.authenticateResponse?.provider != null) {
                                     Button(onClick = {
-                                        openEditDialog.value = 1
+
+                                        goToServices()
+
+
                                     }) {
-                                        Text("Edit Profile")
-                                    }
-                                    if(state.value.authenticateResponse?.provider != null) {
-                                        Button(onClick = {
-                                                 GlobalScope.launch {
-                                                     delay(2000)
-                                                     event(ProfileScreenEvent.UpdateProviderServicesEvent)
-                                                     openEditDialog.value = 2
-                                                 }
-                                        }) {
-                                            Text("Watch my services")
-                                        }
-                                    }
-                                    Button(onClick = {
-                                        logOut()
-                                    }) {
-                                        Text("Log Out")
+                                        Text("Watch my services")
                                     }
                                 }
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Button(onClick = {
+                                    openEditDialog.value = true
+                                }) {
+                                    Text("Edit Profile")
+                                }
+
+
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Button(onClick = {
+                                    state.value.token = null
+                                    logOut()
+                                }) {
+                                    Text("Log Out")
+                                }
+
                             }
 
                         }
 
 
-                        1 -> {
+                        true -> {
                             if (state.value.authenticateResponse?.provider != null && state.value.token != null) {
                                 EditProviderProfileView(
-                                    onUpdateRequest = { openEditDialog.value = 0 },
+                                    onUpdateRequest = { openEditDialog.value = false },
                                     user = state.value.authenticateResponse!!.user,
                                     provider = state.value.authenticateResponse!!.provider,
                                     token = state.value.token,
@@ -314,7 +311,7 @@ fun ProfileScreen(
                                 }
                             } else if (state.value.authenticateResponse?.user != null && state.value.token != null) {
                                 EditProfileView(
-                                    onUpdateRequest = { openEditDialog.value = 0 },
+                                    onUpdateRequest = { openEditDialog.value = false },
                                     user = state.value.authenticateResponse!!.user,
                                     token = state.value.token,
                                     event = event
@@ -325,20 +322,6 @@ fun ProfileScreen(
 
                         }
 
-                        2 -> {
-                            if (state.value.authenticateResponse?.provider != null && state.value.token != null) {
-                                EditProviderProfileView(
-                                    onUpdateRequest = { openEditDialog.value = 0 },
-                                    user = state.value.authenticateResponse!!.user,
-                                    provider = state.value.authenticateResponse!!.provider,
-                                    token = state.value.token,
-                                    event = event
-                                ) {
-                                    logOut()
-                                }
-                            }
-
-                        }
                     }
                 }
             }

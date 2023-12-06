@@ -1,6 +1,5 @@
 package com.example.sigmaindustry.presentation.details
 
-import android.widget.RatingBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -54,7 +51,8 @@ fun DetailsScreen(
     event: (DetailsEvent) -> Unit,
     viewModel: DetailsViewModel,
     sideEffect: UIComponent?,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    isProviderList: Boolean = false
 ) {
     val context = LocalContext.current
     var textField by remember {
@@ -153,53 +151,70 @@ fun DetailsScreen(
                         id = R.color.black
                     )
                 )
-                Spacer(modifier = Modifier.height(MediumPadding1))
-                Row {
-                    OutlinedTextField(value = textField,
-                        modifier = Modifier.width(250.dp), onValueChange =  { textField = it })
-                    Button(onClick = { event(DetailsEvent.SendRate(
-                        serviceId = service.id,
-                        feedback = textField,
-                        rating = ratingBar
-                    )) }) {
-                        Text("Rate")
-                    }
-                }
-                RatingBar(value = ratingBar, onValueChange = {ratingBar = it},
-                    onRatingChanged = {}, config = RatingBarConfig().stepSize(StepSize.HALF))
-                when (viewModel.isTokenPresent) {
-                    true -> Button(onClick = { event(DetailsEvent.ShowDialog) }) {
-                        Text("Order")
-                    }
-
-                    else -> {}
-                }
-
-                var phoneNumber by remember {
-                    mutableStateOf("")
-                }
-
-                when (viewModel.showDialog) {
-                    true -> AlertDialog(
-                        onDismissRequest = { event(DetailsEvent.HideDialog) },
-
-                        confirmButton = { TextButton(onClick = {
-                            event(DetailsEvent.SendOrder(service.id, "$orderField | My phone number is: $phoneNumber"))
-                            event(DetailsEvent.HideDialog)
+                if(!isProviderList) {
+                    Spacer(modifier = Modifier.height(MediumPadding1))
+                    Row {
+                        OutlinedTextField(value = textField,
+                            modifier = Modifier.width(250.dp), onValueChange = { textField = it })
+                        Button(onClick = {
+                            event(
+                                DetailsEvent.SendRate(
+                                    serviceId = service.id,
+                                    feedback = textField,
+                                    rating = ratingBar
+                                )
+                            )
                         }) {
-                            Text("Send")
-                        } },
-                        text = {
-                            Column {
-                                OutlinedTextField(value = phoneNumber, onValueChange = {phoneNumber = it},
-                                    label = {Text("Phone")})
-                                Spacer(modifier = Modifier.height(10.dp))
-                                OutlinedTextField(value = orderField, onValueChange = {orderField = it},
-                                    label = {Text("Order")})
-                            }
+                            Text("Rate")
                         }
+                    }
+                    RatingBar(value = ratingBar, onValueChange = { ratingBar = it },
+                        onRatingChanged = {}, config = RatingBarConfig().stepSize(StepSize.HALF)
                     )
-                    else -> null
+                    when (viewModel.isTokenPresent) {
+                        true -> Button(onClick = { event(DetailsEvent.ShowDialog) }) {
+                            Text("Order")
+                        }
+
+                        else -> {}
+                    }
+
+                    var phoneNumber by remember {
+                        mutableStateOf("")
+                    }
+
+                    when (viewModel.showDialog) {
+                        true -> AlertDialog(
+                            onDismissRequest = { event(DetailsEvent.HideDialog) },
+
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    event(
+                                        DetailsEvent.SendOrder(
+                                            service.id,
+                                            "$orderField | My phone number is: $phoneNumber"
+                                        )
+                                    )
+                                    event(DetailsEvent.HideDialog)
+                                }) {
+                                    Text("Send")
+                                }
+                            },
+                            text = {
+                                Column {
+                                    OutlinedTextField(value = phoneNumber,
+                                        onValueChange = { phoneNumber = it },
+                                        label = { Text("Phone") })
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    OutlinedTextField(value = orderField,
+                                        onValueChange = { orderField = it },
+                                        label = { Text("Order") })
+                                }
+                            }
+                        )
+
+                        else -> null
+                    }
                 }
             }
         }

@@ -9,6 +9,7 @@ import com.example.sigmaindustry.data.remote.dto.PostRateRequest
 import com.example.sigmaindustry.data.remote.dto.PostRateResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderRequest
 import com.example.sigmaindustry.data.remote.dto.ProviderResponse
+import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
@@ -53,7 +54,7 @@ interface ServicesApi {
     suspend fun getHistory(@Path("email") email: String): HistoryResponse
 
     @GET("api/service/list/@{provider_id}")
-    suspend fun getProviderServices(@Path("provider_id") providerId: String): ServiceResponse
+    suspend fun getProviderServices(@Path("provider_id") providerId: String): ProviderServicesResponse
 
 //    @POST("everything")
 //    suspend fun searchNews(

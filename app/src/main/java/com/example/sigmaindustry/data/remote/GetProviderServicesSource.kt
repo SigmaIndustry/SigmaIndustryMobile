@@ -1,40 +1,21 @@
 package com.example.sigmaindustry.data.remote
 
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
-import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
+import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 
 class GetProviderServicesSource(
     private val servicesApi: ServicesApi,
-    private val providerID: String,
-) : PagingSource<Int, Service>() {
+)  {
 
 
-    override fun getRefreshKey(state: PagingState<Int, Service>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
-        }
-    }
-
-    private var totalServicesCount = 0
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Service> {
-        val page = params.key ?: 1
+    suspend fun getServices(providerId: String): ProviderServicesResponse? {
         return try {
-            val searchResponse = servicesApi.getProviderServices(providerID)
-            totalServicesCount += searchResponse.results.size
-            val services = searchResponse.results.distinctBy { it.name } //Remove duplicates
-            LoadResult.Page(
-                data = services,
-                nextKey = if (totalServicesCount == searchResponse.results.size) null else page + 1,
-                prevKey = null
-            )
+            servicesApi.getProviderServices(providerId)
         } catch (e: Exception) {
+            println("Error while load")
             e.printStackTrace()
-            LoadResult.Error(
-                throwable = e
-            )
+            return null
         }
     }
+
 }

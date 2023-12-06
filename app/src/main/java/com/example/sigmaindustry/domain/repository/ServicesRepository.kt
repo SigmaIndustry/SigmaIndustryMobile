@@ -5,6 +5,7 @@ import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
+import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ServicesRepository {
     fun getServices(): Flow<PagingData<Service>>
-    fun getServices(providerID: String): Flow<PagingData<Service>>
+   suspend fun getServices(providerID: String): ProviderServicesResponse?
     suspend fun getHistory(email: String): HistoryResponse
     fun getCategories(): Map<String, String>
     suspend fun login(loginRequest: LoginRequest): LoginResponse

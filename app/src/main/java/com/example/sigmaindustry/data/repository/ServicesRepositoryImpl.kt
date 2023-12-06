@@ -20,9 +20,11 @@ import com.example.sigmaindustry.data.remote.dto.LoginRequest
 import com.example.sigmaindustry.data.remote.dto.LoginResponse
 import com.example.sigmaindustry.data.remote.dto.PostOrderRequest
 import com.example.sigmaindustry.data.remote.dto.PostRateRequest
+import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
 import com.example.sigmaindustry.data.remote.dto.Service
+import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
 import com.example.sigmaindustry.data.remote.dto.UserUpdate
@@ -86,16 +88,9 @@ class ServicesRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getServices(providerID: String): Flow<PagingData<Service>> {
-        return Pager(
-            config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = {
-                GetProviderServicesSource(
-                    servicesApi = servicesApi,
-                    providerID = providerID
-                )
-            }
-        ).flow
+    override suspend fun getServices(providerID: String): ProviderServicesResponse? {
+
+            return GetProviderServicesSource(servicesApi).getServices(providerID)
     }
 
     override suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int {

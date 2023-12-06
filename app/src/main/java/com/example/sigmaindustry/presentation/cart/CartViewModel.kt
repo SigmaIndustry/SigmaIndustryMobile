@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    val serviceProvider: ServicesRepository,
+    private val serviceProvider: ServicesRepository,
     val readToken: ReadTokenUseCase
 ) : ViewModel() {
     var _state = mutableStateOf(CartState(HistoryResponse(listOf())))

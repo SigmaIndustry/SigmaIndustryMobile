@@ -44,6 +44,9 @@ import com.example.sigmaindustry.presentation.auth.signUp.SignUpScreen
 import com.example.sigmaindustry.presentation.auth.signUp.SignUpViewModel
 import com.example.sigmaindustry.presentation.cart.CartView
 import com.example.sigmaindustry.presentation.cart.CartViewModel
+import com.example.sigmaindustry.presentation.createService.AddGeoState
+import com.example.sigmaindustry.presentation.createService.AddGeoView
+import com.example.sigmaindustry.presentation.createService.AddGeoViewModel
 import com.example.sigmaindustry.presentation.createService.CreateServiceScreen
 import com.example.sigmaindustry.presentation.createService.CreateServiceViewModel
 import com.example.sigmaindustry.presentation.details.DetailsScreen
@@ -212,6 +215,9 @@ fun NewsNavigator(
                     },
                     navigateToAddService = {
                         navigateToTab(navController, Route.CreateServicesScreen.route)
+                    },
+                    navigateToAddGeo = {ser ->
+                        navigateToAddGeo(navController, ser)
                     }
                 )
             }
@@ -304,6 +310,15 @@ fun NewsNavigator(
                 navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Cart"))
                 CartView(event = viewModel::onEvent, viewModel = viewModel, state = state)
             }
+            composable(route = Route.AddGeoScreen.route) {
+                val viewModel: AddGeoViewModel = hiltViewModel()
+                viewModel.errorHandler = {GlobalScope.launch { snackController.showSnackbar(it) }}
+                val state = viewModel.state
+                navController.previousBackStackEntry?.savedStateHandle?.get<Service?>("service")?.let {ser ->
+                    viewModel._state.value = viewModel._state.value.copy(service = ser)
+                    AddGeoView(viewModel = viewModel, state = state)
+                }
+            }
             composable(route = Route.ProfileScreen.route) {
                 val viewModel: ProfileScreenViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
@@ -394,5 +409,11 @@ private fun navigateToDetailsProvider(navController: NavController, service: Ser
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
     navController.navigate(
         route = Route.DetailsScreenProvider.route
+    )
+}
+private fun navigateToAddGeo(navController: NavController, service: Service) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
+    navController.navigate(
+        route = Route.AddGeoScreen.route
     )
 }

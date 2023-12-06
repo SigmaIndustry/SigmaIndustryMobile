@@ -24,8 +24,9 @@ fun ProviderServicesScreen(
     state: State<ProviderServicesState>,
     viewModel: ProviderServicesViewModel,
     event: (ProviderServicesEvent) -> Unit,
-     navigateToAddService: () -> Unit,
-    navigateToDetails: (Service) -> Unit
+    navigateToAddService: () -> Unit,
+    navigateToDetails: (Service) -> Unit,
+    navigateToAddGeo: (Service) -> Unit
 ) {
     LaunchedEffect(key1 = null) {
         event(ProviderServicesEvent.GetServices)
@@ -46,7 +47,7 @@ fun ProviderServicesScreen(
                         s = viewModel.changeServiceCategory(ser), onClick =
                         navigateToDetails
                     )
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = { navigateToAddGeo(ser) }) {
                             Text("Add geo")
                         }
                 }

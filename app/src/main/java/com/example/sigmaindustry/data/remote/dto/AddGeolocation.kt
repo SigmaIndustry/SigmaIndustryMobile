@@ -8,7 +8,7 @@ data class AddGeolocation(
     @SerializedName("latitude")
     val serviceID:Int,
     @SerializedName("latitude")
-    val latitude:Int,
+    val latitude: Double,
     @SerializedName("longitude")
-    val longitude:Int
+    val longitude: Double
 )

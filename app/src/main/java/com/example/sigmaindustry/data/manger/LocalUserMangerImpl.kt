@@ -38,9 +38,7 @@ class LocalUserMangerImpl @Inject constructor(
             application.dataStore.edit {settings ->
                 settings.remove(PreferenceKeys.TOKEN)
             }
-            sharedPref.edit().remove("token").commit()
-                val tokenResult = sharedPref.getString("token", null)
-            println("Token set to null, actually token is $tokenResult")
+            sharedPref.edit().remove("token").apply()
         }
     }
 
@@ -55,7 +53,6 @@ class LocalUserMangerImpl @Inject constructor(
         val appToken = application.dataStore.data.map { preferences ->
             preferences[PreferenceKeys.TOKEN]
         }.first()
-        println("Token: $token, appToken: $appToken")
         return token
     }
 

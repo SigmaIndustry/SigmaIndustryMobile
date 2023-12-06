@@ -30,11 +30,9 @@ fun ServiceCard(
     s: Service,
     onClick: ((Service) -> Unit)? = null
 ) {
-
     val context = LocalContext.current
     Row(
         modifier = modifier.clickable { onClick?.invoke(s) },
-
         ) {
         AsyncImage(
             modifier = Modifier
@@ -52,7 +50,7 @@ fun ServiceCard(
         ) {
             Text(
                 text = s.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 color = colorResource(id = R.color.black),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

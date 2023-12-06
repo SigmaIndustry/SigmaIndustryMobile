@@ -44,22 +44,22 @@ class SignUpViewModel @Inject constructor(
             }
             is SignUpEvent.SignUp -> {
                 signUp()
+                _state.value = SignUpState()
             }
             is SignUpEvent.RegisterProvider -> {
                 registerProvider()
+                _state.value = SignUpState()
             }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun signUp() {
-
         GlobalScope.launch {
             val signUpResult = signUp(
                 user = _state.value.user,
             )
             saveToken(signUpResult.token)
-            println("Token is: ${signUpResult.token}")
             readTokenUseCase()?.let{
                 _state.value = _state.value.copy(token = it)
             }

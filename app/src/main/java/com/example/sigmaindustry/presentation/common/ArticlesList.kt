@@ -28,7 +28,7 @@ fun SearchResultList(
     serviceUpdater: (Service) -> Service,
     onClick: (Service) -> Unit
 ) {
-    LazyColumn(Modifier.padding(Dimens.MediumPadding1)) {
+    LazyColumn(Modifier.padding(horizontal = MediumPadding1)) {
         items(services.itemCount, key = services.itemKey {it.id}) { index ->
             val s = services[index]
             if (s != null) {

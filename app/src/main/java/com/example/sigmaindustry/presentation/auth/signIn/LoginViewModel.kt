@@ -45,7 +45,6 @@ class LoginViewModel @Inject constructor(
                 )
             }
             saveToken(loginResult.await().token)
-            println("Token is: ${loginResult.await().token}")
             readTokenUseCase()?.let {
                 _state.value = _state.value.copy(token = it)
             }

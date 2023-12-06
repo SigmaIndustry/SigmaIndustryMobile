@@ -29,6 +29,16 @@ class NewsNavigatorViewModel @Inject constructor(
             is NewsNavigatorEvent.SaveToken -> {
                 setTokenNull()
             }
+            is NewsNavigatorEvent.ChangeTopBarTitle -> {
+                _state.value = _state.value.copy(topBarTitle = event.newTitle)
+            }
+            is NewsNavigatorEvent.ChangeTopBarNavIcon -> {
+                _state.value = _state.value.copy(topBarNavIcon = event.newIcon, topBarIconDesc = event.newIconDesc,
+                    onClick = { event.onClick() })
+            }
+            is NewsNavigatorEvent.ClearTopBarIcon -> {
+                _state.value = _state.value.copy(topBarNavIcon = null)
+            }
         }
     }
     @OptIn(DelicateCoroutinesApi::class)

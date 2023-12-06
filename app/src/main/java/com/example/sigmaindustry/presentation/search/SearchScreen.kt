@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,10 +31,10 @@ fun SearchScreen(
 
     Column(
         modifier = Modifier
-            .padding(top = MediumPadding1, start = MediumPadding1, end = MediumPadding1)
             .statusBarsPadding()
     ) {
         SearchBar(
+            modifier = Modifier.padding(horizontal = MediumPadding1),
             text = state.searchQuery,
             readOnly = false,
             onValueChange = { event(SearchEvent.UpdateSearchQuery(it)) },
@@ -41,6 +42,9 @@ fun SearchScreen(
                 event(SearchEvent.SearchNews)
             }
         )
+
+        Spacer(modifier = Modifier.height(MediumPadding1))
+
         state.services?.let {
             val services = it.collectAsLazyPagingItems()
             SearchResultList(

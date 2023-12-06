@@ -4,12 +4,18 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -86,7 +93,6 @@ fun NewsNavigator(
         else -> selectedItem
     }
 
-
     val isBottomBarVisible = remember(key1 = backStackState) {
         val route = backStackState?.destination?.route
         route == Route.HomeScreen.route ||
@@ -117,7 +123,6 @@ fun NewsNavigator(
 
                         2 -> navigateToProfile(
                             navController = navController,
-                            viewModel = navigatorViewModel,
                             navigatorViewModel
                         )
 
@@ -129,14 +134,24 @@ fun NewsNavigator(
                 }
             )
         }
-    }) {
-        val bottomPadding = it.calculateBottomPadding()
+    },
+        topBar = { TopAppBar(title = { Text(navigatorViewModel.state.value.topBarTitle, style = MaterialTheme.typography.titleMedium)},
+            navigationIcon = {
+                if (navigatorViewModel.state.value.topBarNavIcon != null) {
+                    IconButton(onClick = navigatorViewModel.state.value.onClick) {
+                        Icon(navigatorViewModel.state.value.topBarNavIcon!!, navigatorViewModel.state.value.topBarIconDesc)
+                    }
+                }
+
+            }) }
+    ) {
         NavHost(
             navController = navController,
             startDestination = Route.HomeScreen.route,
-            modifier = Modifier.padding(bottom = bottomPadding)
+            modifier = Modifier.padding(it)
         ) {
-            composable(route = Route.HomeScreen.route) { backStackEntry ->
+            composable(route = Route.HomeScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Home"))
                 val viewModel: HomeViewModel = hiltViewModel()
                 val services = viewModel.services.collectAsLazyPagingItems()
                 HomeScreen(
@@ -156,8 +171,8 @@ fun NewsNavigator(
                     }
                 )
             }
-
             composable(route = Route.SearchScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Search"))
                 val viewModel: SearchViewModel = hiltViewModel()
                 val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
@@ -174,6 +189,7 @@ fun NewsNavigator(
                 )
             }
             composable(route = Route.ProviderServicesScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Profile"))
                 val viewModel: ProviderServicesViewModel = hiltViewModel()
                 val state = viewModel.state
                 OnBackClickStateSaver(navController = navController)
@@ -189,33 +205,31 @@ fun NewsNavigator(
                     }
                 )
             }
-
             composable(route = Route.SignUpScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("SignUp"))
                 val viewModel: SignUpViewModel = hiltViewModel()
                 val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
                 SignUpScreen(event = viewModel::onEvent, state = state, viewModel = viewModel) {
                     navigateToProfile(
                         navController = navController,
-                        viewModel = navigatorViewModel,
                         navigatorViewModel
                     )
                 }
             }
-
             composable(route = Route.LoginScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Login"))
                 val viewModel: LoginViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
                 LoginScreen(event = viewModel::onEvent) {
                     navigateToProfile(
                         navController = navController,
-                        viewModel = navigatorViewModel,
                         navigatorViewModel
                     )
                 }
             }
-
             composable(route = Route.SelectAuthScreen.route) {
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Auth"))
                 val viewModel: SelectAuthViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
                 SelectAuthScreen(viewModel = viewModel, event = viewModel::onEvent,
@@ -223,11 +237,16 @@ fun NewsNavigator(
                     navigateToTab(navController, Route.SignUpScreen.route)
                 }
             }
-
             composable(route = Route.DetailsScreen.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarNavIcon(Icons.Filled.ArrowBack, "Back"
+                ) {
+                    navController.navigateUp()
+                    navigatorViewModel.onEvent(NewsNavigatorEvent.ClearTopBarIcon)
+                })
                 navController.previousBackStackEntry?.savedStateHandle?.get<Service?>("service")
                     ?.let { service ->
+                        navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle(service.name))
                         DetailsScreen(
                             service = service,
                             event = viewModel::onEvent,
@@ -239,8 +258,14 @@ fun NewsNavigator(
             }
             composable(route = Route.DetailsScreenProvider.route) {
                 val viewModel: DetailsViewModel = hiltViewModel()
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarNavIcon(Icons.Filled.ArrowBack, "Back"
+                ) {
+                    navController.navigateUp()
+                    navigatorViewModel.onEvent(NewsNavigatorEvent.ClearTopBarIcon)
+                })
                 navController.previousBackStackEntry?.savedStateHandle?.get<Service?>("service")
                     ?.let { service ->
+                        navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle(service.name))
                         DetailsScreen(
                             service = service,
                             event = viewModel::onEvent,
@@ -251,17 +276,17 @@ fun NewsNavigator(
                         )
                     }
             }
-
             composable(route = Route.CardScreen.route) {
                 val viewModel: CartViewModel = hiltViewModel()
                 val state = viewModel.state
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Cart"))
                 CartView(event = viewModel::onEvent, viewModel = viewModel, state = state)
             }
-
             composable(route = Route.ProfileScreen.route) {
                 val viewModel: ProfileScreenViewModel = hiltViewModel()
                 OnBackClickStateSaver(navController = navController)
                 val state = viewModel.state
+                navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Profile"))
                 ProfileScreen(state = state, event = viewModel::onEvent, logOut =  {
                     navigateToTab(
                         navController = navController,
@@ -302,19 +327,14 @@ private fun navigateToTab(navController: NavController, route: String) {
 @OptIn(DelicateCoroutinesApi::class)
 private fun navigateToProfile(
     navController: NavController,
-    viewModel: NewsNavigatorViewModel,
     navigatorViewModel: NewsNavigatorViewModel
 ) {
-    println("navigate to profile run")
     navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
     GlobalScope.launch {
         navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
         delay(150)
         withContext(Dispatchers.Main) {
-
-
-            if (viewModel.state.value.token == null) {
-                println("but token is nit null")
+            if (navigatorViewModel.state.value.token == null) {
                 navController.navigate(Route.SelectAuthScreen.route) {
                     navController.graph.startDestinationRoute?.let { screen_route ->
                         popUpTo(screen_route) {
@@ -343,7 +363,6 @@ private fun navigateToProfile(
 
 private fun navigateToDetails(navController: NavController, service: Service) {
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
-    println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreen.route
     )
@@ -351,7 +370,6 @@ private fun navigateToDetails(navController: NavController, service: Service) {
 
 private fun navigateToDetailsProvider(navController: NavController, service: Service) {
     navController.currentBackStackEntry?.savedStateHandle?.set("service", service)
-    println("Navigate to detail")
     navController.navigate(
         route = Route.DetailsScreenProvider.route
     )

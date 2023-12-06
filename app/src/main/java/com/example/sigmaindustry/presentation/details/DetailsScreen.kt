@@ -1,5 +1,7 @@
 package com.example.sigmaindustry.presentation.details
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -73,12 +75,7 @@ fun DetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
     ) {
-        DetailsTopBar(
-            onBackClick = navigateUp
-        )
-
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(
@@ -88,13 +85,6 @@ fun DetailsScreen(
             )
         ) {
             item {
-                Text(
-                    text = service.name,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = colorResource(
-                        id = R.color.black
-                    )
-                )
                 AsyncImage(
                     model = ImageRequest.Builder(context = context).data(service.pictures[0])
                         .build(),
@@ -129,7 +119,7 @@ fun DetailsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
                         text = "Provider: ${service.provider}",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(
                             id = R.color.black
                         ),
@@ -151,6 +141,12 @@ fun DetailsScreen(
                         id = R.color.black
                     )
                 )
+                if (service.geolocation != null){
+                    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/@${service.geolocation.latitude},${service.geolocation.longitude},18z")) }
+                    Button(onClick = { context.startActivity(intent) }) {
+                        Text(text = "View GoogleMaps")
+                    }
+                }
                 if(!isProviderList) {
                     Spacer(modifier = Modifier.height(MediumPadding1))
                     Row {

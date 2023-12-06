@@ -29,7 +29,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -53,7 +56,6 @@ fun CartView(
     Column(
         modifier = Modifier
             .padding(
-                top = Dimens.MediumPadding1,
                 start = Dimens.MediumPadding1,
                 end = Dimens.MediumPadding1
             )
@@ -85,13 +87,13 @@ fun CartCardView(entry: EntriesResponse) {
             )
             Spacer(modifier = Modifier.width(Dimens.ExtraSmallPadding2))
             Column {
-                Text("Send to ${entry.email}")
+                Row {Text("Send to", style = TextStyle(fontWeight = FontWeight.Bold)); Text(entry.email)}
                 val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/maps/@${entry.service.geolocation.latitude},${entry.service.geolocation.longitude},18z")) }
                 Button(onClick = { context.startActivity(intent) }) {
-                    Text(text = "Navigate to Google!")
+                    Text(text = "Open GoogleMaps")
                 }
             }
         }
-        Text("Message: ${entry.message.split("|")[0]}")
+        Row {Text("Message: ", style = TextStyle(fontWeight = FontWeight.Bold)); Text(entry.message.split("|")[0])}
     }
 }

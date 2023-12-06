@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class AddGeolocation(
     @SerializedName("token")
     val token: String,
-    @SerializedName("latitude")
+    @SerializedName("service_id")
     val serviceID: Int,
     @SerializedName("latitude")
     val latitude: Double,

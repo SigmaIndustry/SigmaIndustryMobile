@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.data.remote
 
+import com.example.sigmaindustry.data.remote.dto.AddService
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
 import com.example.sigmaindustry.data.remote.dto.LoginRequest
@@ -50,6 +51,8 @@ interface ServicesApi {
     @POST("security/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
 
+    @POST("api/service/create")
+    suspend fun createService(@Body request: AddService)
     @GET("api/get_history/{email}")
     suspend fun getHistory(@Path("email") email: String): HistoryResponse
 

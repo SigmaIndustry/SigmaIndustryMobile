@@ -1,13 +1,14 @@
 package com.example.sigmaindustry.presentation.providerServices
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,9 +41,15 @@ fun ProviderServicesScreen(
                 items(list.size) {
                     val ser = state.value.services!!.entries[it]
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-           ServiceCard(s = viewModel.changeServiceCategory(ser), onClick =
-                         navigateToDetails
+                    Row {
+                    ServiceCard(
+                        s = viewModel.changeServiceCategory(ser), onClick =
+                        navigateToDetails
                     )
+                        Button(onClick = { /*TODO*/ }) {
+                            Text("Add geo")
+                        }
+                }
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
                     Divider()
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))

@@ -47,7 +47,7 @@ fun CreateServiceScreen(
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-
+    var picture by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
     var loading by remember { mutableStateOf(false) }
@@ -57,7 +57,7 @@ fun CreateServiceScreen(
             .fillMaxSize()
             .padding(horizontal = Dimens.MediumPadding1)
             .statusBarsPadding()
-            .verticalScroll(rememberScrollState()) ,
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Your service will appear in search shortly")
@@ -68,7 +68,7 @@ fun CreateServiceScreen(
             label = { Text("Name of service") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp,top = 70.dp)
+                .padding(bottom = 16.dp, top = 70.dp)
         )
 
         OutlinedTextField(
@@ -89,6 +89,15 @@ fun CreateServiceScreen(
                 .padding(bottom = 16.dp)
         )
 
+        OutlinedTextField(
+            value = picture,
+            onValueChange = { picture = it },
+            label = { Text("Enter URL of your service picture") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
         Text(
             text = error,
             color = Color.Red,
@@ -100,17 +109,32 @@ fun CreateServiceScreen(
 
                 loading = true
                 GlobalScope.launch {
-                    event(CreateServiceEvent.UpdateServiceRequest(AddService(
-                        providerID = 1,
-                        name = name,
-                        pictures = listOf("https://i.ibb.co/71Q9Q5q/image.png"),
-                        category = "00",
-                        price = price.toFloat(),
-                        description = description
-                        )))
+                    if (picture == "") {
+                        event(
+                            CreateServiceEvent.UpdateServiceRequest(
+                                AddService(
+                                    providerID = 1,
+                                    name = name,
+                                    pictures = listOf("https://i.ibb.co/71Q9Q5q/image.png"),
+                                    category = "00",
+                                    price = price.toFloat(),
+                                    description = description
+                                )
+                            )
+                        )
+                    } else {
+                        AddService(
+                            providerID = 1,
+                            name = name,
+                            pictures = listOf(picture),
+                            category = "00",
+                            price = price.toFloat(),
+                            description = description
+                        )
+                    }
                     event(CreateServiceEvent.CreateService)
                     delay(4000)
-                    withContext (Dispatchers.Main) {
+                    withContext(Dispatchers.Main) {
                         back()
                     }
                 }
@@ -130,3 +154,4 @@ fun CreateServiceScreen(
         )
     }
 }
+

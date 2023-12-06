@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.presentation.auth.signIn
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,8 +34,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.reflect.KSuspendFunction1
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -99,9 +100,15 @@ fun LoginScreen(
                     return@Button
                 }
                 loading = true
+                GlobalScope.launch {
+
                     event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
                     event(LoginEvent.Login)
-                    toProfile()
+                    delay(2000)
+                    withContext (Dispatchers.Main) {
+                        toProfile()
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

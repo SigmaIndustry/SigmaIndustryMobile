@@ -1,5 +1,6 @@
 package com.example.sigmaindustry.data.remote
 
+import com.example.sigmaindustry.data.remote.dto.AddGeolocation
 import com.example.sigmaindustry.data.remote.dto.AddService
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
@@ -53,7 +54,8 @@ interface ServicesApi {
 
     @POST("api/service/create")
     suspend fun createService(@Body request: AddService)
-
+    @POST("api/add_geolocation")
+    suspend fun addGeo(@Body request: AddGeolocation)
     @GET("api/get_history/{email}")
     suspend fun getHistory(@Path("email") email: String): HistoryResponse
 

@@ -3,6 +3,7 @@ package com.example.sigmaindustry.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.sigmaindustry.data.remote.AddGeoSource
 import com.example.sigmaindustry.data.remote.AuthenticateSource
 import com.example.sigmaindustry.data.remote.CreateServiceSource
 import com.example.sigmaindustry.data.remote.GetProviderServicesSource
@@ -15,6 +16,7 @@ import com.example.sigmaindustry.data.remote.ServicesApi
 import com.example.sigmaindustry.data.remote.ServicesPagingSource
 import com.example.sigmaindustry.data.remote.SignUpSource
 import com.example.sigmaindustry.data.remote.UserUpdateSource
+import com.example.sigmaindustry.data.remote.dto.AddGeolocation
 import com.example.sigmaindustry.data.remote.dto.AddService
 import com.example.sigmaindustry.data.remote.dto.AuthenticateResponse
 import com.example.sigmaindustry.data.remote.dto.HistoryResponse
@@ -95,6 +97,10 @@ class ServicesRepositoryImpl @Inject constructor(
 
     override suspend fun createService(service: AddService) {
         CreateServiceSource(servicesApi).createService(service)
+    }
+
+    override suspend fun addGeo(geo: AddGeolocation) {
+        AddGeoSource(servicesApi).addGeo(geo)
     }
     override suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int {
         val resp = servicesApi.postRate(PostRateRequest(token, serviceId, rating, feedback))

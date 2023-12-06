@@ -13,10 +13,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,10 +47,15 @@ fun CreateServiceScreen(
     event: (CreateServiceEvent) -> Unit,
     back: () -> Unit
 ) {
-
+    val options = listOf("Food & Drinks", "Car service")
+    val optionsCategoryKey = listOf("00", "01")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    var selectedOptionKey by remember { mutableStateOf(options[0]) }
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("00") }
     var picture by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
@@ -98,6 +107,41 @@ fun CreateServiceScreen(
                 .padding(bottom = 16.dp)
         )
 
+
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+        ) {
+            TextField(
+                // The `menuAnchor` modifier must be passed to the text field for correctness.
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                value = selectedOptionText,
+                onValueChange = {},
+                label = { Text("Label") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                options.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption) },
+                        onClick = {
+                            selectedOptionText = selectionOption
+                            selectedOptionKey =
+                                optionsCategoryKey[options.indexOf(selectionOption)]
+                            expanded = false
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+
+            }
+        }
+
         Text(
             text = error,
             color = Color.Red,
@@ -116,7 +160,7 @@ fun CreateServiceScreen(
                                     providerID = 1,
                                     name = name,
                                     pictures = listOf("https://i.ibb.co/71Q9Q5q/image.png"),
-                                    category = "00",
+                                    category = selectedOptionKey,
                                     price = price.toFloat(),
                                     description = description
                                 )
@@ -127,7 +171,7 @@ fun CreateServiceScreen(
                             providerID = 1,
                             name = name,
                             pictures = listOf(picture),
-                            category = "00",
+                            category = selectedOptionKey,
                             price = price.toFloat(),
                             description = description
                         )
@@ -149,9 +193,13 @@ fun CreateServiceScreen(
         if (!loading) return
 
         CircularProgressIndicator(
-            modifier = Modifier.width(64.dp).padding(bottom = 70.dp, top = 70.dp),
+            modifier = Modifier
+                .width(64.dp)
+                .padding(bottom = 70.dp, top = 70.dp),
             color = MaterialTheme.colorScheme.secondary,
         )
     }
 }
+
+
 

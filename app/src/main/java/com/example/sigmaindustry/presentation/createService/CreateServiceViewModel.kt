@@ -23,7 +23,7 @@ class CreateServiceViewModel @Inject constructor(
 
     private var _state = mutableStateOf(CreateServiceState())
     val state: State<CreateServiceState> = _state
-
+    var errorHandling: (String) -> Unit = {}
 
      fun onEvent(event: CreateServiceEvent) {
         when (event) {
@@ -40,19 +40,15 @@ class CreateServiceViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     private  fun createService() {
         GlobalScope.launch {
-            val token = async { readTokenUseCase() }
-            val tokenFetched = token.await()
-            if (tokenFetched != null) {
-                val user =
-                    async {
-                        authenticate(
-                            token = Token(tokenFetched)
-                        )
-                    }
-                if(state.value.service?.name == null){
+            val token = readTokenUseCase()
+            if (token != null) {
+                val user = authenticate( token = Token(token) )
+                if (user == null) {
+                    errorHandling("Error")
+                    return@launch
                 }
                  createServiceUseCase(
-                    AddService(user.await().provider.providerID.toInt(),
+                    AddService(user.provider.providerID.toInt(),
                         state.value.service!!.name,
                         state.value.service!!.pictures,
                         state.value.service!!.price,

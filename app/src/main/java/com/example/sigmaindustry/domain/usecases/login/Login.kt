@@ -8,9 +8,13 @@ import javax.inject.Inject
 class Login @Inject constructor(
     private val servicesRepository: ServicesRepository
 ) {
-    suspend operator fun invoke(loginRequest: LoginRequest): LoginResponse {
-        return servicesRepository.login(
-            loginRequest = loginRequest
-        )
+    suspend operator fun invoke(loginRequest: LoginRequest): LoginResponse? {
+        return try {
+            servicesRepository.login(
+                loginRequest = loginRequest
+            )
+        } catch (e: Exception) {
+            return null
+        }
     }
 }

@@ -20,15 +20,14 @@ fun HomeScreen(
     services: LazyPagingItems<Service>,
     navigateToSearch: () -> Unit,
     viewModel: HomeViewModel,
-    navigateToDetails: (Service) -> Unit
+    navigateToDetails: (Service) -> Unit,
+    errorHandler: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
     ) {
-
-
         SearchResultList(
             services = services,
             serviceUpdater = {s -> viewModel.changeServiceCategory(s)},

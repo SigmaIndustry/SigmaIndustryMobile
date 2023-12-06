@@ -7,14 +7,7 @@ class SignUpSource(
     private val servicesApi: ServicesApi,
 )  {
 
-
-
     suspend fun signUp(user: User): LoginResponse {
-        return try {
-            servicesApi.signUp(user)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            LoginResponse(400, "null")
-        }
+        return servicesApi.signUp(user)
     }
 }

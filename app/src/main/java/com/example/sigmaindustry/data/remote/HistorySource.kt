@@ -7,12 +7,12 @@ class HistorySource(
     private val servicesApi: ServicesApi,
 ) {
     suspend fun getHistory(email: String): HistoryResponse {
-        return try {
-            servicesApi.getHistory(email)
+        try {
+            return servicesApi.getHistory(email)
         } catch (e: Exception) {
             println("Error while load")
             e.printStackTrace()
-            HistoryResponse(listOf())
+            throw e
         }
     }
 }

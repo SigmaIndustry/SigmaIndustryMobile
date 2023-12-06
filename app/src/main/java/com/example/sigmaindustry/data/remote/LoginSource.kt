@@ -8,11 +8,11 @@ class LoginSource(
 ) {
 
     suspend fun login(loginRequest: LoginRequest): LoginResponse {
-        return try {
-            servicesApi.login(loginRequest)
+        try {
+            return servicesApi.login(loginRequest)
         } catch (e: Exception) {
             e.printStackTrace()
-            LoginResponse(400, "null")
+            throw e
         }
     }
 }

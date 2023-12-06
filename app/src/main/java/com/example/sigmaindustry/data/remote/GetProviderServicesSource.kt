@@ -7,14 +7,13 @@ class GetProviderServicesSource(
     private val servicesApi: ServicesApi,
 )  {
 
-
     suspend fun getServices(providerId: String): ProviderServicesResponse? {
         return try {
             servicesApi.getProviderServices(providerId)
         } catch (e: Exception) {
             println("Error while load")
             e.printStackTrace()
-            return null
+            throw e
         }
     }
 

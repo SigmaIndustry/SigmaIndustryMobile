@@ -13,7 +13,7 @@ val name: String,
 val pictures: List<String>,
 
 @SerializedName("price")
-val price: Int,
+val price: Float,
 
 @SerializedName("category")
 val category: String,

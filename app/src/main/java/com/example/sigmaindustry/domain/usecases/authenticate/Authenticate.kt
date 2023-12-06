@@ -8,9 +8,11 @@ import javax.inject.Inject
 class Authenticate @Inject constructor(
     private val servicesRepository: ServicesRepository
 ) {
-    suspend operator fun invoke(token: Token): AuthenticateResponse {
-        return servicesRepository.authenticate(
-            token
-        )
+    suspend operator fun invoke(token: Token): AuthenticateResponse? {
+        return try{
+            servicesRepository.authenticate(token)
+        } catch (e: Exception) {
+            return null
+        }
     }
 }

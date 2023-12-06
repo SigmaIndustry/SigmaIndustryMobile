@@ -38,8 +38,8 @@ import kotlin.reflect.KSuspendFunction1
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    event: KSuspendFunction1<LoginEvent, Unit>,
-    toProfile: () -> Unit
+    event: (LoginEvent) -> Unit,
+    toProfile: () -> Unit,
 ) {
 
     var email by remember { mutableStateOf("") }
@@ -99,14 +99,9 @@ fun LoginScreen(
                     return@Button
                 }
                 loading = true
-                GlobalScope.launch {
                     event(LoginEvent.UpdateLoginRequest(LoginRequest(email, password)))
                     event(LoginEvent.Login)
-                    delay(2000)
-                    withContext (Dispatchers.Main) {
-                        toProfile()
-                    }
-                }
+                    toProfile()
             },
             modifier = Modifier
                 .fillMaxWidth()

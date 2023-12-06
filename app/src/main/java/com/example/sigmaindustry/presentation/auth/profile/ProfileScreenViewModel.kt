@@ -28,7 +28,7 @@ class ProfileScreenViewModel @Inject constructor(
 
     private var _state = mutableStateOf(ProfileScreenState())
     val state: State<ProfileScreenState> = _state
-
+    var errorHandler: (String) -> Unit = {}
 
     suspend fun onEvent(event: ProfileScreenEvent) {
         when (event) {
@@ -71,17 +71,15 @@ class ProfileScreenViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     suspend fun authenticate() {
         GlobalScope.launch {
-            val token = async { readTokenUseCase() }
-            _state.value = _state.value.copy(token = token.await())
-            val tokenFetched = token.await()
-            if (tokenFetched != null) {
-                val user =
-                    async {
-                        authenticateUseCase(
-                            token = Token(tokenFetched)
-                        )
-                    }
-                _state.value = _state.value.copy(authenticateResponse = user.await())
+            val token = readTokenUseCase()
+            _state.value = _state.value.copy(token = token)
+            if (token != null) {
+                val user = authenticateUseCase(token = Token(token))
+                if (user == null) {
+                    errorHandler("Error")
+                    return@launch
+                }
+                _state.value = _state.value.copy(authenticateResponse = user)
             }
         }
     }

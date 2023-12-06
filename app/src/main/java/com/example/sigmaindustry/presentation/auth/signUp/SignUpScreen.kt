@@ -2,6 +2,7 @@ package com.example.sigmaindustry.presentation.auth.signUp
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.database.DatabaseErrorHandler
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,8 @@ fun SignUpScreen(
     state: SignUpState,
     event: (SignUpEvent) -> Unit,
     viewModel: SignUpViewModel,
-    toProfile: () -> Unit
+    toProfile: () -> Unit,
+    errorHandler: (String) -> Unit
 ) {
     var birthDate by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
@@ -277,7 +279,11 @@ fun SignUpScreen(
 
                     if (validProvider.contains(false)) {
                         viewModel.updateProvider(state.provider.copy(email = state.user.email))
-                        event(SignUpEvent.RegisterProvider)
+                        try {
+                            event(SignUpEvent.RegisterProvider)
+                        } catch (e: Exception) {
+                            errorHandler("Error")
+                        }
                     } else {
                         error = "Error from: "
                         if (!validProvider[1]) {
@@ -301,7 +307,11 @@ fun SignUpScreen(
                 GlobalScope.launch {
                     viewModel.updateUser(state.user.copy(birthDate = birthDate,
                         photoUrl = "https://i.ibb.co/jwKccRz/profile-Picture.jpg"))
-                    event(SignUpEvent.SignUp)
+                    try {
+                        event(SignUpEvent.SignUp)
+                    } catch (e: Exception) {
+                        errorHandler("Error")
+                    }
 
                     delay(6000)
                     withContext (Dispatchers.Main) {
@@ -328,7 +338,5 @@ fun SignUpScreen(
             color = MaterialTheme.colorScheme.secondary,
         )
 
-        // Display Token (You may customize this part based on your needs)
-      //  Text(text = state.loginResponse.token)
     }
 }

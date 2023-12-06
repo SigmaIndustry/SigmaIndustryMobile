@@ -11,7 +11,6 @@ import com.example.sigmaindustry.domain.usecases.news.GetProviderServices
 import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
@@ -24,7 +23,7 @@ class ProviderServicesViewModel @Inject constructor(
 
     private var _state = mutableStateOf(ProviderServicesState())
     val state: State<ProviderServicesState> = _state
-
+    var errorHandler: (String) -> Unit = {}
 
     fun changeServiceCategory(s: Service): Service {
         return s.copy(category = serviceRepository.getCategories()[s.category] ?: "Unknown")
@@ -41,16 +40,15 @@ class ProviderServicesViewModel @Inject constructor(
 
     private fun getServices() {
         GlobalScope.launch {
-            val token = async { readTokenUseCase() }
-            val tokenFetched = token.await()
-            if (tokenFetched != null) {
+            val token = readTokenUseCase()
+            if (token != null) {
                 val user =
-                    async {
-                        authenticateUseCase(
-                            token = Token(tokenFetched)
-                        )
-                    }
-                val providerID = user.await().provider.providerID
+                        authenticateUseCase( token = Token(token) )
+                if (user == null) {
+                    errorHandler("Error")
+                    return@launch
+                }
+                val providerID = user.provider.providerID
                 val services = getProviderServices(
                     providerID = providerID,
                 )

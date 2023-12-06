@@ -25,6 +25,7 @@ class SignUpViewModel @Inject constructor(
 
     private var _state = mutableStateOf(SignUpState())
     val state: State<SignUpState> = _state
+    var errorHandler: (String) -> Unit = {}
 
     fun updateUser(newUser: User) {
         _state.value = _state.value.copy(user = newUser)
@@ -56,9 +57,11 @@ class SignUpViewModel @Inject constructor(
     @OptIn(DelicateCoroutinesApi::class)
     private fun signUp() {
         GlobalScope.launch {
-            val signUpResult = signUp(
-                user = _state.value.user,
-            )
+            val signUpResult = signUp(user = _state.value.user)
+            if (signUpResult == null) {
+                errorHandler("Error")
+                return@launch
+            }
             saveToken(signUpResult.token)
             readTokenUseCase()?.let{
                 _state.value = _state.value.copy(token = it)

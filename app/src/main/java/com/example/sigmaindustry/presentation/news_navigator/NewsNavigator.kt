@@ -14,6 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -62,7 +64,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
 fun NewsNavigator(
     navigatorViewModel: NewsNavigatorViewModel
@@ -80,6 +82,7 @@ fun NewsNavigator(
         // navigatorViewModel.onEvent(NewsNavigatorEvent.GetToken)
     }
     val navController = rememberNavController()
+    val snackController = remember { SnackbarHostState() }
     val backStackState = navController.currentBackStackEntryAsState().value
     var selectedItem by rememberSaveable {
         mutableIntStateOf(0)
@@ -104,7 +107,9 @@ fun NewsNavigator(
     }
 
 
-    Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
+    Scaffold(modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackController) },
+        bottomBar = {
         if (isBottomBarVisible) {
             NewsBottomNavigation(
                 items = bottomNavigationItems,
@@ -168,7 +173,7 @@ fun NewsNavigator(
                             navController = navController,
                             service = service
                         )
-                    }
+                    }, errorHandler = { GlobalScope.launch { snackController.showSnackbar(it) } }
                 )
             }
             composable(route = Route.SearchScreen.route) {
@@ -191,6 +196,7 @@ fun NewsNavigator(
             composable(route = Route.ProviderServicesScreen.route) {
                 navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Profile"))
                 val viewModel: ProviderServicesViewModel = hiltViewModel()
+                viewModel.errorHandler = { GlobalScope.launch {snackController.showSnackbar(it)} }
                 val state = viewModel.state
                 OnBackClickStateSaver(navController = navController)
                 ProviderServicesScreen(
@@ -208,25 +214,26 @@ fun NewsNavigator(
             composable(route = Route.SignUpScreen.route) {
                 navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("SignUp"))
                 val viewModel: SignUpViewModel = hiltViewModel()
+                viewModel.errorHandler = { GlobalScope.launch {snackController.showSnackbar(it)} }
                 val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
-                SignUpScreen(event = viewModel::onEvent, state = state, viewModel = viewModel) {
-                    navigateToProfile(
+                SignUpScreen(event = viewModel::onEvent, state = state, viewModel = viewModel, toProfile = { navigateToProfile(
                         navController = navController,
                         navigatorViewModel
-                    )
-                }
+                    )}, errorHandler = { GlobalScope.launch { snackController.showSnackbar(it) } }
+                )
             }
             composable(route = Route.LoginScreen.route) {
                 navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Login"))
                 val viewModel: LoginViewModel = hiltViewModel()
+                viewModel.errorHandler = { GlobalScope.launch { snackController.showSnackbar(it) } }
                 OnBackClickStateSaver(navController = navController)
-                LoginScreen(event = viewModel::onEvent) {
+                LoginScreen(event = viewModel::onEvent, toProfile =  {
                     navigateToProfile(
                         navController = navController,
                         navigatorViewModel
                     )
-                }
+                })
             }
             composable(route = Route.SelectAuthScreen.route) {
                 navigatorViewModel.onEvent(NewsNavigatorEvent.ChangeTopBarTitle("Auth"))

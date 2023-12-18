@@ -33,4 +33,6 @@ interface ServicesRepository {
     suspend fun sendRate(token: String, serviceId: Int, rating: Float, feedback: String): Int
     suspend fun sendOrder(token: String, serviceId: Int, message: String)
 
+    suspend fun deleteService(token: String, serviceId: Int): Boolean
+
 }

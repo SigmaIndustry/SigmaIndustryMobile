@@ -14,6 +14,7 @@ import com.example.sigmaindustry.data.remote.dto.ProviderResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
+import com.example.sigmaindustry.data.remote.dto.ServerDeleteReq
 import com.example.sigmaindustry.data.remote.dto.ServiceRequest
 import com.example.sigmaindustry.data.remote.dto.ServiceResponse
 import com.example.sigmaindustry.data.remote.dto.Token
@@ -38,6 +39,8 @@ interface ServicesApi {
     @POST("security/update")
     suspend fun updateUser(@Body request: UserUpdate)
 
+    @POST("api/service/delete")
+    suspend fun deleteService(@Body request: ServerDeleteReq)
     @POST("security/update")
     suspend fun updateProvider(@Body request: ProviderUpdate)
     @POST("security/authenticate")

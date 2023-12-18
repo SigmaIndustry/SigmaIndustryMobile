@@ -27,6 +27,7 @@ import com.example.sigmaindustry.data.remote.dto.PostRateRequest
 import com.example.sigmaindustry.data.remote.dto.ProviderServicesResponse
 import com.example.sigmaindustry.data.remote.dto.ProviderUpdate
 import com.example.sigmaindustry.data.remote.dto.RegisterProvider
+import com.example.sigmaindustry.data.remote.dto.ServerDeleteReq
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.data.remote.dto.User
@@ -109,6 +110,17 @@ class ServicesRepositoryImpl @Inject constructor(
 
     override suspend fun sendOrder(token: String, serviceId: Int, message: String) {
         servicesApi.postOrder(PostOrderRequest(token, serviceId, message = message))
+    }
+
+    override suspend fun deleteService(token: String, serviceId: Int): Boolean {
+        return try {
+            servicesApi.deleteService(ServerDeleteReq(token=token, serviceId = serviceId))
+            true
+        } catch (e: Exception) {
+            println(e)
+            false
+        }
+
     }
 
 }

@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.example.sigmaindustry.data.remote.dto.Service
 import com.example.sigmaindustry.data.remote.dto.Token
 import com.example.sigmaindustry.domain.repository.ServicesRepository
+import com.example.sigmaindustry.domain.usecases.DeleteService
 import com.example.sigmaindustry.domain.usecases.authenticate.Authenticate
 import com.example.sigmaindustry.domain.usecases.news.GetProviderServices
 import com.example.sigmaindustry.domain.usecases.token.ReadTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +20,8 @@ class ProviderServicesViewModel @Inject constructor(
     private val getProviderServices: GetProviderServices,
     private val readTokenUseCase: ReadTokenUseCase,
     private val authenticateUseCase: Authenticate,
-    private val serviceRepository: ServicesRepository
+    private val serviceRepository: ServicesRepository,
+    private val deleteService: DeleteService
 ) : ViewModel() {
 
     private var _state = mutableStateOf(ProviderServicesState())
@@ -29,9 +32,14 @@ class ProviderServicesViewModel @Inject constructor(
         return s.copy(category = serviceRepository.getCategories()[s.category] ?: "Unknown")
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun onEvent(event: ProviderServicesEvent) {
         when (event) {
-
+            is ProviderServicesEvent.DeleteService -> {
+                GlobalScope.launch {
+                    deleteService(event.serviceId)
+                }
+            }
             is ProviderServicesEvent.GetServices -> {
                 getServices()
             }

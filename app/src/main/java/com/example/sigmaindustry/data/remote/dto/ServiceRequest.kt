@@ -10,3 +10,10 @@ data class ServiceRequest (
     var pageLimit: Int = 10,
 
 )
+
+data class ServerDeleteReq (
+    @SerializedName("service_id")
+    val serviceId: Int = 0,
+    @SerializedName("token")
+    val token: String = ""
+)

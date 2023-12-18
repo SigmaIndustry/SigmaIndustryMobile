@@ -2,6 +2,7 @@ package com.example.sigmaindustry.presentation.providerServices
 
 
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -80,7 +81,7 @@ fun ProviderServicesScreen(
                 items(list.size) {
                     var ser = state.value.services!!.entries[it]
                     ser = viewModel.changeServiceCategory(ser)
-                    ListItemService(service = ser, navigateToAddGeo) {
+                    ListItemService(service = ser, navigateToAddGeo, navigateToDetails) {
                         event(
                             ProviderServicesEvent.DeleteService(
                                 it.id
@@ -91,31 +92,6 @@ fun ProviderServicesScreen(
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
                     Divider()
                     Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-                    
-//                    Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-//                    Row(
-//                        Modifier.fillMaxWidth(),
-//                                verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        
-//                    ServiceCard(
-//                        s = viewModel.changeServiceCategory(ser), onClick =
-//                        navigateToDetails
-//                    )
-//                        Spacer(Modifier.weight(1f))
-//                        Button(  contentPadding = PaddingValues(),
-//                            modifier = Modifier
-//                                .width(70.dp)
-//                                .height(70.dp)
-//                                .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
-//                            shape = RoundedCornerShape(2)
-//                            , onClick = { navigateToAddGeo(ser) }) {
-//                            Text("Add geo")
-//                        }
-//                }
-//                    Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
-//                    Divider()
-//                    Spacer(modifier = Modifier.height(Dimens.ExtraSmallPadding))
                 }
             }
         }
@@ -136,13 +112,14 @@ fun ProviderServicesScreen(
 fun ListItemService(
     service: Service,
     navigateToAddGeo: (Service) -> Unit,
-    deleteService: (Service) -> Unit
+    navigateToService: (Service) -> Unit,
+    deleteService: (Service) -> Unit,
 ) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
-    ListItem(headlineText = { Text(service.name) },
-        leadingContent = {             AsyncImage(
+    ListItem( modifier = Modifier.clickable { navigateToService(service) }, headlineText = { Text(service.name) },
+        leadingContent = { AsyncImage(
             modifier = Modifier
                 .size(Dimens.ServiceCardSize)
                 .clip(MaterialTheme.shapes.medium),

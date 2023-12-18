@@ -55,7 +55,6 @@ fun CreateServiceScreen(
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("00") }
     var picture by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
@@ -70,7 +69,7 @@ fun CreateServiceScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Your service will appear in search shortly")
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -150,36 +149,34 @@ fun CreateServiceScreen(
 
         Button(
             onClick = {
-
-                loading = true
                 GlobalScope.launch {
-                    if (picture == "") {
-                        event(
-                            CreateServiceEvent.UpdateServiceRequest(
-                                AddService(
-                                    providerID = 1,
-                                    name = name,
-                                    pictures = listOf("https://i.ibb.co/71Q9Q5q/image.png"),
-                                    category = selectedOptionKey,
-                                    price = price.toFloat(),
-                                    description = description
-                                )
-                            )
-                        )
-                    } else {
-                        event(
-                            CreateServiceEvent.UpdateServiceRequest(
-                                AddService(
-                                    providerID = 1,
-                                    name = name,
-                                    pictures = listOf(picture),
-                                    category = selectedOptionKey,
-                                    price = price.toFloat(),
-                                    description = description
-                                )
-                            )
-                        )
+                    var floatPrice = 0.0f
+                    try {
+                        floatPrice = price.toFloat()
+                    } catch (e: Exception) {
+                        error = "Price is not number"
+                        return@launch
                     }
+
+                    val appService = AddService(
+                        providerID = 1,
+                        name = name,
+                        pictures = listOf(picture.ifEmpty { "https://i.ibb.co/71Q9Q5q/image.png" }),
+                        category = selectedOptionKey,
+                        price = floatPrice,
+                        description = description
+                    )
+                    val errors = getErrors(appService)
+                    if (errors.isNotEmpty()) {
+                        error = "Errors: ${errors.joinToString(" ")}"
+                        return@launch
+                    }
+                    loading = true
+                    event (
+                        CreateServiceEvent.UpdateServiceRequest(
+                            appService
+                        )
+                    )
                     event(CreateServiceEvent.CreateService)
                     delay(4000)
                     withContext(Dispatchers.Main) {
@@ -206,4 +203,14 @@ fun CreateServiceScreen(
 }
 
 
+fun getErrors (addService: AddService): List<String> {
+    var errors = mutableListOf<String>()
+    if (addService.name.isEmpty()) {
+        errors.add("Name is empty")
+    }
+    if (addService.description.isEmpty()) {
+        errors.add("Description is empty")
+    }
+    return errors
+}
 

@@ -7,7 +7,7 @@ data class ServiceRequest (
     var searchQuery: String = "",
 
     @SerializedName("page_limit")
-    var pageLimit: Int = 10,
+    var pageLimit: Int = 100,
 
 )
 

@@ -1,8 +1,6 @@
 package com.example.sigmaindustry.data.remote.dto
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
 
 data class SearchRequest (
@@ -10,7 +8,7 @@ data class SearchRequest (
     var searchQuery: String = "",
 
     @SerializedName("page_limit")
-    var pageLimit: Int = 10,
+    var pageLimit: Int = 100,
 
     @SerializedName("page_offset")
     var pageOffset: Int = 0,

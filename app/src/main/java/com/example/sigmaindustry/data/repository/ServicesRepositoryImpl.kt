@@ -41,7 +41,7 @@ class ServicesRepositoryImpl @Inject constructor(
 
     override fun getServices(): Flow<PagingData<Service>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = 100),
             pagingSourceFactory = {
                 ServicesPagingSource(servicesApi = servicesApi)
             }
@@ -81,7 +81,7 @@ class ServicesRepositoryImpl @Inject constructor(
         searchQuery: String,
     ): Flow<PagingData<Service>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = 100),
             pagingSourceFactory = {
                 SearchServicesPagingSource(
                     api = servicesApi,

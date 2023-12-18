@@ -51,7 +51,7 @@ fun CreateServiceScreen(
     val optionsCategoryKey = listOf("00", "01")
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
-    var selectedOptionKey by remember { mutableStateOf(options[0]) }
+    var selectedOptionKey by remember { mutableStateOf(optionsCategoryKey[0]) }
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -167,13 +167,17 @@ fun CreateServiceScreen(
                             )
                         )
                     } else {
-                        AddService(
-                            providerID = 1,
-                            name = name,
-                            pictures = listOf(picture),
-                            category = selectedOptionKey,
-                            price = price.toFloat(),
-                            description = description
+                        event(
+                            CreateServiceEvent.UpdateServiceRequest(
+                                AddService(
+                                    providerID = 1,
+                                    name = name,
+                                    pictures = listOf(picture),
+                                    category = selectedOptionKey,
+                                    price = price.toFloat(),
+                                    description = description
+                                )
+                            )
                         )
                     }
                     event(CreateServiceEvent.CreateService)

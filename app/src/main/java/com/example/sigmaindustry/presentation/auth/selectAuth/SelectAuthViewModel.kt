@@ -33,6 +33,8 @@ class SelectAuthViewModel @Inject constructor(
             is SelectAuthEvent.ChangeAuthType -> {
                 _state.value = _state.value.copy(checkedAuthType = event.type)
             }
+
+            else -> {}
         }
 
     }
